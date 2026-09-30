@@ -1,26 +1,174 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Hijau Terang & Segar (Fresh Vibrant Green Palette) */
+  --forest: #0D5C3A;       /* Hijau Zamrud Segar & Elegan (lebih terang & hidup) */
+  --forest-2: #08432A;     /* Hover state */
+  --leaf: #10B981;         /* Hijau Terang Utama (Emerald 500 - Cerah & Modern) */
+  --leaf-hover: #059669;   /* Emerald 600 */
+  --leaf-active: #047857;  /* Emerald 700 */
+  --mint: #34D399;         /* Hijau Mint Terang (Emerald 400) */
+  --mint-light: #ECFDF5;   /* Hijau Terang Pastel (Emerald 50) */
+  --lime-accent: #22C55E;  /* Hijau Daun Muda Segar */
+
+  /* Netral Bersih (Putih Penuh) */
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-2: #F9FAFB;
+  --line: #E5E7EB;
+  --line-strong: #D1D5DB;
+  --control: #9CA3AF;
+  --disabled-bg: #F3F4F6;
+  --disabled-text: #9CA3AF;
+  --ink: #0A0A0A;          /* Hitam Murni Bersih untuk Seluruh Teks */
+  --muted: #52525B;        /* Abu-abu Netral Bersih untuk Teks Pendukung */
+
+  /* Semantik */
+  --danger: #D9381E;
+  --danger-hover: #B82E17;
+  --amber: #F59E0B;
+  --blue: #2563EB;
+  --brick: #C2410C;
+  --gray-green: #64748B;
+
+  /* Bentuk & Elevasi Minimalis */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Gerak Halus Minimalis */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-forest: var(--forest);
+  --color-forest-2: var(--forest-2);
+  --color-leaf: var(--leaf);
+  --color-leaf-hover: var(--leaf-hover);
+  --color-leaf-active: var(--leaf-active);
+  --color-mint: var(--mint);
+  --color-mint-light: var(--mint-light);
+  --color-lime: var(--lime-accent);
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-control: var(--control);
+  --color-disabled-bg: var(--disabled-bg);
+  --color-disabled-text: var(--disabled-text);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-amber: var(--amber);
+  --color-blue: var(--blue);
+  --color-brick: var(--brick);
+  --color-gray-green: var(--gray-green);
+
+  --font-heading: var(--font-heading), Montserrat, sans-serif;
+  --font-body: var(--font-body), Inter, sans-serif;
+  --font-sans: var(--font-body), Inter, sans-serif;
+  --font-inter: var(--font-body), Inter, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg);
+  color: var(--ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body), Inter, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Minimalist Soft Layered Shadows */
+.shadow-subtle {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+}
+
+.shadow-card {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 6px 20px -4px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-card-hover {
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+}
+
+.shadow-elevated {
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+}
+
+/* Minimalist Button Micro-interactions */
+.btn-minimal {
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-minimal:hover {
+  transform: translateY(-1px);
+}
+.btn-minimal:active {
+  transform: translateY(0);
+  opacity: 0.96;
+}
+
+/* Refined Dot Leader */
+.dot-leader {
+  flex-grow: 1;
+  border-bottom: 1.5px dotted var(--line-strong);
+  margin: 0 10px;
+  position: relative;
+  top: -4px;
+  opacity: 0.7;
+}
+
+/* Clean Receipt Notches */
+.ticket-notch-left,
+.ticket-notch-right {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background-color: var(--bg);
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  z-index: 10;
+}
+.ticket-notch-left {
+  left: -9px;
+}
+.ticket-notch-right {
+  right: -9px;
+}
+
+/* Modern Minimalist Verification Stamp */
+@keyframes stampIn {
+  0% {
+    opacity: 0;
+    transform: scale(1.15) rotate(-6deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-3deg);
+  }
+}
+
+.animate-stamp {
+  animation: stampIn 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-stamp {
+    animation: none !important;
+    transform: rotate(-3deg) !important;
+    opacity: 1 !important;
+  }
+  html {
+    scroll-behavior: auto !important;
+  }
 }
