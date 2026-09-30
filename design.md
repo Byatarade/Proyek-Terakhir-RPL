@@ -564,9 +564,9 @@ Aturan: satu CTA utama per layar, teks hero dan salinan diambil dari `content/la
 | Level | Komponen dari dokumen ini |
 |---|---|
 | **Atoms** | Button, Input, Textarea, Select, Checkbox, Radio, Switch, Badge, Avatar, Spinner, Skeleton, Divider, Tooltip |
-| **Molecules** | FormField, PriceTag, QuantityStepper, SearchInput, StatusBadge, EmptyState, Toast |
-| **Organisms** | DataTable, Sidebar, TopBar, PageHeader, ConfirmDialog, Tabs, Pagination, StatCard |
-| **Komponen domain** (`features/*`) | QueueNumber, OrderTicket, ReceiptCart, OrderStatusTimeline, QrisPayPanel, ProductCard, StampLunas |
+| **Molecules** | FormField, PriceTag, QuantityStepper, SearchInput, StatusBadge, EmptyState, Toast, DotLeader, StampLunas |
+| **Organisms** | LoginForm, RegisterForm, ForgotPasswordForm, OrderTicket, ReceiptCart, QueueNumber, OrderStatusTimeline, QrisPayPanel, ProductCard, DataTable, Sidebar, TopBar, PageHeader, ConfirmDialog, Tabs, Pagination, StatCard |
+| **Templates** | AuthLayout, MarketingLayout, DashboardShell, PublicStoreShell |
 | **Sections** (`components/sections/landing`) | Navbar, Hero, Problem, HowItWorks, Features, Pricing, Faq, Cta, Footer |
 
 ---
