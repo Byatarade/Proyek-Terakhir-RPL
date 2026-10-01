@@ -130,16 +130,16 @@ export function Sidebar({
         />
       )}
 
-      {/* Sidebar Container: White background, subtle border, minimal aesthetic */}
+      {/* Sidebar Container: Fixed on mobile, sticky/fixed on desktop */}
       <aside
         className={cn(
-          "fixed top-0 bottom-0 left-0 z-50 w-64 bg-white border-r border-[var(--line)] flex flex-col justify-between transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static shrink-0 select-none",
+          "fixed top-0 bottom-0 left-0 z-50 w-64 bg-white border-r border-[var(--line)] flex flex-col justify-between transition-transform duration-200 ease-in-out lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen shrink-0 select-none",
           isOpen ? "translate-x-0 shadow-lg" : "-translate-x-full"
         )}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full overflow-hidden">
           {/* Header Brand: Matches Landing Page Navbar Logo */}
-          <div className="h-16 px-5 border-b border-[var(--line)] flex items-center justify-between">
+          <div className="h-16 px-5 border-b border-[var(--line)] flex items-center justify-between shrink-0">
             <Link
               href="/dashboard"
               className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--leaf)] rounded-lg p-1"
@@ -169,7 +169,7 @@ export function Sidebar({
 
           {/* Store Info Card: Clean Minimalist Store Pill */}
           {storeName && (
-            <div className="mx-3.5 mt-3.5 p-3 rounded-xl bg-zinc-50 border border-zinc-200/70 flex items-center justify-between">
+            <div className="mx-3.5 mt-3.5 p-3 rounded-xl bg-zinc-50 border border-zinc-200/70 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className="w-7 h-7 rounded-lg bg-white border border-zinc-200 flex items-center justify-center text-zinc-700 shrink-0">
                   <Store className="w-3.5 h-3.5 text-[var(--leaf)]" />
@@ -257,7 +257,7 @@ export function Sidebar({
           </nav>
 
           {/* Footer User Role Notice: Clean Minimalist */}
-          <div className="p-3 border-t border-[var(--line)] bg-zinc-50/50 flex items-center justify-between text-xs text-zinc-500">
+          <div className="p-3 border-t border-[var(--line)] bg-zinc-50/50 flex items-center justify-between text-xs text-zinc-500 shrink-0">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span className="capitalize font-medium text-zinc-700">
