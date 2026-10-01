@@ -39,11 +39,11 @@ export default async function DashboardLayout({
   }
 
   // Load store details
-  let store = null;
+  let store: { name: string; slug: string; is_open: boolean } | null = null;
   if (profileData?.store_id) {
     const { data: storeData } = await supabase
       .from("stores")
-      .select("*")
+      .select("name, slug, is_open")
       .eq("id", profileData.store_id)
       .maybeSingle();
     store = storeData;

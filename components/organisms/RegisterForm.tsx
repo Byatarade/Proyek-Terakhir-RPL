@@ -78,13 +78,13 @@ export function RegisterForm() {
   }, []);
 
   useEffect(() => {
-    if (!slug || slug.length < 3) {
-      setSlugStatus(null);
-      return;
-    }
     const timer = setTimeout(() => {
-      checkSlugDebounced(slug);
-    }, 450);
+      if (!slug || slug.length < 3) {
+        setSlugStatus(null);
+      } else {
+        checkSlugDebounced(slug);
+      }
+    }, 400);
 
     return () => clearTimeout(timer);
   }, [slug, checkSlugDebounced]);

@@ -74,6 +74,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       profiles: {
         Row: {
@@ -103,6 +104,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       categories: {
         Row: {
@@ -126,6 +128,7 @@ export interface Database {
           sort_order?: number;
           created_at?: string;
         };
+        Relationships: [];
       };
       products: {
         Row: {
@@ -170,6 +173,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       orders: {
         Row: {
@@ -220,6 +224,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       order_items: {
         Row: {
@@ -255,6 +260,7 @@ export interface Database {
           price_cost?: number;
           created_at?: string;
         };
+        Relationships: [];
       };
       queue_counters: {
         Row: {
@@ -272,6 +278,7 @@ export interface Database {
           queue_date?: string;
           last_number?: number;
         };
+        Relationships: [];
       };
       expenses: {
         Row: {
@@ -304,6 +311,7 @@ export interface Database {
           created_by?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       order_status_logs: {
         Row: {
@@ -339,14 +347,17 @@ export interface Database {
           note?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
     };
     Views: {
       v_products_staff: {
         Row: Omit<Database["public"]["Tables"]["products"]["Row"], "price_cost">;
+        Relationships: [];
       };
       v_order_items_staff: {
         Row: Omit<Database["public"]["Tables"]["order_items"]["Row"], "price_cost">;
+        Relationships: [];
       };
     };
     Functions: {

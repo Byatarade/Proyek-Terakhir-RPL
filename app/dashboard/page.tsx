@@ -19,7 +19,7 @@ export default async function DashboardPage() {
     .eq("id", user?.id || "")
     .maybeSingle();
 
-  let store = null;
+  let store: { name: string; slug: string; is_open: boolean } | null = null;
   let todaySales = 0;
   let todayOrdersCount = 0;
   let activeOrdersCount = 0;

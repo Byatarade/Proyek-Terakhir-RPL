@@ -67,7 +67,7 @@ export function TopBar({
                 {storeName}
               </h1>
               <Badge
-                variant={isOpen ? "success" : "muted"}
+                variant={isOpen ? "leaf" : "neutral"}
                 size="sm"
                 className="hidden sm:inline-flex"
               >
