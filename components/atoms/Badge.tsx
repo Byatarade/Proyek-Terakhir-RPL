@@ -13,23 +13,24 @@ export function Badge({
   children,
   ...props
 }: BadgeProps) {
-  // Minimalist Landing Page Style: Pill-shaped, subtle 1px border, refined soft background
+  // Hijau Nota Style (design.md 7.4): Radius 6px, border tegas, kontras tinggi
   const baseStyles =
-    "inline-flex items-center gap-1.5 font-medium rounded-full transition-colors select-none";
+    "inline-flex items-center gap-1.5 font-medium rounded-[6px] transition-colors select-none";
 
   const sizeStyles = {
-    sm: "h-6 px-2.5 text-[11px]",
-    md: "h-7 px-3 text-[12px]",
+    sm: "h-6 px-2 text-[11px]",
+    md: "h-7 px-2.5 text-[12px]",
   };
 
   const variantStyles = {
-    mint: "bg-emerald-50 text-emerald-700 border border-emerald-200/80 font-medium",
-    forest: "bg-zinc-950 text-white border border-zinc-950",
-    leaf: "bg-emerald-50 text-[var(--leaf)] border border-emerald-200/80 font-medium",
-    amber: "bg-amber-50 text-amber-800 border border-amber-200/80",
-    neutral: "bg-zinc-100 text-zinc-700 border border-zinc-200/80",
-    danger: "bg-red-50 text-[var(--danger)] border border-red-200/80",
-    blue: "bg-blue-50 text-[var(--blue)] border border-blue-200/80",
+    // Mint di atas putih kontrasnya rendah, jadi wajib diberi garis tepi Hutan (design.md 2.4 & 7.4)
+    mint: "bg-[var(--mint)] text-[var(--ink)] border-2 border-[var(--forest)] font-medium",
+    forest: "bg-[var(--forest)] text-white border-2 border-[var(--forest)] font-medium",
+    leaf: "bg-[var(--surface-2)] text-[var(--leaf)] border-2 border-[var(--leaf)] font-medium",
+    amber: "bg-[var(--amber)] text-[var(--ink)] border-2 border-[var(--forest)] font-medium",
+    neutral: "bg-[var(--surface-2)] text-[var(--forest)] border-2 border-[var(--line)] font-medium",
+    danger: "bg-[var(--danger)] text-white border-2 border-[#7C2011] font-medium",
+    blue: "bg-[var(--blue)] text-white border-2 border-[var(--forest)] font-medium",
   };
 
   return (

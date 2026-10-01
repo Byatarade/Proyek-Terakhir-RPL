@@ -40,8 +40,7 @@ export function QuantityStepper({
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-xl bg-zinc-50 border border-zinc-200/90 select-none shadow-2xs",
-        isSmall ? "h-8 px-1" : "h-10 px-1.5",
+        "inline-flex items-center gap-1.5 select-none",
         disabled && "opacity-50 pointer-events-none",
         className
       )}
@@ -51,18 +50,18 @@ export function QuantityStepper({
         onClick={handleDecrement}
         disabled={disabled || value <= min}
         className={cn(
-          "flex items-center justify-center rounded-lg text-zinc-600 hover:text-zinc-950 hover:bg-white active:scale-95 transition-all cursor-pointer disabled:opacity-30 disabled:pointer-events-none disabled:hover:bg-transparent",
-          isSmall ? "w-6 h-6" : "w-7 h-7"
+          "flex items-center justify-center rounded-[6px] bg-white text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none hover:bg-[var(--surface-2)] transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none disabled:shadow-none",
+          isSmall ? "w-7 h-7" : "w-8 h-8"
         )}
         aria-label="Kurangi jumlah"
       >
-        <Minus className={cn(isSmall ? "w-3 h-3" : "w-3.5 h-3.5")} />
+        <Minus className={cn(isSmall ? "w-3 h-3 stroke-[2.5]" : "w-3.5 h-3.5 stroke-[2.5]")} />
       </button>
 
       <span
         className={cn(
-          "font-heading font-semibold text-zinc-950 text-center tabular-nums leading-none",
-          isSmall ? "w-7 text-xs" : "w-9 text-sm"
+          "font-heading font-bold text-[var(--forest)] text-center tabular-nums leading-none",
+          isSmall ? "w-6 text-xs" : "w-8 text-sm"
         )}
       >
         {value}
@@ -73,12 +72,12 @@ export function QuantityStepper({
         onClick={handleIncrement}
         disabled={disabled || value >= max}
         className={cn(
-          "flex items-center justify-center rounded-lg text-zinc-600 hover:text-zinc-950 hover:bg-white active:scale-95 transition-all cursor-pointer disabled:opacity-30 disabled:pointer-events-none disabled:hover:bg-transparent",
-          isSmall ? "w-6 h-6" : "w-7 h-7"
+          "flex items-center justify-center rounded-[6px] bg-[var(--leaf)] text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none hover:bg-[var(--leaf-hover)] transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none disabled:shadow-none",
+          isSmall ? "w-7 h-7" : "w-8 h-8"
         )}
         aria-label="Tambah jumlah"
       >
-        <Plus className={cn(isSmall ? "w-3 h-3" : "w-3.5 h-3.5")} />
+        <Plus className={cn(isSmall ? "w-3 h-3 stroke-[2.5]" : "w-3.5 h-3.5 stroke-[2.5]")} />
       </button>
     </div>
   );

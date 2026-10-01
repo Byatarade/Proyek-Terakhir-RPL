@@ -20,30 +20,30 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // Minimalist Landing Page Style: Clean rounded corners, elegant subtle shadows, smooth transitions
+    // Hijau Nota Style (design.md 7.1): Solid, 8px radius, 2px border, hard shadow, active physical press
     const baseStyles =
-      "inline-flex items-center justify-center font-medium rounded-xl transition-all duration-150 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--leaf)]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
+      "inline-flex items-center justify-center font-medium rounded-[8px] transition-all select-none focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[var(--leaf)] focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
 
     const variantStyles = {
-      // Primary: Vibrant Emerald Green, subtle elevation
+      // Primary: Hijau Daun, 2px border Hijau Hutan, 3px hard shadow
       primary:
-        "bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white shadow-xs hover:shadow-sm active:scale-[0.99]",
-      // Secondary: Crisp white with refined fine border
+        "bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white border-2 border-[var(--forest)] shadow-[3px_3px_0px_var(--forest)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
+      // Secondary: Putih, border 2px Hijau Hutan, 3px hard shadow
       secondary:
-        "bg-white hover:bg-zinc-50 text-zinc-900 border border-zinc-200 shadow-xs hover:border-zinc-300 active:scale-[0.99]",
-      // Danger: Clean red with soft shadow
+        "bg-white hover:bg-[var(--surface-2)] text-[var(--forest)] border-2 border-[var(--forest)] shadow-[3px_3px_0px_var(--forest)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
+      // Danger: Merah, border 2px Merah Gelap, 3px hard shadow
       danger:
-        "bg-[var(--danger)] hover:bg-[var(--danger-hover)] text-white shadow-xs active:scale-[0.99]",
-      // Ghost: Subtle hover on transparent
+        "bg-[var(--danger)] hover:bg-[var(--danger-hover)] text-white border-2 border-[#7C2011] shadow-[3px_3px_0px_#7C2011] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
+      // Ghost: Transparan, teks Hijau Hutan
       ghost:
-        "bg-transparent hover:bg-zinc-100 text-zinc-700 hover:text-zinc-950",
-      // Link: Clean inline text link
+        "bg-transparent hover:bg-[var(--surface-2)] text-[var(--forest)] active:bg-[var(--disabled-bg)]",
+      // Link: Tautan teks Hijau Daun
       link:
         "bg-transparent text-[var(--leaf)] hover:underline p-0 h-auto",
     };
 
     const sizeStyles = {
-      sm: "h-9 px-3.5 text-xs",
+      sm: "h-9 px-3 text-xs",
       md: "h-11 px-5 text-sm",
       lg: "h-12 px-6 text-base",
       xl: "h-14 px-8 text-base sm:text-lg",

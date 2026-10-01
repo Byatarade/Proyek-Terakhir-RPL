@@ -3,7 +3,6 @@
 import * as React from "react";
 import Link from "next/link";
 import { Store, CreditCard, Banknote, AlertCircle, Receipt } from "lucide-react";
-import { Badge } from "@/components/atoms/Badge";
 
 export interface PublicStoreShellProps {
   children: React.ReactNode;
@@ -24,73 +23,85 @@ export function PublicStoreShell({
   acceptQris = true,
 }: PublicStoreShellProps) {
   return (
-    <div className="min-h-screen bg-zinc-100/60 text-zinc-900 flex flex-col items-center selection:bg-[var(--leaf)] selection:text-white">
-      {/* Mobile-first fixed container (maks. 560px per design.md 4.3) */}
-      <div className="w-full max-w-[560px] min-h-screen bg-white border-x border-[var(--line)] flex flex-col shadow-xs relative">
-        {/* Top Header Navigation */}
-        <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-[var(--line)] px-4 py-3.5 flex items-center justify-between">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col items-center selection:bg-[var(--leaf)] selection:text-white">
+      {/* Mobile-first fixed container (maks. 560px per design.md 4.3) with solid forest border */}
+      <div className="w-full max-w-[560px] min-h-screen bg-[var(--bg)] border-x-2 border-[var(--forest)] flex flex-col relative">
+        {/* Top Header Navigation (Hijau Nota Style: 2px forest border) */}
+        <header className="sticky top-0 z-30 bg-white border-b-2 border-[var(--forest)] px-4 py-3 flex items-center justify-between shadow-[0_2px_0px_var(--line)]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-zinc-950 text-[var(--leaf)] flex items-center justify-center shadow-2xs">
-              <Receipt className="w-4 h-4 text-[var(--leaf)]" />
+            <div className="w-9 h-9 rounded-[8px] bg-[var(--forest)] text-[var(--mint)] border-2 border-[var(--forest)] flex items-center justify-center shadow-[2px_2px_0px_var(--forest)]">
+              <Receipt className="w-4 h-4 text-[var(--mint)]" />
             </div>
             <div className="flex flex-col">
-              <span className="font-heading font-bold text-base text-zinc-950 leading-none">
+              <span className="font-heading font-bold text-base text-[var(--forest)] leading-tight">
                 {storeName}
               </span>
-              <span className="text-[10px] text-zinc-400 font-mono mt-0.5">
+              <span className="text-[11px] text-[var(--muted)] font-mono mt-0.5">
                 /t/{storeSlug}
               </span>
             </div>
           </div>
 
-          <Badge
-            variant={isOpen ? "mint" : "neutral"}
-            size="sm"
-            className="font-semibold text-xs"
+          {/* Status Toko Badge (design.md 2.4 & 7.4: Mint selalu bertepi 2px Hutan) */}
+          <div
+            className={
+              isOpen
+                ? "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-[var(--mint)] text-[var(--ink)] border-2 border-[var(--forest)] font-semibold text-xs shadow-[2px_2px_0px_var(--forest)] select-none"
+                : "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-[var(--amber)] text-[var(--ink)] border-2 border-[var(--forest)] font-semibold text-xs shadow-[2px_2px_0px_var(--forest)] select-none"
+            }
           >
-            {isOpen ? "Toko Buka" : "Toko Sedang Tutup"}
-          </Badge>
+            <span
+              className={
+                isOpen
+                  ? "w-2 h-2 rounded-full bg-[var(--leaf)]"
+                  : "w-2 h-2 rounded-full bg-[var(--danger)]"
+              }
+            />
+            <span>{isOpen ? "Toko Buka" : "Toko Tutup"}</span>
+          </div>
         </header>
 
         {/* Store Closed Warning Banner (design.md 9.7) */}
         {!isOpen && (
-          <div className="bg-amber-50 border-b border-amber-200 px-4 py-3 flex items-start gap-2.5 text-xs text-amber-900">
-            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+          <div className="bg-[var(--amber)] border-b-2 border-[var(--forest)] px-4 py-3 flex items-start gap-2.5 text-xs text-[var(--ink)] font-medium">
+            <AlertCircle className="w-4 h-4 text-[var(--forest)] shrink-0 mt-0.5" />
             <div>
-              <strong className="font-semibold block">Toko Sedang Tutup</strong>
+              <strong className="font-bold block font-heading">Toko Sedang Tutup</strong>
               <span>Menu masih dapat dilihat, namun pemesanan sementara dinonaktifkan.</span>
             </div>
           </div>
         )}
 
-        {/* Store Profile Showcase Card */}
-        <div className="p-4 sm:p-5 border-b border-[var(--line)] bg-zinc-50/50 space-y-3">
+        {/* Store Profile Showcase: Karcis/Nota motif card (design.md 6.1) */}
+        <div className="mx-4 mt-4 bg-white border-2 border-[var(--forest)] rounded-[8px] shadow-[4px_4px_0px_var(--forest)] p-4 relative overflow-hidden">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-white border border-zinc-200/80 flex items-center justify-center text-[var(--leaf)] shadow-2xs shrink-0">
-              <Store className="w-6 h-6 text-[var(--leaf)]" />
+            <div className="w-12 h-12 rounded-[8px] bg-[var(--surface-2)] border-2 border-[var(--forest)] flex items-center justify-center text-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] shrink-0">
+              <Store className="w-6 h-6 text-[var(--forest)]" />
             </div>
             <div>
-              <h1 className="font-heading font-bold text-xl text-zinc-950 leading-tight">
+              <h1 className="font-heading font-bold text-lg text-[var(--forest)] leading-tight">
                 {storeName}
               </h1>
-              <p className="text-xs text-zinc-500 mt-0.5">
-                Pesan menu favorit Anda langsung dari meja tanpa perlu mengantre.
+              <p className="text-xs text-[var(--muted)] mt-0.5 leading-relaxed">
+                Pesan menu favorit kamu langsung dari meja tanpa perlu mengantre.
               </p>
             </div>
           </div>
 
           {/* Payment Badges Supported */}
-          <div className="pt-1 flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-[11px] font-medium text-zinc-400">Metode Bayar:</span>
+          <div className="pt-3 mt-3 border-t-2 border-dashed border-[var(--line)] flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+              Metode Bayar:
+            </span>
             {acceptQris && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-[var(--leaf)] border border-emerald-200/80 text-[11px] font-semibold">
-                <CreditCard className="w-3 h-3" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[6px] bg-[var(--surface-2)] text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] text-[11px] font-semibold">
+                <CreditCard className="w-3.5 h-3.5 text-[var(--leaf)]" />
                 <span>QRIS Instan</span>
               </span>
             )}
             {acceptCash && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 text-[11px] font-semibold">
-                <Banknote className="w-3 h-3" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[6px] bg-white text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] text-[11px] font-semibold">
+                <Banknote className="w-3.5 h-3.5 text-[var(--forest)]" />
                 <span>Tunai di Kasir</span>
               </span>
             )}
@@ -98,18 +109,21 @@ export function PublicStoreShell({
         </div>
 
         {/* Main Content (Category Tabs, Product List, Cart) */}
-        <main className="flex-1 pb-24">{children}</main>
+        <main className="flex-1 pb-28">{children}</main>
 
-        {/* Minimalist Public Store Footer */}
-        <footer className="p-6 border-t border-[var(--line)] text-center text-xs text-zinc-400 space-y-1 bg-white">
-          <p className="font-medium text-zinc-500">
+        {/* Authentic Hijau Nota Footer */}
+        <footer className="p-5 border-t-2 border-[var(--forest)] text-center text-xs text-[var(--muted)] space-y-1 bg-white mt-auto">
+          <p className="font-medium text-[var(--forest)]">
             Didukung oleh{" "}
-            <Link href="/" className="font-semibold text-zinc-800 hover:text-[var(--leaf)] transition-colors">
+            <Link
+              href="/"
+              className="font-bold underline text-[var(--leaf)] hover:text-[var(--forest)] transition-colors"
+            >
               PayBuy
             </Link>{" "}
             — Kasir & Pesan Mandiri UMKM
           </p>
-          <p className="text-[11px] text-zinc-400">
+          <p className="text-[11px] text-[var(--muted)]">
             Pemesanan langsung tanpa aplikasi • Transaksi cepat & aman
           </p>
         </footer>

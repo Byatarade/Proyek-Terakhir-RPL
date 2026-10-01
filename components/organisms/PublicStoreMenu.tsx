@@ -122,30 +122,30 @@ export function PublicStoreMenu({
 
   return (
     <div className="space-y-4">
-      {/* 1. Sticky Category Bar & Search */}
-      <div className="sticky top-14 z-20 bg-white/95 backdrop-blur-md border-b border-[var(--line)] py-3 px-4 space-y-2.5">
-        {/* Search Bar */}
+      {/* 1. Sticky Category Bar & Search with Hijau Nota styles */}
+      <div className="sticky top-[57px] z-20 bg-[var(--bg)] border-b-2 border-[var(--forest)] py-3 px-4 space-y-2.5">
+        {/* Search Bar (design.md 7.2) */}
         <div className="relative w-full">
-          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[var(--forest)] absolute left-3.5 top-1/2 -translate-y-1/2 stroke-[2.5]" />
           <input
             type="text"
             placeholder="Cari menu favorit kamu..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-10 pl-9.5 pr-4 rounded-xl bg-zinc-50 border border-zinc-200 text-xs sm:text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[var(--leaf)]/40 focus:border-[var(--leaf)] transition-all"
+            className="w-full h-11 pl-10 pr-4 rounded-[8px] bg-white border-2 border-[var(--control)] focus:border-[var(--forest)] text-xs sm:text-sm text-[var(--ink)] placeholder:text-[var(--muted)] shadow-[2px_2px_0px_var(--forest)] focus:outline-none transition-all"
           />
         </div>
 
-        {/* Category Pills Navigation */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none">
+        {/* Category Tabs Navigation: Solid 8px radius buttons with 2px borders (design.md 5.1 & 8) */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none pt-0.5">
           <button
             type="button"
             onClick={() => setActiveCategoryTab("all")}
             className={cn(
-              "px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all select-none cursor-pointer",
+              "px-3.5 py-1.5 rounded-[8px] text-xs font-semibold whitespace-nowrap transition-all select-none cursor-pointer border-2",
               activeCategoryTab === "all"
-                ? "bg-zinc-950 text-white shadow-2xs"
-                : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/80"
+                ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
+                : "bg-white text-[var(--forest)] border-[var(--forest)] hover:bg-[var(--surface-2)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
             )}
           >
             Semua Menu
@@ -157,10 +157,10 @@ export function PublicStoreMenu({
               type="button"
               onClick={() => setActiveCategoryTab(cat.id)}
               className={cn(
-                "px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all select-none cursor-pointer",
+                "px-3.5 py-1.5 rounded-[8px] text-xs font-semibold whitespace-nowrap transition-all select-none cursor-pointer border-2",
                 activeCategoryTab === cat.id
-                  ? "bg-zinc-950 text-white shadow-2xs"
-                  : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/80"
+                  ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
+                  : "bg-white text-[var(--forest)] border-[var(--forest)] hover:bg-[var(--surface-2)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
               )}
             >
               {cat.name} ({cat.products.length})
@@ -171,7 +171,7 @@ export function PublicStoreMenu({
 
       {/* Error alert if any */}
       {orderError && (
-        <div className="mx-4 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium">
+        <div className="mx-4 p-3.5 rounded-[8px] bg-red-50 border-2 border-[var(--danger)] text-xs text-[var(--danger)] font-semibold shadow-[2px_2px_0px_var(--danger)]">
           {orderError}
         </div>
       )}
@@ -179,31 +179,31 @@ export function PublicStoreMenu({
       {/* 2. Product Sections Grouped by Category */}
       <div className="px-4 space-y-6 pt-1">
         {displayedCategories.length === 0 ? (
-          <div className="p-12 text-center space-y-3 bg-zinc-50 rounded-2xl border border-zinc-200/70 my-6">
-            <div className="w-12 h-12 rounded-2xl bg-white border border-zinc-200 flex items-center justify-center text-zinc-400 mx-auto">
+          <div className="p-8 text-center space-y-3 bg-white rounded-[8px] border-2 border-[var(--forest)] shadow-[4px_4px_0px_var(--forest)] my-6">
+            <div className="w-12 h-12 rounded-[8px] bg-[var(--surface-2)] border-2 border-[var(--forest)] flex items-center justify-center text-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] mx-auto">
               <ShoppingBag className="w-6 h-6" />
             </div>
-            <h3 className="font-heading font-bold text-base text-zinc-900">
+            <h3 className="font-heading font-bold text-base text-[var(--forest)]">
               Menu Tidak Ditemukan
             </h3>
-            <p className="text-xs text-zinc-500 max-w-xs mx-auto">
+            <p className="text-xs text-[var(--muted)] max-w-xs mx-auto">
               Tidak ada produk yang cocok dengan pencarian &quot;{searchQuery}&quot;. Silakan coba kata kunci lain.
             </p>
           </div>
         ) : (
           displayedCategories.map((cat) => (
             <section key={cat.id} className="space-y-3">
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
-                <h2 className="font-heading font-bold text-base sm:text-lg text-zinc-950">
+              <div className="flex items-center justify-between border-b-2 border-dashed border-[var(--line)] pb-2">
+                <h2 className="font-heading font-bold text-base sm:text-lg text-[var(--forest)]">
                   {cat.name}
                 </h2>
-                <span className="text-[11px] font-medium text-zinc-400 font-mono">
+                <span className="text-xs font-semibold text-[var(--forest)] font-mono bg-[var(--surface-2)] border-2 border-[var(--forest)] px-2 py-0.5 rounded-[6px] shadow-[1px_1px_0px_var(--forest)]">
                   {cat.products.length} menu
                 </span>
               </div>
 
-              {/* Grid 2 Columns on Mobile / Tablet */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-3.5">
+              {/* Grid 2 Columns */}
+              <div className="grid grid-cols-2 gap-3.5 sm:gap-4">
                 {cat.products.map((product) => {
                   const cartItem = cart.get(product.id);
                   const qty = cartItem ? cartItem.qty : 0;

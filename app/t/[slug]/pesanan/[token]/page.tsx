@@ -94,10 +94,10 @@ export default function OrderStatusPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center p-4">
         <div className="text-center space-y-3">
-          <Loader2 className="w-8 h-8 animate-spin text-[var(--leaf)] mx-auto" />
-          <p className="text-xs text-zinc-500 font-medium">Memuat status pesanan...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-[var(--forest)] mx-auto" />
+          <p className="text-xs text-[var(--muted)] font-medium">Memuat status pesanan...</p>
         </div>
       </div>
     );
@@ -105,13 +105,13 @@ export default function OrderStatusPage() {
 
   if (error || !order) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-sm bg-white p-6 rounded-3xl border border-zinc-200 text-center space-y-4">
-          <AlertCircle className="w-10 h-10 text-red-500 mx-auto" />
-          <h2 className="font-heading font-bold text-lg text-zinc-900">
+      <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center p-4">
+        <div className="w-full max-w-sm bg-white p-6 rounded-[8px] border-2 border-[var(--forest)] shadow-[4px_4px_0px_var(--forest)] text-center space-y-4">
+          <AlertCircle className="w-10 h-10 text-[var(--danger)] mx-auto" />
+          <h2 className="font-heading font-bold text-lg text-[var(--forest)]">
             Pesanan Tidak Ditemukan
           </h2>
-          <p className="text-xs text-zinc-500">{error || "Tautan pesanan tidak valid atau telah kedaluwarsa."}</p>
+          <p className="text-xs text-[var(--muted)]">{error || "Tautan pesanan tidak valid atau telah kedaluwarsa."}</p>
           <Link href={`/t/${slug}`}>
             <Button variant="secondary" size="md" className="w-full gap-2">
               <ArrowLeft className="w-4 h-4" />
@@ -144,68 +144,68 @@ export default function OrderStatusPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-100/70 text-zinc-900 flex flex-col items-center p-0 sm:p-4 selection:bg-[var(--leaf)] selection:text-white">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col items-center p-0 sm:p-4 selection:bg-[var(--leaf)] selection:text-white">
       {/* Container maks. 480px per design.md 4.3 */}
-      <div className="w-full max-w-[480px] min-h-screen sm:min-h-0 bg-white sm:rounded-3xl border-x sm:border border-[var(--line)] shadow-sm overflow-hidden pb-12">
+      <div className="w-full max-w-[480px] min-h-screen sm:min-h-0 bg-[var(--bg)] sm:rounded-[8px] border-x-2 sm:border-2 border-[var(--forest)] sm:shadow-[6px_6px_0px_var(--forest)] overflow-hidden pb-12">
         {/* Header navigation */}
-        <header className="p-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
+        <header className="p-3.5 border-b-2 border-[var(--forest)] flex items-center justify-between bg-white shadow-[0_2px_0px_var(--line)]">
           <Link
             href={`/t/${slug}`}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-600 hover:text-zinc-950 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-white hover:bg-[var(--surface-2)] text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-xs font-semibold transition-all"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Kembali ke Menu</span>
+            <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+            <span>Menu Toko</span>
           </Link>
 
           <button
             type="button"
             onClick={handleCopyLink}
-            className="inline-flex items-center gap-1 text-[11px] font-medium text-zinc-500 hover:text-zinc-900 bg-white border border-zinc-200 px-2.5 py-1 rounded-full shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-[6px] bg-white hover:bg-[var(--surface-2)] text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-xs font-medium cursor-pointer transition-all"
             title="Salin tautan status pesanan"
           >
             {copied ? (
               <>
-                <Check className="w-3 h-3 text-[var(--leaf)]" />
-                <span className="text-[var(--leaf)]">Tersalin!</span>
+                <Check className="w-3.5 h-3.5 text-[var(--leaf)] stroke-[2.5]" />
+                <span className="text-[var(--leaf)] font-bold">Tersalin!</span>
               </>
             ) : (
               <>
-                <Copy className="w-3 h-3" />
+                <Copy className="w-3.5 h-3.5" />
                 <span>Salin Tautan</span>
               </>
             )}
           </button>
         </header>
 
-        {/* 1. Queue Number Bintang Utama (design.md 6.3) */}
-        <div className="p-6 text-center bg-white space-y-3 relative overflow-hidden">
+        {/* 1. Queue Number Bintang Utama (design.md 6.3: Border putus-putus 3px warna Hutan di atas latar putih) */}
+        <div className="p-5 text-center bg-white space-y-3 relative overflow-hidden border-b-2 border-[var(--forest)]">
           {/* Cap Lunas Overlay (design.md 6.4) */}
           {isPaid && (
-            <div className="absolute top-4 right-5 z-20 pointer-events-none">
+            <div className="absolute top-4 right-4 z-20 pointer-events-none">
               <StampLunas />
             </div>
           )}
 
-          <div className="p-6 rounded-3xl border-2 border-dashed border-[var(--line)] bg-zinc-50/60 max-w-[340px] mx-auto space-y-1">
-            <span className="text-[11px] font-bold tracking-widest uppercase text-zinc-400 block">
+          <div className="p-6 rounded-[8px] border-3 border-dashed border-[var(--forest)] bg-white max-w-[340px] mx-auto space-y-1 shadow-[4px_4px_0px_var(--forest)]">
+            <span className="text-[11px] font-bold tracking-widest uppercase text-[var(--muted)] block">
               Nomor Antrian Kamu
             </span>
-            <div className="font-heading font-extrabold text-6xl sm:text-7xl text-zinc-950 tracking-tight tabular-nums py-1">
+            <div className="font-heading font-extrabold text-6xl sm:text-7xl text-[var(--forest)] tracking-tight tabular-nums py-1">
               {formattedQueue}
             </div>
-            <span className="text-xs font-semibold text-[var(--leaf)] block">
+            <span className="text-xs font-bold text-[var(--leaf)] block font-heading">
               {order.storeName}
             </span>
           </div>
         </div>
 
         {/* 2. Order Status Timeline (design.md 9.4) */}
-        <div className="px-6 py-4 border-y border-zinc-100 bg-zinc-50/40">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-3">
-            Status Pesanan
+        <div className="px-4 py-3.5 border-b-2 border-[var(--forest)] bg-[var(--surface-2)]">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--forest)] block mb-2.5">
+            Tahapan Pesanan
           </span>
 
-          <div className="grid grid-cols-4 gap-1.5 text-center">
+          <div className="grid grid-cols-4 gap-2 text-center">
             {timelineSteps.map((step) => {
               const status = getStepStatus(step.key);
               const isCurrent = status === "current";
@@ -214,23 +214,23 @@ export default function OrderStatusPage() {
               return (
                 <div key={step.key} className="flex flex-col items-center space-y-1.5">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                    className={`w-9 h-9 rounded-[6px] border-2 flex items-center justify-center transition-all ${
                       isCompleted
-                        ? "bg-[var(--leaf)] text-white"
+                        ? "bg-[var(--leaf)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
                         : isCurrent
-                        ? "bg-emerald-100 text-[var(--leaf)] ring-4 ring-emerald-50 font-bold"
-                        : "bg-zinc-100 text-zinc-400"
+                        ? "bg-[var(--mint)] text-[var(--ink)] border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] font-bold ring-2 ring-[var(--forest)]"
+                        : "bg-white text-[var(--disabled-text)] border-[var(--line)] shadow-none"
                     }`}
                   >
-                    <step.icon className="w-4 h-4" />
+                    <step.icon className="w-4 h-4 stroke-[2.5]" />
                   </div>
                   <span
                     className={`text-[10px] leading-tight font-medium ${
                       isCurrent
-                        ? "text-zinc-950 font-bold"
+                        ? "text-[var(--forest)] font-bold"
                         : isCompleted
-                        ? "text-zinc-700"
-                        : "text-zinc-400"
+                        ? "text-[var(--forest)]"
+                        : "text-[var(--muted)]"
                     }`}
                   >
                     {step.label}
@@ -241,26 +241,26 @@ export default function OrderStatusPage() {
           </div>
         </div>
 
-        {/* 3. Payment Instruction Section (QRIS or Cash) */}
-        <div className="p-6 space-y-4">
+        {/* 3. Payment Instruction Section (QRIS or Cash per design.md 9.5) */}
+        <div className="p-4 sm:p-5 space-y-4">
           {order.status === "menunggu_bayar" && (
-            <div className="p-5 rounded-3xl bg-zinc-50 border border-zinc-200/90 text-center space-y-4">
+            <div className="p-5 rounded-[8px] bg-white border-2 border-[var(--forest)] shadow-[4px_4px_0px_var(--forest)] text-center space-y-4">
               {order.paymentMethod === "qris" ? (
                 <>
                   <div className="space-y-1">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--leaf)]">
                       Pembayaran QRIS
                     </span>
-                    <h3 className="font-heading font-bold text-lg text-zinc-950">
+                    <h3 className="font-heading font-bold text-lg text-[var(--forest)]">
                       Scan QR untuk Membayar
                     </h3>
-                    <p className="text-xs text-zinc-500">
+                    <p className="text-xs text-[var(--muted)]">
                       Buka aplikasi m-banking atau e-wallet (BCA, GoPay, OVO, ShopeePay, Dana, dll.)
                     </p>
                   </div>
 
-                  {/* QR Code Display */}
-                  <div className="w-[240px] h-[240px] bg-white p-3 rounded-2xl border border-zinc-200 mx-auto shadow-2xs flex items-center justify-center">
+                  {/* QR Code Display per design.md 9.5: Modul hitam latar putih zona tenang */}
+                  <div className="w-[240px] h-[240px] bg-white p-3 rounded-[8px] border-2 border-[var(--forest)] mx-auto shadow-[3px_3px_0px_var(--forest)] flex items-center justify-center">
                     {qrDataUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -269,20 +269,20 @@ export default function OrderStatusPage() {
                         className="w-full h-full object-contain"
                       />
                     ) : (
-                      <Loader2 className="w-8 h-8 animate-spin text-zinc-400" />
+                      <Loader2 className="w-8 h-8 animate-spin text-[var(--forest)]" />
                     )}
                   </div>
 
-                  <div className="font-heading font-bold text-2xl text-zinc-950 tabular-nums">
+                  <div className="font-heading font-bold text-2xl text-[var(--forest)] tabular-nums">
                     {formatRupiah(order.total)}
                   </div>
 
                   <Button
                     variant="primary"
-                    size="md"
+                    size="lg"
                     onClick={handleConfirmPaid}
                     disabled={isPending}
-                    className="w-full gap-2 text-sm font-bold shadow-md rounded-2xl"
+                    className="w-full gap-2 text-sm sm:text-base font-bold shadow-[3px_3px_0px_var(--forest)] h-12"
                   >
                     {isPending ? (
                       <>
@@ -299,24 +299,24 @@ export default function OrderStatusPage() {
                 </>
               ) : (
                 <div className="space-y-2 py-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-amber-700">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--forest)]">
                     Pembayaran Tunai di Kasir
                   </span>
-                  <h3 className="font-heading font-bold text-lg text-zinc-950">
+                  <h3 className="font-heading font-bold text-lg text-[var(--forest)]">
                     Silakan Menuju ke Meja Kasir
                   </h3>
-                  <p className="text-xs text-zinc-500 max-w-xs mx-auto leading-relaxed">
-                    Sebutkan nomor antrian Anda <strong className="text-zinc-900 font-bold">{formattedQueue}</strong> kepada kasir untuk membayar sebesar{" "}
-                    <strong className="text-zinc-900 font-bold tabular-nums">{formatRupiah(order.total)}</strong>.
+                  <p className="text-xs text-[var(--muted)] max-w-xs mx-auto leading-relaxed">
+                    Sebutkan nomor antrian kamu <strong className="text-[var(--forest)] font-bold">{formattedQueue}</strong> kepada kasir untuk membayar sebesar{" "}
+                    <strong className="text-[var(--forest)] font-bold tabular-nums">{formatRupiah(order.total)}</strong>.
                   </p>
                 </div>
               )}
             </div>
           )}
 
-          {/* 4. Rincian Nota Pesanan (Receipt Detail with DotLeader) */}
-          <div className="p-5 rounded-3xl bg-white border border-zinc-200/80 space-y-3">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block border-b border-zinc-100 pb-2">
+          {/* 4. Rincian Nota Pesanan (Receipt Detail with DotLeader design.md 6.2) */}
+          <div className="p-4 sm:p-5 rounded-[8px] bg-white border-2 border-[var(--forest)] shadow-[4px_4px_0px_var(--forest)] space-y-3">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--forest)] block border-b-2 border-dashed border-[var(--forest)] pb-2">
               Rincian Menu Pesanan
             </span>
 
@@ -327,13 +327,13 @@ export default function OrderStatusPage() {
                   name={item.name}
                   qty={item.qty}
                   price={item.price * item.qty}
-                  className="text-xs text-zinc-800"
+                  className="text-xs text-[var(--forest)]"
                 />
               ))}
             </div>
 
-            <div className="pt-3 border-t border-dashed border-zinc-200 flex items-baseline justify-between">
-              <span className="font-heading font-bold text-sm text-zinc-950">
+            <div className="pt-3 border-t-2 border-dashed border-[var(--forest)] flex items-baseline justify-between">
+              <span className="font-heading font-bold text-sm text-[var(--forest)]">
                 Total
               </span>
               <span className="font-heading font-bold text-lg text-[var(--leaf)] tabular-nums">
