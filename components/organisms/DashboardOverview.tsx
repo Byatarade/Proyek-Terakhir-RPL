@@ -161,11 +161,17 @@ export function DashboardOverview({
           </p>
         </div>
 
-        <div className="pt-2 flex justify-center gap-3">
+        <div className="pt-2 flex flex-wrap justify-center gap-3">
           <Link href="/dashboard/menu">
             <Button variant="secondary" size="md" className="gap-2 text-xs sm:text-sm">
               <span>Kelola Daftar Menu</span>
               <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
+          <Link href="/dashboard/pengaturan">
+            <Button variant="secondary" size="md" className="gap-2 text-xs sm:text-sm">
+              <QrCode className="w-4 h-4 text-[var(--leaf)]" />
+              <span>Kelola QRIS & Pembayaran</span>
             </Button>
           </Link>
         </div>
