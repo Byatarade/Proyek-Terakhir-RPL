@@ -7,7 +7,7 @@ import { DotLeader } from "@/components/molecules/DotLeader";
 import { StampLunas } from "@/components/molecules/StampLunas";
 import { TicketCard, TicketPerforation } from "@/components/molecules/TicketCard";
 import { formatRupiah } from "@/lib/utils";
-import { ArrowRight, CheckCircle2, QrCode, Sparkles, Clock, Check } from "lucide-react";
+import { ArrowRight, CheckCircle2, QrCode, Clock, Check } from "lucide-react";
 
 export function HeroSection() {
   const { hero } = landingContent;
@@ -19,16 +19,6 @@ export function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
           {/* Left Column: Copywriting & CTAs - 7 cols */}
           <div className="lg:col-span-7 space-y-6 sm:space-y-7">
-            {/* Pill Badge */}
-            <div className="inline-flex items-center">
-              <Badge variant="mint" size="md" className="py-1 px-3.5 shadow-subtle">
-                <Sparkles className="w-3.5 h-3.5 text-zinc-900" />
-                <span className="font-heading tracking-wide uppercase text-[11px] font-semibold">
-                  {hero.badge}
-                </span>
-              </Badge>
-            </div>
-
             {/* Display Headline */}
             <h1 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-[54px] lg:leading-[1.12] tracking-tight text-zinc-950">
               {hero.headline}

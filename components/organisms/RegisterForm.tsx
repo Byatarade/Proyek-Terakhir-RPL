@@ -14,11 +14,11 @@ import {
   AlertCircle,
   CheckCircle2,
   Loader2,
-  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { FormField } from "@/components/molecules/FormField";
+import { EmailVerificationPending } from "@/components/molecules/EmailVerificationPending";
 import {
   registerOwnerAction,
   checkSlugAction,
@@ -108,45 +108,12 @@ export function RegisterForm() {
   // If email verification is pending (FR-AU-02)
   if (formResult?.success && formResult.requiresEmailVerification) {
     return (
-      <div className="py-6 px-4 text-center space-y-6 animate-stamp">
-        <div className="w-16 h-16 rounded-2xl bg-[var(--surface-2)] border-2 border-[var(--forest)] text-[var(--forest)] mx-auto flex items-center justify-center shadow-subtle">
-          <Mail className="w-8 h-8 text-[var(--leaf)]" />
-        </div>
-
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[var(--surface-2)] border border-[var(--line)] text-[var(--forest)] text-xs font-semibold">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--leaf)]" />
-            <span>Pendaftaran Akun Berhasil</span>
-          </div>
-          <h2 className="font-heading font-extrabold text-2xl text-[var(--ink)]">
-            Periksa Kotak Masuk Email Anda
-          </h2>
-          <p className="text-sm text-[var(--muted)] max-w-md mx-auto leading-relaxed">
-            Kami telah mengirimkan tautan aktivasi ke{" "}
-            <strong className="text-[var(--ink)] font-semibold">{email}</strong>.
-            Klik tautan tersebut untuk mengonfirmasi akun toko Anda dan memulai onboarding.
-          </p>
-        </div>
-
-        <div className="p-4 rounded-xl bg-[var(--surface-2)] border border-[var(--line)] text-left text-xs text-[var(--muted)] space-y-1.5 max-w-md mx-auto">
-          <p className="font-semibold text-[var(--ink)]">Belum menerima email?</p>
-          <p>
-            1. Periksa folder <strong>Spam / Promosi</strong> di akun email Anda.
-          </p>
-          <p>
-            2. Pastikan alamat email yang dimasukkan sudah benar.
-          </p>
-        </div>
-
-        <div className="pt-2">
-          <Link href="/masuk?registered=true">
-            <Button variant="secondary" size="md" className="gap-2">
-              <span>Ke Halaman Masuk</span>
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <EmailVerificationPending
+        email={email}
+        storeName={storeName}
+        slug={slug}
+        onBackToEdit={() => setFormResult(null)}
+      />
     );
   }
 

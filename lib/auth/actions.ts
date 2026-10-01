@@ -288,6 +288,47 @@ export async function forgotPasswordAction(
 }
 
 /**
+ * Resend verification email for unconfirmed user (FR-AU-02)
+ */
+export async function resendVerificationEmailAction(
+  email: string
+): Promise<{ success: boolean; error?: string; message?: string }> {
+  try {
+    const supabase = await createClient();
+    const headerList = await headers();
+    const origin =
+      headerList.get("origin") ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "http://localhost:3000";
+
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: {
+        emailRedirectTo: `${origin}/auth/callback?next=/onboarding`,
+      },
+    });
+
+    if (error) {
+      return {
+        success: false,
+        error: error.message || "Gagal mengirim ulang email verifikasi.",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Tautan verifikasi baru berhasil dikirim. Silakan periksa email Anda.",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Terjadi kesalahan tak terduga.",
+    };
+  }
+}
+
+/**
  * Sign out user
  */
 export async function logoutUserAction() {
