@@ -41,7 +41,7 @@ export default function OrderStatusPage() {
   useEffect(() => {
     const loadData = async () => {
       if (!token) return;
-      const res = await getOrderStatusAction(token);
+      const res = await getOrderStatusAction(token, slug);
       if (res.success && res.data) {
         setOrder(res.data);
         setError(null);
@@ -74,12 +74,12 @@ export default function OrderStatusPage() {
     const interval = setInterval(loadData, 6000);
 
     return () => clearInterval(interval);
-  }, [token]);
+  }, [token, slug]);
 
   const handleConfirmPaid = () => {
     startTransition(async () => {
       await customerConfirmPaidAction(token);
-      const res = await getOrderStatusAction(token);
+      const res = await getOrderStatusAction(token, slug);
       if (res.success && res.data) {
         setOrder(res.data);
       }
@@ -268,8 +268,18 @@ export default function OrderStatusPage() {
                         alt="QRIS Pembayaran"
                         className="w-full h-full object-contain"
                       />
-                    ) : (
+                    ) : order.qrisPayload ? (
                       <Loader2 className="w-8 h-8 animate-spin text-[var(--forest)]" />
+                    ) : (
+                      <div className="p-3 text-center text-xs text-[var(--muted)] space-y-1.5">
+                        <AlertCircle className="w-6 h-6 text-amber-600 mx-auto" />
+                        <span className="font-bold block text-[var(--forest)] font-heading">
+                          QRIS Belum Diatur
+                        </span>
+                        <span className="text-[11px] leading-relaxed block">
+                          Toko ini belum mengunggah kode QRIS. Silakan lakukan pembayaran tunai di kasir.
+                        </span>
+                      </div>
                     )}
                   </div>
 

@@ -241,16 +241,30 @@ export function validateQris(rawPayload: string): QrisValidationResult {
   };
 }
 
+export interface DynamicQrisOptions {
+  /**
+   * Jika true (default), Tag 01 diubah ke "12" (Dynamic QRIS standar EMVCo).
+   * Jika false, Tag 01 tetap "11" (Static dengan Tag 54 nominal terisi).
+   * E-wallet (GoPay, DANA, OVO, ShopeePay) mendukung pengisian nominal otomatis pada Tag 54.
+   */
+  useDynamicInitiation?: boolean;
+}
+
 /**
  * Mengubah QRIS Statis menjadi QRIS Dinamis dengan menyisipkan nominal (Tag 54)
  * dan menghitung ulang checksum CRC16 (Tag 63)
  */
-export function toDynamicQris(payload: string, amount: number): string {
+export function toDynamicQris(
+  payload: string,
+  amount: number,
+  options?: DynamicQrisOptions
+): string {
   const validation = validateQris(payload);
   if (!validation.valid) {
     throw new Error(`QRIS tidak valid: ${validation.error}`);
   }
 
+  const useDynamic = options?.useDynamicInitiation ?? true;
   const items = parseTlv(payload);
   const amountStr = Math.round(amount).toString();
   const formattedAmount = `54${amountStr.length.toString().padStart(2, "0")}${amountStr}`;
@@ -263,9 +277,9 @@ export function toDynamicQris(payload: string, amount: number): string {
     // Abaikan Tag 63 lama karena akan dihitung ulang di akhir
     if (item.tag === "63") continue;
 
-    // Jika Tag 01, ubah menjadi "12" (Dynamic)
+    // Jika Tag 01, ubah menjadi "12" jika useDynamic = true, atau biarkan tetap asli
     if (item.tag === "01") {
-      output += "010212";
+      output += useDynamic ? "010212" : `01${item.length.toString().padStart(2, "0")}${item.value}`;
       continue;
     }
 

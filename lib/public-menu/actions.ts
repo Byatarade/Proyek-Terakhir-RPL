@@ -1,7 +1,9 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { PaymentMethod } from "@/lib/types/database";
+import { toDynamicQris } from "@/lib/payments/qris";
 
 export interface PublicProduct {
   id: string;
@@ -41,8 +43,8 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
   isOpen: true,
   acceptCash: true,
   acceptQris: true,
-  qrisMerchantName: "Ababil Cake Official",
-  qrisPayload: "00020101021126600014ID.LINKAJA.WWW0118936009110022204561021000000000010303UMI51440014ID.CO.QRIS.WWW0215ID10200212345670303UMI5204581253033605802ID5911Ababil Cake6007Jakarta61051234062070703A016304D1B9",
+  qrisMerchantName: null,
+  qrisPayload: null,
   categories: [
     {
       id: "cat-kue-spesial",
@@ -163,7 +165,7 @@ export async function getPublicStoreMenuAction(
     const { data: store, error: storeError } = await supabase
       .from("stores")
       .select("id, name, slug, is_open, accept_cash, accept_qris, qris_merchant_name, qris_payload")
-      .or(`slug.eq.${normalizedSlug},slug.eq.ababil-cake,slug.eq.ababilcake-menu`)
+      .eq("slug", normalizedSlug)
       .maybeSingle();
 
     if (storeError || !store) {
@@ -307,7 +309,7 @@ export async function createCustomerOrderAction(
       return { success: false, error: "Keranjang belanja kosong." };
     }
 
-    const supabase = await createClient();
+    const supabase = createAdminClient();
 
     // Dapatkan data toko
     const { data: store } = await supabase
@@ -459,10 +461,11 @@ export interface OrderStatusData {
  * Mengambil status pesanan berdasarkan public_token (PRD FR-OR-04)
  */
 export async function getOrderStatusAction(
-  token: string
+  token: string,
+  slug?: string
 ): Promise<{ success: boolean; data?: OrderStatusData; error?: string }> {
   try {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
 
     const { data: order } = await supabase
       .from("orders")
@@ -487,6 +490,17 @@ export async function getOrderStatusAction(
         }
       ).stores;
 
+      // Manipulasi QRIS statis toko menjadi QRIS ber-nominal pesanan (Tag 54) + hitung ulang CRC16
+      const basePayload = store?.qris_payload || null;
+      let finalQrisPayload = basePayload;
+      if (basePayload && order.total > 0) {
+        try {
+          finalQrisPayload = toDynamicQris(basePayload, order.total);
+        } catch {
+          finalQrisPayload = basePayload;
+        }
+      }
+
       return {
         success: true,
         data: {
@@ -500,8 +514,8 @@ export async function getOrderStatusAction(
           paymentMethod: order.payment_method,
           paidAt: order.paid_at,
           expiresAt: order.expires_at,
-          qrisPayload: store?.qris_payload,
-          qrisMerchantName: store?.qris_merchant_name,
+          qrisPayload: finalQrisPayload,
+          qrisMerchantName: store?.qris_merchant_name || null,
           items: (items || []).map((it) => ({
             name: it.product_name,
             qty: it.qty,
@@ -511,13 +525,56 @@ export async function getOrderStatusAction(
       };
     }
 
-    // Fallback data untuk demo token
+    // Jika order belum ditemukan di database (misal demo token), ambil data toko dari slug
+    if (slug) {
+      const { data: storeBySlug } = await supabase
+        .from("stores")
+        .select("name, slug, qris_payload, qris_merchant_name")
+        .eq("slug", slug)
+        .maybeSingle();
+
+      if (storeBySlug) {
+        let finalDynamicQris = storeBySlug.qris_payload;
+        if (finalDynamicQris) {
+          try {
+            finalDynamicQris = toDynamicQris(finalDynamicQris, 56000);
+          } catch {
+            finalDynamicQris = storeBySlug.qris_payload;
+          }
+        }
+
+        return {
+          success: true,
+          data: {
+            orderId: "demo-" + token,
+            storeName: storeBySlug.name,
+            storeSlug: storeBySlug.slug,
+            queueNumber: 12,
+            queueDate: new Date().toISOString().split("T")[0],
+            status: "menunggu_bayar",
+            total: 56000,
+            paymentMethod: "qris",
+            paidAt: null,
+            expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+            qrisPayload: finalDynamicQris,
+            qrisMerchantName: storeBySlug.qris_merchant_name,
+            items: [
+              { name: "Choco Fudge Slice Cake", qty: 1, price: 28000 },
+              { name: "Butter Croissant French Style", qty: 1, price: 22000 },
+              { name: "Es Kopi Susu Gula Aren", qty: 1, price: 18000 },
+            ],
+          },
+        };
+      }
+    }
+
+    // Fallback data umum
     return {
       success: true,
       data: {
         orderId: "demo-" + token,
-        storeName: "Ababil Cake & Bakery",
-        storeSlug: "ababilcake-menu",
+        storeName: "Toko",
+        storeSlug: slug || "menu",
         queueNumber: 12,
         queueDate: new Date().toISOString().split("T")[0],
         status: "menunggu_bayar",
@@ -525,8 +582,8 @@ export async function getOrderStatusAction(
         paymentMethod: "qris",
         paidAt: null,
         expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
-        qrisPayload: SAMPLE_ABABIL_CAKE_DATA.qrisPayload,
-        qrisMerchantName: SAMPLE_ABABIL_CAKE_DATA.qrisMerchantName,
+        qrisPayload: null,
+        qrisMerchantName: null,
         items: [
           { name: "Choco Fudge Slice Cake", qty: 1, price: 28000 },
           { name: "Butter Croissant French Style", qty: 1, price: 22000 },
@@ -549,7 +606,7 @@ export async function customerConfirmPaidAction(
   token: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
 
     const { data: order } = await supabase
       .from("orders")
