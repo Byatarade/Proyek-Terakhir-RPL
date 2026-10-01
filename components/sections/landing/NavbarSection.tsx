@@ -1,14 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { landingContent } from "@/content/landing";
 import { Button } from "@/components/atoms/Button";
-import { Receipt, Menu, X, ArrowRight, Store } from "lucide-react";
+import { Receipt, Menu, X, ArrowRight, Store, User } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export function NavbarSection() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { navbar, brand } = landingContent;
+
+  useEffect(() => {
+    const supabase = createClient();
+    
+    // Check initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[var(--bg)]/90 backdrop-blur-md border-b border-[var(--line)] transition-all">
@@ -49,17 +71,28 @@ export function NavbarSection() {
 
         {/* Action Buttons (Desktop) */}
         <div className="hidden sm:flex items-center gap-3">
-          <Link href={navbar.loginHref}>
-            <Button variant="ghost" size="sm" className="font-medium text-sm">
-              {navbar.loginText}
-            </Button>
-          </Link>
-          <Link href={navbar.registerHref}>
-            <Button variant="primary" size="md" className="gap-2 text-sm">
-              <Store className="w-4 h-4 text-white" />
-              {navbar.registerText}
-            </Button>
-          </Link>
+          {isLoggedIn ? (
+            <Link href="/dashboard">
+              <Button variant="primary" size="md" className="gap-2 text-sm">
+                <User className="w-4 h-4 text-white" />
+                Akun Saya
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link href={navbar.loginHref}>
+                <Button variant="ghost" size="sm" className="font-medium text-sm">
+                  {navbar.loginText}
+                </Button>
+              </Link>
+              <Link href={navbar.registerHref}>
+                <Button variant="primary" size="md" className="gap-2 text-sm">
+                  <Store className="w-4 h-4 text-white" />
+                  {navbar.registerText}
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Hamburger Button */}
@@ -90,17 +123,28 @@ export function NavbarSection() {
             ))}
           </nav>
           <div className="pt-4 border-t border-[var(--line)] flex flex-col gap-2.5">
-            <Link href={navbar.loginHref} onClick={() => setMobileMenuOpen(false)}>
-              <Button variant="secondary" size="md" className="w-full">
-                {navbar.loginText}
-              </Button>
-            </Link>
-            <Link href={navbar.registerHref} onClick={() => setMobileMenuOpen(false)}>
-              <Button variant="primary" size="md" className="w-full gap-2">
-                {navbar.registerText}
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                <Button variant="primary" size="md" className="w-full gap-2">
+                  <User className="w-4 h-4" />
+                  Akun Saya
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link href={navbar.loginHref} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="secondary" size="md" className="w-full">
+                    {navbar.loginText}
+                  </Button>
+                </Link>
+                <Link href={navbar.registerHref} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="primary" size="md" className="w-full gap-2">
+                    {navbar.registerText}
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
