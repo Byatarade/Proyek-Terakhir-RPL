@@ -25,17 +25,18 @@ export function DashboardShell({
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] flex">
+    <div className="min-h-screen bg-white flex">
       {/* Sidebar Navigation */}
       <Sidebar
         role={role}
         storeName={storeName}
+        storeSlug={storeSlug}
         isOpen={mobileSidebarOpen}
         onClose={() => setMobileSidebarOpen(false)}
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 bg-white">
         {/* TopBar with Store Info & Logout */}
         <TopBar
           storeName={storeName}
@@ -47,7 +48,7 @@ export function DashboardShell({
         />
 
         {/* Page Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1280px] w-full mx-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1280px] w-full mx-auto bg-white">
           {children}
         </main>
       </div>

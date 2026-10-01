@@ -13,7 +13,6 @@ export function AuthLayout({
   children,
   title,
   subtitle,
-  type = "login",
 }: AuthLayoutProps) {
   return (
     <div className="min-h-screen bg-[var(--bg)] flex flex-col justify-between selection:bg-[var(--leaf)] selection:text-white">

@@ -20,24 +20,24 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // Minimalist: Clean 10px rounded, smooth transitions, subtle micro-elevation
+    // Minimalist Landing Page Style: Clean rounded corners, elegant subtle shadows, smooth transitions
     const baseStyles =
-      "inline-flex items-center justify-center font-medium rounded-md transition-all duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--leaf)]/40 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer btn-minimal";
+      "inline-flex items-center justify-center font-medium rounded-xl transition-all duration-150 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--leaf)]/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
 
     const variantStyles = {
-      // Primary: Vibrant Bright Green (Emerald 500) with clean soft shadow
+      // Primary: Vibrant Emerald Green, subtle elevation
       primary:
-        "bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white shadow-subtle hover:shadow-card font-medium",
-      // Secondary: Crisp white with fine subtle border and clean black text
+        "bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white shadow-xs hover:shadow-sm active:scale-[0.99]",
+      // Secondary: Crisp white with refined fine border
       secondary:
-        "bg-white hover:bg-[var(--surface-2)] text-zinc-900 border border-[var(--line-strong)] shadow-subtle hover:border-zinc-400 hover:text-black",
+        "bg-white hover:bg-zinc-50 text-zinc-900 border border-zinc-200 shadow-xs hover:border-zinc-300 active:scale-[0.99]",
       // Danger: Clean red with soft shadow
       danger:
-        "bg-[var(--danger)] hover:bg-[var(--danger-hover)] text-white shadow-subtle",
-      // Ghost: Clean black text with light hover
+        "bg-[var(--danger)] hover:bg-[var(--danger-hover)] text-white shadow-xs active:scale-[0.99]",
+      // Ghost: Subtle hover on transparent
       ghost:
-        "bg-transparent hover:bg-[var(--surface-2)] text-zinc-900 hover:text-black",
-      // Link: Clean text link
+        "bg-transparent hover:bg-zinc-100 text-zinc-700 hover:text-zinc-950",
+      // Link: Clean inline text link
       link:
         "bg-transparent text-[var(--leaf)] hover:underline p-0 h-auto",
     };

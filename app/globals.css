@@ -1,44 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  /* Hijau Terang & Segar (Fresh Vibrant Green Palette) */
-  --forest: #0D5C3A;       /* Hijau Zamrud Segar & Elegan (lebih terang & hidup) */
-  --forest-2: #08432A;     /* Hover state */
-  --leaf: #10B981;         /* Hijau Terang Utama (Emerald 500 - Cerah & Modern) */
-  --leaf-hover: #059669;   /* Emerald 600 */
-  --leaf-active: #047857;  /* Emerald 700 */
-  --mint: #34D399;         /* Hijau Mint Terang (Emerald 400) */
-  --mint-light: #ECFDF5;   /* Hijau Terang Pastel (Emerald 50) */
-  --lime-accent: #22C55E;  /* Hijau Daun Muda Segar */
+  /* Hijau Nota (design.md) */
+  --forest: #0F3D2A;
+  --forest-2: #17513A;
+  --leaf: #1B7F45;
+  --leaf-hover: #166B3A;
+  --leaf-active: #125A31;
+  --mint: #A5D8B4;
 
-  /* Netral Bersih (Putih Penuh) */
+  /* Netral (Latar belakang putih murni sesuai permintaan pengguna) */
   --bg: #FFFFFF;
   --surface: #FFFFFF;
-  --surface-2: #F9FAFB;
-  --line: #E5E7EB;
-  --line-strong: #D1D5DB;
-  --control: #9CA3AF;
-  --disabled-bg: #F3F4F6;
-  --disabled-text: #9CA3AF;
-  --ink: #0A0A0A;          /* Hitam Murni Bersih untuk Seluruh Teks */
-  --muted: #52525B;        /* Abu-abu Netral Bersih untuk Teks Pendukung */
+  --surface-2: #EAF4EC;
+  --line: #CFE0D2;
+  --control: #6F8B78;
+  --disabled-bg: #E3ECE5;
+  --disabled-text: #7A8C80;
+  --ink: #12201A;
+  --muted: #4F6357;
 
   /* Semantik */
-  --danger: #D9381E;
-  --danger-hover: #B82E17;
-  --amber: #F59E0B;
-  --blue: #2563EB;
-  --brick: #C2410C;
-  --gray-green: #64748B;
+  --danger: #C8371F;
+  --danger-hover: #A82D18;
+  --amber: #F2B01E;
+  --blue: #2F5D8A;
+  --brick: #B4501C;
+  --gray-green: #6F8076;
 
-  /* Bentuk & Elevasi Minimalis */
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* Bentuk & Elevasi (design.md) */
+  --radius-sm: 6px;
+  --radius: 8px;
+  --shadow-hard-sm: 3px 3px 0 var(--forest);
+  --shadow-hard: 4px 4px 0 var(--forest);
+  --shadow-hard-lg: 6px 6px 0 var(--forest);
 
-  /* Gerak Halus Minimalis */
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Gerak */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --ease-stamp: cubic-bezier(0.2, 1.4, 0.4, 1);
 }
 
 @theme {
@@ -48,14 +47,11 @@
   --color-leaf-hover: var(--leaf-hover);
   --color-leaf-active: var(--leaf-active);
   --color-mint: var(--mint);
-  --color-mint-light: var(--mint-light);
-  --color-lime: var(--lime-accent);
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
   --color-control: var(--control);
   --color-disabled-bg: var(--disabled-bg);
   --color-disabled-text: var(--disabled-text);
@@ -89,83 +85,79 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Minimalist Soft Layered Shadows */
+/* Bayangan Keras Hijau Nota (design.md 5.3) */
+.shadow-hard-sm {
+  box-shadow: 3px 3px 0 var(--forest);
+}
+
+.shadow-hard {
+  box-shadow: 4px 4px 0 var(--forest);
+}
+
+.shadow-hard-lg {
+  box-shadow: 6px 6px 0 var(--forest);
+}
+
+/* Minimalist Subtle Elevation (Landing Page & Dashboard) */
 .shadow-subtle {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
 }
 
 .shadow-card {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 6px 20px -4px rgba(0, 0, 0, 0.05);
-}
-
-.shadow-card-hover {
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 4px 16px -2px rgba(0, 0, 0, 0.04);
 }
 
 .shadow-elevated {
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.08);
 }
 
-/* Minimalist Button Micro-interactions */
-.btn-minimal {
-  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.btn-minimal:hover {
-  transform: translateY(-1px);
-}
-.btn-minimal:active {
-  transform: translateY(0);
-  opacity: 0.96;
-}
-
-/* Refined Dot Leader */
+/* Refined Dot Leader (design.md 6.2) */
 .dot-leader {
   flex-grow: 1;
-  border-bottom: 1.5px dotted var(--line-strong);
+  border-bottom: 2px dotted var(--forest);
   margin: 0 10px;
   position: relative;
   top: -4px;
-  opacity: 0.7;
 }
 
-/* Clean Receipt Notches */
+/* Clean Receipt Notches (design.md 6.1) */
 .ticket-notch-left,
 .ticket-notch-right {
   position: absolute;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   background-color: var(--bg);
   border-radius: 9999px;
   border: 1px solid var(--line);
   z-index: 10;
 }
 .ticket-notch-left {
-  left: -9px;
+  left: -8px;
 }
 .ticket-notch-right {
-  right: -9px;
+  right: -8px;
 }
 
-/* Modern Minimalist Verification Stamp */
+/* Cap LUNAS Stamp Animation (design.md 6.4) */
 @keyframes stampIn {
   0% {
     opacity: 0;
-    transform: scale(1.15) rotate(-6deg);
+    transform: scale(1.6) rotate(-12deg);
   }
   100% {
     opacity: 1;
-    transform: scale(1) rotate(-3deg);
+    transform: scale(1) rotate(-4deg);
   }
 }
 
 .animate-stamp {
-  animation: stampIn 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: stampIn 220ms cubic-bezier(0.2, 1.4, 0.4, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-stamp {
     animation: none !important;
-    transform: rotate(-3deg) !important;
+    transform: rotate(-4deg) !important;
     opacity: 1 !important;
   }
   html {

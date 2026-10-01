@@ -13,72 +13,92 @@ import {
   QrCode,
   Settings,
   X,
-  Users,
+  Store,
+  ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserRole } from "@/lib/types/database";
 
-interface NavItem {
-  label: string;
-  href: string;
-  icon: React.ReactNode;
-  roles: UserRole[];
+interface NavGroup {
+  title: string;
+  items: {
+    label: string;
+    href: string;
+    icon: React.ReactNode;
+    roles: UserRole[];
+  }[];
 }
 
-const NAV_ITEMS: NavItem[] = [
+const NAV_GROUPS: NavGroup[] = [
   {
-    label: "Beranda",
-    href: "/dashboard",
-    icon: <LayoutDashboard className="w-5 h-5" />,
-    roles: ["owner", "admin_gudang", "kasir", "koki"],
+    title: "OPERASIONAL",
+    items: [
+      {
+        label: "Beranda",
+        href: "/dashboard",
+        icon: <LayoutDashboard className="w-4 h-4" />,
+        roles: ["owner", "admin_gudang", "kasir", "koki"],
+      },
+      {
+        label: "Layar Kasir",
+        href: "/dashboard/kasir",
+        icon: <Receipt className="w-4 h-4" />,
+        roles: ["owner", "kasir"],
+      },
+      {
+        label: "Layar Dapur",
+        href: "/dashboard/dapur",
+        icon: <UtensilsCrossed className="w-4 h-4" />,
+        roles: ["owner", "koki"],
+      },
+    ],
   },
   {
-    label: "Layar Kasir",
-    href: "/dashboard/kasir",
-    icon: <Receipt className="w-5 h-5" />,
-    roles: ["owner", "kasir"],
+    title: "KATALOG & LAPORAN",
+    items: [
+      {
+        label: "Menu & Produk",
+        href: "/dashboard/menu",
+        icon: <Coffee className="w-4 h-4" />,
+        roles: ["owner", "admin_gudang"],
+      },
+      {
+        label: "Riwayat Transaksi",
+        href: "/dashboard/transaksi",
+        icon: <Clock className="w-4 h-4" />,
+        roles: ["owner", "kasir"],
+      },
+      {
+        label: "Laba Rugi & Biaya",
+        href: "/dashboard/laporan",
+        icon: <BarChart3 className="w-4 h-4" />,
+        roles: ["owner"],
+      },
+    ],
   },
   {
-    label: "Layar Dapur",
-    href: "/dashboard/dapur",
-    icon: <UtensilsCrossed className="w-5 h-5" />,
-    roles: ["owner", "koki"],
-  },
-  {
-    label: "Menu & Produk",
-    href: "/dashboard/menu",
-    icon: <Coffee className="w-5 h-5" />,
-    roles: ["owner", "admin_gudang"],
-  },
-  {
-    label: "Riwayat Transaksi",
-    href: "/dashboard/transaksi",
-    icon: <Clock className="w-5 h-5" />,
-    roles: ["owner", "kasir"],
-  },
-  {
-    label: "Laba Rugi & Biaya",
-    href: "/dashboard/laporan",
-    icon: <BarChart3 className="w-5 h-5" />,
-    roles: ["owner"],
-  },
-  {
-    label: "Cetak QR Menu",
-    href: "/dashboard/qr",
-    icon: <QrCode className="w-5 h-5" />,
-    roles: ["owner"],
-  },
-  {
-    label: "Pengaturan Toko",
-    href: "/dashboard/pengaturan",
-    icon: <Settings className="w-5 h-5" />,
-    roles: ["owner"],
+    title: "PENGATURAN",
+    items: [
+      {
+        label: "Cetak QR Menu",
+        href: "/dashboard/qr",
+        icon: <QrCode className="w-4 h-4" />,
+        roles: ["owner"],
+      },
+      {
+        label: "Pengaturan Toko",
+        href: "/dashboard/pengaturan",
+        icon: <Settings className="w-4 h-4" />,
+        roles: ["owner"],
+      },
+    ],
   },
 ];
 
 export interface SidebarProps {
   role?: UserRole;
   storeName?: string;
+  storeSlug?: string;
   isOpen?: boolean;
   onClose?: () => void;
 }
@@ -86,48 +106,52 @@ export interface SidebarProps {
 export function Sidebar({
   role = "owner",
   storeName,
+  storeSlug,
   isOpen,
   onClose,
 }: SidebarProps) {
   const pathname = usePathname();
 
-  const filteredNavItems = NAV_ITEMS.filter((item) =>
-    item.roles.includes(role)
-  );
+  const roleLabelMap: Record<UserRole, string> = {
+    owner: "Pemilik Toko",
+    kasir: "Kasir",
+    koki: "Koki Dapur",
+    admin_gudang: "Admin Gudang",
+  };
 
   return (
     <>
       {/* Mobile Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs lg:hidden"
           onClick={onClose}
           aria-hidden="true"
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Sidebar Container: White background, subtle border, minimal aesthetic */}
       <aside
         className={cn(
-          "fixed top-0 bottom-0 left-0 z-50 w-64 bg-[var(--forest)] text-white flex flex-col justify-between transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static shrink-0 select-none shadow-card",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed top-0 bottom-0 left-0 z-50 w-64 bg-white border-r border-[var(--line)] flex flex-col justify-between transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static shrink-0 select-none",
+          isOpen ? "translate-x-0 shadow-lg" : "-translate-x-full"
         )}
       >
         <div className="flex flex-col h-full">
-          {/* Header Brand */}
-          <div className="h-16 px-5 border-b border-white/10 flex items-center justify-between">
+          {/* Header Brand: Matches Landing Page Navbar Logo */}
+          <div className="h-16 px-5 border-b border-[var(--line)] flex items-center justify-between">
             <Link
               href="/dashboard"
-              className="flex items-center gap-2.5 group focus:outline-none focus:ring-1 focus:ring-[var(--mint)] rounded p-1"
+              className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--leaf)] rounded-lg p-1"
             >
-              <div className="w-8 h-8 rounded-lg bg-white text-[var(--forest)] flex items-center justify-center font-medium">
+              <div className="w-8 h-8 rounded-xl bg-zinc-950 text-[var(--leaf)] flex items-center justify-center shadow-xs group-hover:bg-zinc-800 transition-colors">
                 <Receipt className="w-4 h-4 text-[var(--leaf)]" />
               </div>
               <div className="flex flex-col">
-                <span className="font-heading font-semibold text-lg text-white leading-none tracking-tight">
+                <span className="font-heading font-bold text-base tracking-tight text-zinc-950 leading-none">
                   PayBuy
                 </span>
-                <span className="text-[10px] text-white/60 tracking-wider uppercase font-medium mt-0.5">
+                <span className="text-[10px] font-medium tracking-wide uppercase text-zinc-400 mt-0.5">
                   Panel Toko
                 </span>
               </div>
@@ -136,72 +160,111 @@ export function Sidebar({
             {/* Mobile Close Button */}
             <button
               onClick={onClose}
-              className="lg:hidden p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 focus:outline-none"
+              className="lg:hidden p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors focus:outline-none"
               aria-label="Tutup menu samping"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Store Info Pill */}
+          {/* Store Info Card: Clean Minimalist Store Pill */}
           {storeName && (
-            <div className="mx-3.5 mt-3.5 px-3 py-2 rounded-lg bg-[var(--forest-2)]/70 border border-white/10">
-              <span className="text-[10px] uppercase tracking-wider text-[var(--mint)] font-medium block">
-                Toko Aktif
-              </span>
-              <span className="text-xs font-medium text-white truncate block">
-                {storeName}
-              </span>
+            <div className="mx-3.5 mt-3.5 p-3 rounded-xl bg-zinc-50 border border-zinc-200/70 flex items-center justify-between">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-7 h-7 rounded-lg bg-white border border-zinc-200 flex items-center justify-center text-zinc-700 shrink-0">
+                  <Store className="w-3.5 h-3.5 text-[var(--leaf)]" />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-xs font-semibold text-zinc-900 truncate">
+                    {storeName}
+                  </span>
+                  {storeSlug && (
+                    <span className="text-[10px] text-zinc-400 font-mono truncate">
+                      /t/{storeSlug}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {storeSlug && (
+                <Link
+                  href={`/t/${storeSlug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1 rounded text-zinc-400 hover:text-[var(--leaf)] hover:bg-white transition-colors"
+                  title="Buka menu publik"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              )}
             </div>
           )}
 
-          {/* Navigation Links */}
-          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-            {filteredNavItems.map((item) => {
-              const isActive =
-                item.href === "/dashboard"
-                  ? pathname === "/dashboard"
-                  : pathname.startsWith(item.href);
+          {/* Grouped Navigation Links */}
+          <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto">
+            {NAV_GROUPS.map((group) => {
+              const visibleItems = group.items.filter((item) =>
+                item.roles.includes(role)
+              );
+
+              if (visibleItems.length === 0) return null;
 
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative group",
-                    isActive
-                      ? "bg-[var(--forest-2)] text-white font-medium"
-                      : "text-white/75 hover:bg-[var(--forest-2)]/60 hover:text-white"
-                  )}
-                >
-                  {/* Active Indicator Border */}
-                  {isActive && (
-                    <span
-                      className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[var(--mint)] rounded-r"
-                      aria-hidden="true"
-                    />
-                  )}
-                  <span
-                    className={cn(
-                      "shrink-0 transition-colors",
-                      isActive
-                        ? "text-[var(--mint)]"
-                        : "text-white/60 group-hover:text-white"
-                    )}
-                  >
-                    {item.icon}
+                <div key={group.title} className="space-y-1">
+                  <span className="text-[10px] font-semibold tracking-wider uppercase text-zinc-400 px-3 block">
+                    {group.title}
                   </span>
-                  <span className="truncate">{item.label}</span>
-                </Link>
+                  <div className="space-y-0.5 pt-1">
+                    {visibleItems.map((item) => {
+                      const isActive =
+                        item.href === "/dashboard"
+                          ? pathname === "/dashboard"
+                          : pathname.startsWith(item.href);
+
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={onClose}
+                          className={cn(
+                            "flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-[13px] font-medium transition-all group relative",
+                            isActive
+                              ? "bg-emerald-50/80 text-[var(--leaf)] font-semibold border border-emerald-100"
+                              : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-950 border border-transparent"
+                          )}
+                        >
+                          <span
+                            className={cn(
+                              "shrink-0 transition-colors",
+                              isActive
+                                ? "text-[var(--leaf)]"
+                                : "text-zinc-400 group-hover:text-zinc-700"
+                            )}
+                          >
+                            {item.icon}
+                          </span>
+                          <span className="truncate">{item.label}</span>
+                          {isActive && (
+                            <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--leaf)]" />
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </nav>
 
-          {/* Footer role notice */}
-          <div className="p-3.5 border-t border-white/10 text-xs text-white/60 flex items-center justify-between">
-            <span className="capitalize">Peran: {role}</span>
-            <span className="text-[10px] font-mono text-[var(--mint)] bg-[var(--forest-2)] px-1.5 py-0.5 rounded">
+          {/* Footer User Role Notice: Clean Minimalist */}
+          <div className="p-3 border-t border-[var(--line)] bg-zinc-50/50 flex items-center justify-between text-xs text-zinc-500">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span className="capitalize font-medium text-zinc-700">
+                {roleLabelMap[role] || role}
+              </span>
+            </div>
+            <span className="text-[10px] font-mono text-zinc-400 bg-white px-1.5 py-0.5 rounded border border-zinc-200">
               v0.1
             </span>
           </div>
