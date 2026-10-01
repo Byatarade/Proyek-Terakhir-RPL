@@ -120,11 +120,11 @@ export function Sidebar({
               href="/dashboard"
               className="flex items-center gap-2.5 group focus:outline-none focus:ring-1 focus:ring-[var(--mint)] rounded p-1"
             >
-              <div className="w-8 h-8 rounded-lg bg-white text-[var(--forest)] flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-lg bg-white text-[var(--forest)] flex items-center justify-center font-medium">
                 <Receipt className="w-4 h-4 text-[var(--leaf)]" />
               </div>
               <div className="flex flex-col">
-                <span className="font-heading font-extrabold text-lg text-white leading-none tracking-tight">
+                <span className="font-heading font-semibold text-lg text-white leading-none tracking-tight">
                   PayBuy
                 </span>
                 <span className="text-[10px] text-white/60 tracking-wider uppercase font-medium mt-0.5">
@@ -146,10 +146,10 @@ export function Sidebar({
           {/* Store Info Pill */}
           {storeName && (
             <div className="mx-3.5 mt-3.5 px-3 py-2 rounded-lg bg-[var(--forest-2)]/70 border border-white/10">
-              <span className="text-[10px] uppercase tracking-wider text-[var(--mint)] font-semibold block">
+              <span className="text-[10px] uppercase tracking-wider text-[var(--mint)] font-medium block">
                 Toko Aktif
               </span>
-              <span className="text-xs font-semibold text-white truncate block">
+              <span className="text-xs font-medium text-white truncate block">
                 {storeName}
               </span>
             </div>
@@ -171,7 +171,7 @@ export function Sidebar({
                   className={cn(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative group",
                     isActive
-                      ? "bg-[var(--forest-2)] text-white font-semibold"
+                      ? "bg-[var(--forest-2)] text-white font-medium"
                       : "text-white/75 hover:bg-[var(--forest-2)]/60 hover:text-white"
                   )}
                 >

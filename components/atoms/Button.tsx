@@ -27,7 +27,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const variantStyles = {
       // Primary: Vibrant Bright Green (Emerald 500) with clean soft shadow
       primary:
-        "bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white shadow-subtle hover:shadow-card font-semibold",
+        "bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white shadow-subtle hover:shadow-card font-medium",
       // Secondary: Crisp white with fine subtle border and clean black text
       secondary:
         "bg-white hover:bg-[var(--surface-2)] text-zinc-900 border border-[var(--line-strong)] shadow-subtle hover:border-zinc-400 hover:text-black",
@@ -43,10 +43,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const sizeStyles = {
-      sm: "h-9 px-3.5 text-xs font-semibold",
-      md: "h-11 px-5 text-sm font-semibold",
-      lg: "h-12 px-6 text-base font-semibold",
-      xl: "h-14 px-8 text-base sm:text-lg font-semibold",
+      sm: "h-9 px-3.5 text-xs",
+      md: "h-11 px-5 text-sm",
+      lg: "h-12 px-6 text-base",
+      xl: "h-14 px-8 text-base sm:text-lg",
     };
 
     return (

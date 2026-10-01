@@ -218,7 +218,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
             <button
               type="button"
               onClick={() => setStep(1)}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center font-heading font-extrabold text-sm transition-all border ${
+              className={`w-10 h-10 rounded-xl flex items-center justify-center font-heading font-semibold text-sm transition-all border ${
                 step === 1
                   ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-card"
                   : step > 1
@@ -242,7 +242,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
             <button
               type="button"
               onClick={() => setStep(2)}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center font-heading font-extrabold text-sm transition-all border ${
+              className={`w-10 h-10 rounded-xl flex items-center justify-center font-heading font-semibold text-sm transition-all border ${
                 step === 2
                   ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-card ring-4 ring-emerald-500/20"
                   : step > 2
@@ -264,7 +264,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
           {/* Step 3 */}
           <div className="relative z-10 flex flex-col items-center">
             <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center font-heading font-extrabold text-sm transition-all border ${
+              className={`w-10 h-10 rounded-xl flex items-center justify-center font-heading font-semibold text-sm transition-all border ${
                 step === 3
                   ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-card"
                   : "bg-white text-[var(--muted)] border-[var(--line-strong)]"
@@ -292,7 +292,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="font-heading font-extrabold text-2xl text-[var(--ink)]">
+                <h2 className="font-heading font-semibold text-2xl text-[var(--ink)]">
                   Identitas Toko Anda
                 </h2>
                 <Badge variant="mint" size="sm">
@@ -307,20 +307,20 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
 
           <div className="bg-[var(--surface-2)] border border-[var(--line)] rounded-xl p-5 space-y-4 mb-6">
             <div>
-              <span className="text-xs font-semibold text-[var(--muted)] uppercase tracking-wider block">
+              <span className="text-xs font-medium text-[var(--muted)] uppercase tracking-wider block">
                 Nama Toko
               </span>
-              <p className="font-heading font-bold text-xl text-[var(--ink)] mt-0.5">
+              <p className="font-heading font-semibold text-xl text-[var(--ink)] mt-0.5">
                 {store.name}
               </p>
             </div>
 
             <div className="pt-3 border-t border-[var(--line)]">
-              <span className="text-xs font-semibold text-[var(--muted)] uppercase tracking-wider block">
+              <span className="text-xs font-medium text-[var(--muted)] uppercase tracking-wider block">
                 Tautan Menu Publik Pelanggan (QR Menu)
               </span>
               <div className="mt-1.5 flex flex-col sm:flex-row items-start sm:items-center gap-2">
-                <code className="px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-mono text-[var(--leaf)] font-bold flex-1 select-all break-all">
+                <code className="px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-mono text-[var(--leaf)] font-semibold flex-1 select-all break-all">
                   paybuy.id/t/{store.slug}
                 </code>
                 <Button
@@ -376,7 +376,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
               <Sparkles className="w-3.5 h-3.5 text-[var(--leaf)]" />
               <span>Langkah Utama: Pengaturan Pembayaran</span>
             </div>
-            <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
+            <h1 className="font-heading font-semibold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
               Apakah toko Anda memiliki QRIS sendiri?
             </h1>
             <p className="text-sm text-[var(--muted)] mt-2 leading-relaxed">
@@ -428,7 +428,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
                     </Badge>
                   )}
                 </div>
-                <h3 className="font-heading font-extrabold text-lg text-[var(--ink)]">
+                <h3 className="font-heading font-semibold text-lg text-[var(--ink)]">
                   Ya, Toko Punya QRIS
                 </h3>
                 <p className="text-xs text-[var(--muted)] mt-1.5 leading-relaxed">
@@ -472,7 +472,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
                     </Badge>
                   )}
                 </div>
-                <h3 className="font-heading font-extrabold text-lg text-[var(--ink)]">
+                <h3 className="font-heading font-semibold text-lg text-[var(--ink)]">
                   Belum / Hanya Tunai
                 </h3>
                 <p className="text-xs text-[var(--muted)] mt-1.5 leading-relaxed">
@@ -494,7 +494,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="font-heading font-bold text-base text-[var(--ink)] flex items-center gap-2">
+                  <label className="font-heading font-semibold text-base text-[var(--ink)] flex items-center gap-2">
                     <Upload className="w-4 h-4 text-[var(--leaf)]" />
                     <span>Unggah Gambar / Foto QRIS Toko</span>
                   </label>
@@ -555,7 +555,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
                       <CheckCircle2 className="w-7 h-7" />
                     </div>
                     <div>
-                      <p className="font-heading font-bold text-sm text-emerald-900">
+                      <p className="font-heading font-semibold text-sm text-emerald-900">
                         Kode QRIS Berhasil Dibaca!
                       </p>
                       <p className="text-xs text-[var(--muted)] mt-0.5">
@@ -622,7 +622,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
                   <div className="flex items-start justify-between gap-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-heading font-extrabold text-xs uppercase tracking-wider text-[var(--muted)]">
+                        <span className="font-heading font-semibold text-xs uppercase tracking-wider text-[var(--muted)]">
                           Nama Merchant QRIS Terverifikasi
                         </span>
                         <Badge variant="mint" size="sm">
@@ -630,7 +630,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
                           <span>QRIS Standar BI</span>
                         </Badge>
                       </div>
-                      <p className="font-heading font-extrabold text-xl sm:text-2xl text-[var(--ink)] tracking-tight">
+                      <p className="font-heading font-semibold text-xl sm:text-2xl text-[var(--ink)] tracking-tight">
                         {merchantName}
                       </p>
                       {merchantCity && (
@@ -718,7 +718,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
               <div className="bg-zinc-50 border border-[var(--line)] rounded-2xl p-5 sm:p-6 space-y-3">
                 <div className="flex items-center gap-2.5">
                   <Banknote className="w-5 h-5 text-[var(--forest)]" />
-                  <h4 className="font-heading font-bold text-base text-[var(--ink)]">
+                  <h4 className="font-heading font-semibold text-base text-[var(--ink)]">
                     Toko Anda Diatur Menerima Tunai di Kasir
                   </h4>
                 </div>
@@ -793,7 +793,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
             <span>Setup Onboarding Berhasil</span>
           </div>
 
-          <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
+          <h2 className="font-heading font-semibold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
             Toko {store.name} Siap Beroperasi!
           </h2>
 
@@ -810,7 +810,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
               <span className="text-[11px] font-semibold text-[var(--muted)] uppercase tracking-wider block">
                 Toko
               </span>
-              <span className="font-heading font-bold text-base text-[var(--ink)]">
+              <span className="font-heading font-semibold text-base text-[var(--ink)]">
                 {store.name}
               </span>
             </div>
@@ -821,13 +821,13 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
               </span>
               <div className="flex flex-wrap gap-2 mt-1.5">
                 {store.acceptQris && (
-                  <Badge variant="mint" size="sm" className="font-bold">
+                  <Badge variant="mint" size="sm">
                     <QrCode className="w-3 h-3" />
                     <span>QRIS Dinamis ({store.qrisMerchantName || "Aktif"})</span>
                   </Badge>
                 )}
                 {store.acceptCash && (
-                  <Badge variant="forest" size="sm" className="font-bold">
+                  <Badge variant="forest" size="sm">
                     <Banknote className="w-3 h-3" />
                     <span>Tunai di Kasir</span>
                   </Badge>
@@ -836,10 +836,10 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
             </div>
 
             <div className="pt-2 border-t border-[var(--line)]">
-              <span className="text-[11px] font-semibold text-[var(--muted)] uppercase tracking-wider block">
+              <span className="text-[11px] font-medium text-[var(--muted)] uppercase tracking-wider block">
                 Tautan Menu Publik
               </span>
-              <div className="flex items-center justify-between mt-1 text-xs font-mono text-[var(--leaf)] font-bold">
+              <div className="flex items-center justify-between mt-1 text-xs font-mono text-[var(--leaf)] font-semibold">
                 <span>paybuy.id/t/{store.slug}</span>
                 <Link
                   href={`/t/${store.slug}`}

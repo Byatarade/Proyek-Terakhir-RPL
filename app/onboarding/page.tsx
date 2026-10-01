@@ -85,7 +85,7 @@ export default async function OnboardingPage() {
               <Receipt className="w-5 h-5" />
             </div>
             <div className="flex flex-col">
-              <span className="font-heading font-extrabold text-xl tracking-tight text-zinc-950 leading-none">
+              <span className="font-heading font-bold text-xl tracking-tight text-zinc-950 leading-none">
                 PayBuy
               </span>
               <span className="text-[10px] font-medium tracking-wide uppercase text-zinc-500 mt-0.5">
@@ -96,7 +96,7 @@ export default async function OnboardingPage() {
 
           <div className="flex items-center gap-3 text-xs sm:text-sm">
             <span className="text-[var(--muted)] hidden sm:inline">Masuk sebagai:</span>
-            <span className="font-semibold text-[var(--ink)] bg-[var(--surface-2)] px-2.5 py-1 rounded-md border border-[var(--line)]">
+            <span className="font-medium text-[var(--ink)] bg-[var(--surface-2)] px-2.5 py-1 rounded-md border border-[var(--line)]">
               {profileData.full_name || user.email}
             </span>
           </div>

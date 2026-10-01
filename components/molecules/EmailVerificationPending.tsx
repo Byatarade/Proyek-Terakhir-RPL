@@ -124,7 +124,7 @@ export function EmailVerificationPending({
           <span className="hidden sm:inline">1. Isi Data Toko</span>
         </div>
         <div className="h-0.5 w-6 bg-emerald-400 mx-1" />
-        <div className="flex items-center gap-2 text-[var(--leaf)] font-bold">
+        <div className="flex items-center gap-2 text-[var(--leaf)] font-medium">
           <span className="w-5 h-5 rounded-full bg-[var(--leaf)] text-white flex items-center justify-center text-[10px] animate-pulse">
             2
           </span>
@@ -148,11 +148,11 @@ export function EmailVerificationPending({
         </div>
 
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold mb-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium mb-2">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
             <span>Pendaftaran Berhasil</span>
           </div>
-          <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
+          <h2 className="font-heading font-semibold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
             Periksa Kotak Masuk Email Anda
           </h2>
           <p className="text-sm text-[var(--muted)] max-w-md mx-auto mt-1 leading-relaxed">
@@ -164,7 +164,7 @@ export function EmailVerificationPending({
       {/* Karcis Rincian Pendaftaran Toko (Nota Style) */}
       <div className="bg-white border-2 border-[var(--line-strong)]/80 rounded-2xl p-5 shadow-card relative overflow-hidden">
         <div className="flex items-center justify-between gap-2 pb-3 border-b border-[var(--line)]">
-          <span className="font-mono text-xs text-[var(--muted)] uppercase tracking-wider font-semibold">
+          <span className="font-mono text-xs text-[var(--muted)] uppercase tracking-wider font-medium">
             Tujuan Aktivasi
           </span>
           <Badge variant="amber" size="sm">
@@ -174,7 +174,7 @@ export function EmailVerificationPending({
         </div>
 
         <div className="py-3 space-y-2">
-          <div className="font-mono text-base sm:text-lg font-bold text-[var(--forest)] break-all flex items-center gap-2">
+          <div className="font-mono text-base sm:text-lg font-semibold text-[var(--forest)] break-all flex items-center gap-2">
             <Mail className="w-4 h-4 text-[var(--leaf)] shrink-0" />
             <span>{email}</span>
           </div>
@@ -183,14 +183,14 @@ export function EmailVerificationPending({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-2 text-[var(--muted)]">
               {storeName && (
                 <div>
-                  <span className="block text-[11px] font-semibold uppercase">Toko:</span>
-                  <span className="font-bold text-[var(--ink)]">{storeName}</span>
+                  <span className="block text-[11px] font-medium uppercase">Toko:</span>
+                  <span className="font-semibold text-[var(--ink)]">{storeName}</span>
                 </div>
               )}
               {slug && (
                 <div>
-                  <span className="block text-[11px] font-semibold uppercase">Tautan Menu:</span>
-                  <span className="font-mono font-bold text-[var(--leaf)]">paybuy.id/t/{slug}</span>
+                  <span className="block text-[11px] font-medium uppercase">Tautan Menu:</span>
+                  <span className="font-mono font-semibold text-[var(--leaf)]">paybuy.id/t/{slug}</span>
                 </div>
               )}
             </div>

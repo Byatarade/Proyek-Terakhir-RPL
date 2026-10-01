@@ -5,14 +5,14 @@ import "./globals.css";
 const heading = Montserrat({
   subsets: ["latin"],
   variable: "--font-heading",
-  weight: ["600", "700", "800"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
 
 const body = Inter({
   subsets: ["latin"],
   variable: "--font-body",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 

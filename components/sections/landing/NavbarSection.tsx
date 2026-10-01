@@ -22,7 +22,7 @@ export function NavbarSection() {
             <Receipt className="w-5 h-5" />
           </div>
           <div className="flex flex-col">
-            <span className="font-heading font-extrabold text-xl sm:text-2xl tracking-tight text-zinc-950 leading-none">
+            <span className="font-heading font-bold text-xl sm:text-2xl tracking-tight text-zinc-950 leading-none">
               {brand.name}
             </span>
             <span className="text-[10px] sm:text-[11px] font-medium tracking-wide uppercase text-zinc-500 mt-0.5">

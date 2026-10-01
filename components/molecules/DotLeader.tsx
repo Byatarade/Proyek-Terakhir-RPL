@@ -17,11 +17,11 @@ export function DotLeader({ name, qty, price, className }: DotLeaderProps) {
   return (
     <div className={cn("flex items-baseline justify-between text-[15px]", className)}>
       <span className="font-medium text-[var(--ink)] shrink-0">
-        {qty && <strong className="font-bold text-zinc-950 mr-1.5">{qty}×</strong>}
+        {qty && <strong className="font-semibold text-zinc-950 mr-1.5">{qty}×</strong>}
         {name}
       </span>
       <span className="dot-leader" aria-hidden="true" />
-      <span className="font-semibold text-[var(--ink)] tabular-nums shrink-0 font-mono">
+      <span className="font-medium text-[var(--ink)] tabular-nums shrink-0 font-mono">
         {formatRupiah(price)}
       </span>
     </div>

@@ -20,11 +20,11 @@ export function FaqSection() {
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
           <Badge variant="mint" size="sm" className="mb-4">
             <HelpCircle className="w-3.5 h-3.5 text-zinc-900" />
-            <span className="font-heading uppercase tracking-wider text-[11px] font-semibold">
+            <span className="font-heading uppercase tracking-wider text-[11px] font-medium">
               {faq.overline}
             </span>
           </Badge>
-          <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[40px] leading-tight tracking-tight text-zinc-950 mb-4">
+          <h2 className="font-heading font-bold text-3xl sm:text-4xl lg:text-[40px] leading-tight tracking-tight text-zinc-950 mb-4">
             {faq.headline}
           </h2>
           <p className="text-base sm:text-lg text-[var(--muted)] leading-relaxed">
@@ -44,7 +44,7 @@ export function FaqSection() {
                   className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 focus-visible:outline-none focus-visible:bg-[var(--surface-2)]/60 hover:bg-[var(--surface-2)]/40 transition-colors cursor-pointer"
                   aria-expanded={isOpen}
                 >
-                  <span className="font-heading font-bold text-base sm:text-lg text-zinc-950">
+                  <span className="font-heading font-semibold text-base sm:text-lg text-zinc-950">
                     {item.question}
                   </span>
                   <div

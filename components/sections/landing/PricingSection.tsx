@@ -16,11 +16,11 @@ export function PricingSection() {
         <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
           <Badge variant="mint" size="sm" className="mb-4">
             <Tag className="w-3.5 h-3.5 text-zinc-900" />
-            <span className="font-heading uppercase tracking-wider text-[11px] font-semibold">
+            <span className="font-heading uppercase tracking-wider text-[11px] font-medium">
               {pricing.overline}
             </span>
           </Badge>
-          <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[40px] leading-tight tracking-tight text-zinc-950 mb-4">
+          <h2 className="font-heading font-bold text-3xl sm:text-4xl lg:text-[40px] leading-tight tracking-tight text-zinc-950 mb-4">
             {pricing.headline}
           </h2>
           <p className="text-base sm:text-lg text-[var(--muted)] leading-relaxed">
@@ -42,7 +42,7 @@ export function PricingSection() {
               <div>
                 {/* Header: Plan Name & Badge */}
                 <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
-                  <h3 className="font-heading font-extrabold text-2xl text-zinc-950">
+                  <h3 className="font-heading font-semibold text-2xl text-zinc-950">
                     {plan.name}
                   </h3>
                   {plan.badge.isActive ? (
@@ -61,7 +61,7 @@ export function PricingSection() {
                 {/* Price Display */}
                 <div className="my-5">
                   <div className="flex items-baseline gap-1.5">
-                    <span className="font-heading font-extrabold text-3xl sm:text-4xl text-zinc-950 tabular-nums tracking-tight">
+                    <span className="font-heading font-bold text-3xl sm:text-4xl text-zinc-950 tabular-nums tracking-tight">
                       {plan.price}
                     </span>
                     <span className="text-xs font-medium text-[var(--muted)]">
@@ -83,7 +83,7 @@ export function PricingSection() {
 
                 {/* Feature List */}
                 <div className="space-y-2.5 pt-1 mb-6">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)] block">
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--muted)] block">
                     FITUR YANG DIDAPAT:
                   </span>
                   <ul className="space-y-2 text-xs font-medium text-zinc-900">

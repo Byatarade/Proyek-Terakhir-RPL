@@ -29,7 +29,7 @@ export function StatCard({
       )}
     >
       <div className="flex items-center justify-between gap-3 mb-2">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+        <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--muted)]">
           {label}
         </span>
         {icon && (
@@ -40,7 +40,7 @@ export function StatCard({
       </div>
 
       <div className="space-y-1">
-        <div className="font-heading font-extrabold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight tabular-nums">
+        <div className="font-heading font-semibold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight tabular-nums">
           {value}
         </div>
 
@@ -49,7 +49,7 @@ export function StatCard({
             {trend && (
               <span
                 className={cn(
-                  "font-semibold px-1.5 py-0.5 rounded text-[11px]",
+                  "font-medium px-1.5 py-0.5 rounded text-[11px]",
                   trend.isPositive
                     ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                     : "bg-zinc-100 text-zinc-700 border border-zinc-200"

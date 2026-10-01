@@ -117,26 +117,26 @@ Pasangan teks-latar yang dianjurkan diperkirakan berada di atas **4,5:1** (batas
 
 | Peran | Font | Bobot | Pemakaian |
 |---|---|---|---|
-| **Judul** | **Montserrat** | 600, 700, 800 | Judul halaman dan section, nomor antrian, cap LUNAS, total besar |
-| **Isi & antarmuka** | **Inter** | 400, 500, 600 | Isi, form, tombol, tabel, harga, label |
+| **Judul** | **Montserrat** | 500, 600, 700 | Judul halaman dan section, nomor antrian, cap LUNAS, total besar |
+| **Isi & antarmuka** | **Inter** | 400, 500 | Isi, form, tombol, tabel, harga, label |
 
 ### 3.2 Skala tipografi
 
 | Gaya | Font | Bobot | Ukuran / tinggi baris (desktop) | Ukuran / tinggi baris (ponsel) | Tracking |
 |---|---|---|---|---|---|
-| Display (hero landing) | Montserrat | 800 | 56 / 60 | 36 / 42 | −0,02em |
-| H1 | Montserrat | 700 | 40 / 46 | 30 / 36 | −0,015em |
-| H2 | Montserrat | 700 | 30 / 36 | 24 / 30 | −0,01em |
-| H3 | Montserrat | 700 | 22 / 28 | 20 / 26 | 0 |
-| H4 | Montserrat | 600 | 18 / 24 | 18 / 24 | 0 |
+| Display (hero landing) | Montserrat | 600 | 56 / 60 | 36 / 42 | −0,02em |
+| H1 | Montserrat | 600 | 40 / 46 | 30 / 36 | −0,015em |
+| H2 | Montserrat | 600 | 30 / 36 | 24 / 30 | −0,01em |
+| H3 | Montserrat | 500 | 22 / 28 | 20 / 26 | 0 |
+| H4 | Montserrat | 500 | 18 / 24 | 18 / 24 | 0 |
 | Body besar (landing) | Inter | 400 | 18 / 28 | 17 / 26 | 0 |
 | Body | Inter | 400 | 16 / 24 | 16 / 24 | 0 |
 | Body kecil | Inter | 400 | 14 / 20 | 14 / 20 | 0 |
-| Label / tombol | Inter | 600 | 14–16 / 20 | 14–16 / 20 | 0 |
-| Caption | Inter | 500 | 12 / 16 | 12 / 16 | +0,01em |
-| Overline | Inter | 600 | 12 / 16 | 12 / 16 | +0,08em, huruf kapital |
-| Nomor antrian XL (status pelanggan) | Montserrat | 800 | 96 / 96 | 72 / 72 | −0,02em |
-| Nomor antrian layar dapur | Montserrat | 800 | 48 / 48 | 40 / 40 | −0,01em |
+| Label / tombol | Inter | 500 | 14–16 / 20 | 14–16 / 20 | 0 |
+| Caption | Inter | 400 | 12 / 16 | 12 / 16 | +0,01em |
+| Overline | Inter | 500 | 12 / 16 | 12 / 16 | +0,08em, huruf kapital |
+| Nomor antrian XL (status pelanggan) | Montserrat | 600 | 96 / 96 | 72 / 72 | −0,02em |
+| Nomor antrian layar dapur | Montserrat | 600 | 48 / 48 | 40 / 40 | −0,01em |
 
 ### 3.3 Aturan tipografi
 
@@ -247,13 +247,13 @@ Es Teh Manis ................... Rp  5.000
 Implementasi dengan flex dan garis bawah titik-titik (`border-bottom: 2px dotted`) yang mengisi ruang di antara nama dan harga; harga memakai angka tabular.
 
 ### 6.3 Nomor antrian sebagai bintang utama
-Kotak berborder putus-putus 3px warna Hutan di atas latar putih; label "Nomor antrian kamu" (overline) di atas; nomor Montserrat 800 sangat besar di tengah; nama toko di bawah.
+Kotak berborder putus-putus 3px warna Hutan di atas latar putih; label "Nomor antrian kamu" (overline) di atas; nomor Montserrat 600 sangat besar di tengah; nama toko di bawah.
 
 ### 6.4 Cap LUNAS
 | Properti | Nilai |
 |---|---|
 | Bentuk | Persegi panjang, radius 8px |
-| Isi | Teks **LUNAS**, Montserrat 800, tracking +0,12em, warna Hutan |
+| Isi | Teks **LUNAS**, Montserrat 600, tracking +0,12em, warna Hutan |
 | Latar dan tepi | Mint, garis tepi 3px Hutan, bayangan keras kecil |
 | Sudut | Miring −4° |
 | Animasi muncul | Dari skala 1,6 dan sudut −12° dengan opasitas 0 menuju skala 1 dan −4° dalam 220ms, easing dengan sedikit lonjakan (`cubic-bezier(.2, 1.4, .4, 1)`) |
@@ -305,14 +305,14 @@ Tombol ikon: persegi sesuai tinggi ukuran; wajib memiliki label aksesibel.
 - **Switch:** trek 48×28, bulat penuh diperbolehkan untuk pegangan; aktif `--leaf`, nonaktif `--control`.
 
 ### 7.4 Badge
-- Tinggi 24px, radius 6px, padding horizontal 8px, teks Inter 600 12px.
+- Tinggi 24px, radius 6px, padding horizontal 8px, teks Inter 500 12px.
 - **StatusBadge:** ikon 14px + label; warna sesuai Bagian 2.4. Badge `siap` selalu bertepi 2px Hutan.
 - Badge peran pegawai (owner, kasir, koki, admin gudang): latar `--surface-2`, tepi 1px `--line`, teks `--forest`.
 
 ### 7.5 Lain-lain
 | Komponen | Spesifikasi |
 |---|---|
-| **Avatar** | Bulat, 32/40px, inisial Montserrat 700 di latar `--surface-2` |
+| **Avatar** | Bulat, 32/40px, inisial Montserrat 600 di latar `--surface-2` |
 | **Spinner** | Cincin 2px `--leaf` dengan segmen `--forest`; 16/24px |
 | **Skeleton** | Blok `--surface-2` dengan pulsa opasitas halus (tanpa gradient shimmer) |
 | **Divider** | 1px `--line` atau putus-putus 2px pada motif karcis |
@@ -325,19 +325,19 @@ Tombol ikon: persegi sesuai tinggi ukuran; wajib memiliki label aksesibel.
 | Komponen | Spesifikasi |
 |---|---|
 | **FormField** | Label + input + teks bantu/galat; jarak 8px antar-elemen, 24px antar-field |
-| **PriceTag** | `Rp` + angka tabular Inter 600; varian coret untuk harga lama (jika kelak ada) |
-| **QuantityStepper** | Tombol − dan + ukuran 44px (sekunder), angka di tengah Inter 600 18px; minimum 0, dapat dihapus lewat nilai 0 |
+| **PriceTag** | `Rp` + angka tabular Inter 500; varian coret untuk harga lama (jika kelak ada) |
+| **QuantityStepper** | Tombol − dan + ukuran 44px (sekunder), angka di tengah Inter 500 18px; minimum 0, dapat dihapus lewat nilai 0 |
 | **SearchInput** | Input dengan ikon cari di kiri dan tombol hapus di kanan |
 | **EmptyState** | Ikon 48px `--forest`, judul H4, teks bantu, satu tombol aksi opsional; nada santai |
 | **Toast** | Putih, tepi 2px Hutan, bayangan keras 3px, ikon status di kiri, muncul 4 detik, dapat ditutup |
 | **Dialog / ConfirmDialog** | Putih, tepi 2px Hutan, bayangan keras 6px, judul H3, tombol aksi di kanan bawah; aksi berbahaya memakai tombol Danger dan menyebut objeknya secara jelas |
-| **Tabs** | Garis bawah 3px `--leaf` pada tab aktif; teks Inter 600; target sentuh 44px |
-| **Table** | Header `--surface-2`, teks Inter 600 12px kapital kecil; tinggi baris 48px; garis bawah baris 1px `--line`; angka rata kanan tabular; baris dapat diklik memiliki hover `--surface-2` |
+| **Tabs** | Garis bawah 3px `--leaf` pada tab aktif; teks Inter 500; target sentuh 44px |
+| **Table** | Header `--surface-2`, teks Inter 500 12px kapital kecil; tinggi baris 48px; garis bawah baris 1px `--line`; angka rata kanan tabular; baris dapat diklik memiliki hover `--surface-2` |
 | **Pagination** | Tombol sekunder ukuran sm dengan nomor halaman aktif berlatar `--forest` teks putih |
 | **Sidebar** | Latar `--forest`; item teks putih 80%; hover `--forest-2`; aktif `--forest-2` dengan penanda kiri 4px `--mint`; ikon 20px |
 | **TopBar** | Putih, garis bawah 1px `--line`; nama toko, status buka/tutup (switch), menu pengguna |
 | **PageHeader** | Judul H1/H2 + deskripsi singkat + aksi utama di kanan |
-| **StatCard** (ringkasan dashboard) | Kartu halus 1px `--line`; label overline, nilai Montserrat 700 28px, perubahan opsional |
+| **StatCard** (ringkasan dashboard) | Kartu halus 1px `--line`; label overline, nilai Montserrat 600 28px, perubahan opsional |
 
 ---
 
@@ -351,7 +351,7 @@ Lihat 6.3. Variasi: `xl` (halaman status pelanggan), `lg` (layar antrian publik)
 |---|---|
 | Kerangka | Putih, tepi 2px Hutan, bayangan keras 4px, takik pada pemisah header dan isi |
 | Garis status | Strip vertikal 8px di sisi kiri berwarna status (dengan tepi Hutan untuk `siap`) |
-| Header | Nomor antrian (Montserrat 800, 48px) di kiri; badge status dan waktu berjalan di kanan |
+| Header | Nomor antrian (Montserrat 600, 48px) di kiri; badge status dan waktu berjalan di kanan |
 | Isi | Daftar item: `2×` tebal + nama; catatan (bila ada) di bawah dengan warna redam; pemisah putus-putus |
 | Pewaktu | Warna waktu: < 5 menit `--forest`; 5–10 menit `--amber` (dengan ikon); > 10 menit `--danger` (dengan ikon). Ambang dapat diatur. **[Usulan]** |
 | Aksi | Satu tombol besar (xl) di bawah: "Mulai masak", "Tandai siap", "Konfirmasi bayar", "Panggil", "Tandai diambil" sesuai konteks; aksi batal berupa tombol Ghost kecil dengan konfirmasi |
@@ -360,18 +360,18 @@ Lihat 6.3. Variasi: `xl` (halaman status pelanggan), `lg` (layar antrian publik)
 ### 9.3 ReceiptCart (keranjang berbentuk nota)
 - Judul "Pesanan kamu" dengan pemisah putus-putus.
 - Baris item dengan titik penuntun, `QuantityStepper` kecil di baris.
-- Subtotal dan **Total** (Montserrat 700, 24px) di bagian bawah nota.
+- Subtotal dan **Total** (Montserrat 600, 24px) di bagian bawah nota.
 - Di ponsel: bilah ringkas menempel di bawah layar (jumlah item + total + tombol "Lihat pesanan"); membuka lembar nota penuh dari bawah.
 - Tombol utama "Pesan sekarang" (lg, Primary).
 
 ### 9.4 OrderStatusTimeline
-Langkah vertikal: Menunggu pembayaran → Sudah dibayar → Sedang dimasak → Siap diambil. Langkah selesai memakai ikon centang di lingkaran Daun; langkah aktif diberi latar Mint bertepi Hutan dan label tebal; langkah berikutnya abu-abu (`--control` tipis). Pembaruan status diiringi cap LUNAS pada langkah "Sudah dibayar".
+Langkah vertikal: Menunggu pembayaran → Sudah dibayar → Sedang dimasak → Siap diambil. Langkah selesai memakai ikon centang di lingkaran Daun; langkah aktif diberi latar Mint bertepi Hutan dan label medium; langkah berikutnya abu-abu (`--control` tipis). Pembaruan status diiringi cap LUNAS pada langkah "Sudah dibayar".
 
 ### 9.5 QrisPayPanel
-Karcis putih berisi: nama merchant, **QR** (modul hitam, latar putih, zona tenang minimal 4 modul, ukuran minimal 240px), nominal besar (Montserrat 700), hitung mundur batas waktu, petunjuk singkat, tombol **"Saya sudah bayar"** (lg, Primary), dan tautan batalkan. Bila toko tidak memakai QRIS, panel ini diganti petunjuk membayar tunai di kasir dengan nomor pesanan yang besar.
+Karcis putih berisi: nama merchant, **QR** (modul hitam, latar putih, zona tenang minimal 4 modul, ukuran minimal 240px), nominal besar (Montserrat 600), hitung mundur batas waktu, petunjuk singkat, tombol **"Saya sudah bayar"** (lg, Primary), dan tautan batalkan. Bila toko tidak memakai QRIS, panel ini diganti petunjuk membayar tunai di kasir dengan nomor pesanan yang besar.
 
 ### 9.6 ProductCard (menu publik)
-Foto 4:3 di atas (atau blok ikon), nama Inter 600, deskripsi singkat maksimal dua baris, harga, dan tombol tambah (ikon plus atau stepper bila sudah di keranjang). Produk habis: foto dibuat abu-abu datar (tanpa filter blur), label "Habis" berbadge, tombol nonaktif.
+Foto 4:3 di atas (atau blok ikon), nama Inter 500, deskripsi singkat maksimal dua baris, harga, dan tombol tambah (ikon plus atau stepper bila sudah di keranjang). Produk habis: foto dibuat abu-abu datar (tanpa filter blur), label "Habis" berbadge, tombol nonaktif.
 
 ### 9.7 ToastStatus dan StatusBanner
 Banner status toko (mis. "Toko sedang tutup") berlatar Kuning bertepi Hutan di bagian atas menu publik.

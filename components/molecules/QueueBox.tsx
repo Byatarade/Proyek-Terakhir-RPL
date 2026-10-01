@@ -33,12 +33,12 @@ export function QueueBox({
         className
       )}
     >
-      <span className="block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+      <span className="block text-[10px] font-medium uppercase tracking-wider text-[var(--muted)]">
         {label}
       </span>
       <div
         className={cn(
-          "font-heading font-extrabold text-zinc-950 tabular-nums tracking-tight",
+          "font-heading font-semibold text-zinc-950 tabular-nums tracking-tight",
           numberSizes[size]
         )}
       >

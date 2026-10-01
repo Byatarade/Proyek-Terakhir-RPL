@@ -19,11 +19,11 @@ export function ProblemSection() {
         <div className="max-w-3xl mb-12 sm:mb-16">
           <Badge variant="mint" size="sm" className="mb-4">
             <AlertTriangle className="w-3.5 h-3.5 text-[var(--leaf)]" />
-            <span className="font-heading uppercase tracking-wider text-[11px] font-semibold">
+            <span className="font-heading uppercase tracking-wider text-[11px] font-medium">
               {problem.overline}
             </span>
           </Badge>
-          <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[42px] leading-tight tracking-tight text-zinc-950 mb-4">
+          <h2 className="font-heading font-bold text-3xl sm:text-4xl lg:text-[40px] leading-tight tracking-tight text-zinc-950 mb-4">
             {problem.headline}
           </h2>
           <p className="text-base sm:text-lg text-zinc-600 leading-relaxed font-normal">
@@ -47,7 +47,7 @@ export function ProblemSection() {
                     {item.badge}
                   </span>
                 </div>
-                <h3 className="font-heading font-bold text-xl text-zinc-950 mb-2.5 leading-snug">
+                <h3 className="font-heading font-semibold text-xl text-zinc-950 mb-2.5 leading-snug">
                   {item.title}
                 </h3>
                 <p className="text-sm leading-relaxed text-zinc-600 mb-6">

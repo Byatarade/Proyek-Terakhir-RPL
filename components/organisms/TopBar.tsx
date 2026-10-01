@@ -63,7 +63,7 @@ export function TopBar({
         <div className="flex items-center gap-2.5">
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <h1 className="font-heading font-extrabold text-base sm:text-lg text-[var(--ink)] leading-none truncate max-w-[180px] sm:max-w-[260px]">
+              <h1 className="font-heading font-semibold text-base sm:text-lg text-[var(--ink)] leading-none truncate max-w-[180px] sm:max-w-[260px]">
                 {storeName}
               </h1>
               <Badge
@@ -96,14 +96,14 @@ export function TopBar({
         {/* User Pill */}
         <div className="hidden md:flex items-center gap-2.5 pl-3 py-1 pr-1.5 rounded-full bg-[var(--surface-2)] border border-[var(--line)] text-xs">
           <div className="flex flex-col text-right">
-            <span className="font-semibold text-[var(--ink)] leading-tight max-w-[140px] truncate">
+            <span className="font-medium text-[var(--ink)] leading-tight max-w-[140px] truncate">
               {fullName}
             </span>
             <span className="text-[10px] text-[var(--muted)] font-medium">
               {roleLabelMap[role] || role}
             </span>
           </div>
-          <div className="w-7 h-7 rounded-full bg-white border border-[var(--line)] flex items-center justify-center text-[var(--forest)] font-bold text-xs">
+          <div className="w-7 h-7 rounded-full bg-white border border-[var(--line)] flex items-center justify-center text-[var(--forest)] font-medium text-xs">
             <User className="w-3.5 h-3.5 text-[var(--leaf)]" />
           </div>
         </div>
@@ -112,7 +112,7 @@ export function TopBar({
         <button
           onClick={handleLogout}
           disabled={isPending}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-[var(--danger)] hover:bg-red-50 border border-transparent hover:border-red-200 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--danger)]/30 disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-[var(--danger)] hover:bg-red-50 border border-transparent hover:border-red-200 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--danger)]/30 disabled:opacity-50"
           title="Keluar dari akun toko"
         >
           {isPending ? (

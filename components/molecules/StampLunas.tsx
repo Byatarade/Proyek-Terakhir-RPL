@@ -26,7 +26,7 @@ export function StampLunas({
   return (
     <div
       className={cn(
-        "inline-flex items-center justify-center font-heading font-bold uppercase text-zinc-950 bg-[var(--mint-light)] border-[var(--leaf)] rounded-lg shadow-subtle tracking-[0.1em] select-none",
+        "inline-flex items-center justify-center font-heading font-semibold uppercase text-zinc-950 bg-[var(--mint-light)] border-[var(--leaf)] rounded-lg shadow-subtle tracking-[0.1em] select-none",
         sizeStyles[size],
         animate ? "animate-stamp" : "rotate-[-3deg]",
         className

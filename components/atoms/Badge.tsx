@@ -26,7 +26,7 @@ export function Badge({
     // Mint: soft mint background with fine mint border and clean dark text
     mint: "bg-[var(--mint-light)] text-zinc-900 border border-[var(--mint)]/80",
     forest: "bg-zinc-950 text-white border border-zinc-950",
-    leaf: "bg-emerald-50 text-[var(--leaf)] border border-emerald-200/80 font-semibold",
+    leaf: "bg-emerald-50 text-[var(--leaf)] border border-emerald-200/80 font-medium",
     amber: "bg-amber-50 text-amber-800 border border-amber-200/80",
     neutral: "bg-[var(--surface-2)] text-[var(--muted)] border border-[var(--line)]",
     danger: "bg-red-50 text-[var(--danger)] border border-red-200/80",

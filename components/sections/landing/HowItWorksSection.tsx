@@ -19,11 +19,11 @@ export function HowItWorksSection() {
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
           <Badge variant="mint" size="sm" className="mb-4">
-            <span className="font-heading uppercase tracking-wider text-[11px] font-semibold">
+            <span className="font-heading uppercase tracking-wider text-[11px] font-medium">
               {howItWorks.overline}
             </span>
           </Badge>
-          <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[40px] leading-tight tracking-tight text-zinc-950 mb-4">
+          <h2 className="font-heading font-bold text-3xl sm:text-4xl lg:text-[40px] leading-tight tracking-tight text-zinc-950 mb-4">
             {howItWorks.headline}
           </h2>
           <p className="text-base sm:text-lg text-zinc-600 leading-relaxed">
@@ -39,7 +39,7 @@ export function HowItWorksSection() {
                 {/* Step Number & Icon Header */}
                 <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
                   <div className="flex items-center gap-2.5">
-                    <span className="font-heading font-extrabold text-2xl sm:text-3xl text-zinc-950 tabular-nums">
+                    <span className="font-heading font-semibold text-2xl sm:text-3xl text-zinc-950 tabular-nums">
                       {step.number}
                     </span>
                     <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 border border-[var(--line)] px-2.5 py-0.5 rounded-full bg-[var(--surface-2)]">
@@ -53,7 +53,7 @@ export function HowItWorksSection() {
 
                 {/* Step Title & Subtitle */}
                 <div className="mt-4 mb-2.5">
-                  <h3 className="font-heading font-bold text-xl text-zinc-950 leading-snug">
+                  <h3 className="font-heading font-semibold text-xl text-zinc-950 leading-snug">
                     {step.title}
                   </h3>
                   <span className="text-xs font-medium text-zinc-600 block mt-1">

@@ -43,7 +43,7 @@ export const Footer: React.FC<FooterProps> = ({ className = "" }) => {
                 aria-label="LinkedIn"
                 className="w-7 h-7 rounded-md border border-zinc-800/80 flex items-center justify-center text-zinc-800 hover:text-zinc-950 hover:border-zinc-950 transition-colors"
               >
-                <span className="text-[11px] leading-none font-bold">in</span>
+                <span className="text-[11px] leading-none font-medium">in</span>
               </a>
 
               {/* X */}
@@ -54,14 +54,14 @@ export const Footer: React.FC<FooterProps> = ({ className = "" }) => {
                 aria-label="X"
                 className="w-7 h-7 rounded-md border border-zinc-800/80 flex items-center justify-center text-zinc-800 hover:text-zinc-950 hover:border-zinc-950 transition-colors"
               >
-                <span className="text-xs leading-none font-black">𝕏</span>
+                <span className="text-xs leading-none font-semibold">𝕏</span>
               </a>
             </div>
 
             {/* Email */}
             <a
               href="mailto:kontak@paybuy.id"
-              className="text-lg sm:text-xl font-bold text-zinc-950 mt-4 hover:underline tracking-tight"
+              className="text-lg sm:text-xl font-semibold text-zinc-950 mt-4 hover:underline tracking-tight"
             >
               kontak@paybuy.id
             </a>
@@ -95,10 +95,10 @@ export const Footer: React.FC<FooterProps> = ({ className = "" }) => {
               {/* Center Pill Button */}
               <Link
                 href="/daftar"
-                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-zinc-950 hover:bg-zinc-900 text-white text-xs sm:text-sm font-semibold shadow-2xl transition-all duration-200 group shrink-0 hover:scale-[1.02]"
+                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-zinc-950 hover:bg-zinc-900 text-white text-xs sm:text-sm font-medium shadow-2xl transition-all duration-200 group shrink-0 hover:scale-[1.02]"
               >
                 <span>Daftar Toko Gratis</span>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#10B981]/30 text-emerald-200 border border-[#10B981]/50 tracking-wider">
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#10B981]/30 text-emerald-200 border border-[#10B981]/50 tracking-wider">
                   FREE
                 </span>
               </Link>
@@ -124,37 +124,37 @@ export const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           <div className="md:col-span-3 flex flex-col md:items-end items-start gap-2.5">
             <Link
               href="#fitur"
-              className="text-sm sm:text-base font-semibold text-zinc-900 hover:text-black transition-colors"
+              className="text-sm sm:text-base font-medium text-zinc-900 hover:text-black transition-colors"
             >
               Platform POS
             </Link>
             <Link
               href="#cara-kerja"
-              className="text-sm sm:text-base font-semibold text-zinc-900 hover:text-black transition-colors"
+              className="text-sm sm:text-base font-medium text-zinc-900 hover:text-black transition-colors"
             >
               Cara Kerja
             </Link>
             <Link
               href="#fitur"
-              className="text-sm sm:text-base font-semibold text-zinc-900 hover:text-black transition-colors"
+              className="text-sm sm:text-base font-medium text-zinc-900 hover:text-black transition-colors"
             >
               Fitur Unggulan
             </Link>
             <Link
               href="#harga"
-              className="text-sm sm:text-base font-semibold text-zinc-900 hover:text-black transition-colors"
+              className="text-sm sm:text-base font-medium text-zinc-900 hover:text-black transition-colors"
             >
               Paket & Harga
             </Link>
             <Link
               href="#simulasi"
-              className="text-sm sm:text-base font-semibold text-zinc-900 hover:text-black transition-colors"
+              className="text-sm sm:text-base font-medium text-zinc-900 hover:text-black transition-colors"
             >
               Simulasi Layar
             </Link>
             <Link
               href="#faq"
-              className="text-sm sm:text-base font-semibold text-zinc-900 hover:text-black transition-colors"
+              className="text-sm sm:text-base font-medium text-zinc-900 hover:text-black transition-colors"
             >
               Tentang Kami
             </Link>

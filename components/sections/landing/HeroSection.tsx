@@ -20,7 +20,7 @@ export function HeroSection() {
           {/* Left Column: Copywriting & CTAs - 7 cols */}
           <div className="lg:col-span-7 space-y-6 sm:space-y-7">
             {/* Display Headline */}
-            <h1 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-[54px] lg:leading-[1.12] tracking-tight text-zinc-950">
+            <h1 className="font-heading font-bold text-4xl sm:text-5xl lg:text-[52px] lg:leading-[1.12] tracking-tight text-zinc-950">
               {hero.headline}
             </h1>
 
@@ -72,10 +72,10 @@ export function HeroSection() {
                 {/* Header Ticket: Store Name & Meta */}
                 <div className="flex items-start justify-between border-b border-[var(--line)] pb-4">
                   <div>
-                    <span className="text-[10px] font-semibold text-zinc-400 tracking-wider uppercase">
+                    <span className="text-[10px] font-medium text-zinc-400 tracking-wider uppercase">
                       TOKO MITRA
                     </span>
-                    <h3 className="font-heading font-extrabold text-xl text-zinc-950">
+                    <h3 className="font-heading font-semibold text-xl text-zinc-950">
                       {sampleReceipt.storeName}
                     </h3>
                     <p className="text-xs text-zinc-500 mt-0.5 flex items-center gap-1.5">
@@ -96,10 +96,10 @@ export function HeroSection() {
 
                 {/* Queue Number Minimal Box */}
                 <div className="my-4 bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 text-center">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 block">
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-500 block">
                     NOMOR ANTRIAN
                   </span>
-                  <div className="font-heading font-extrabold text-5xl text-zinc-950 my-1 tabular-nums tracking-tight">
+                  <div className="font-heading font-semibold text-5xl text-zinc-950 my-1 tabular-nums tracking-tight">
                     {sampleReceipt.queueNumber}
                   </div>
                   <span className="text-[11px] text-zinc-500">
@@ -112,7 +112,7 @@ export function HeroSection() {
 
                 {/* Order Items with Dot Leader */}
                 <div className="space-y-3 py-1">
-                  <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+                  <div className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider mb-2">
                     Rincian Pesanan
                   </div>
                   {sampleReceipt.items.map((item, idx) => (
@@ -132,10 +132,10 @@ export function HeroSection() {
                 <div className="relative pt-2 pb-1">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block">
+                      <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 block">
                         TOTAL DIBAYAR
                       </span>
-                      <span className="font-heading font-extrabold text-2xl sm:text-3xl text-zinc-950 tabular-nums">
+                      <span className="font-heading font-semibold text-2xl sm:text-3xl text-zinc-950 tabular-nums">
                         {formatRupiah(sampleReceipt.total)}
                       </span>
                     </div>
@@ -151,7 +151,7 @@ export function HeroSection() {
                       <QrCode className="w-3.5 h-3.5 text-[var(--leaf)]" />
                       {sampleReceipt.paymentMethod}
                     </span>
-                    <span className="text-[11px] font-mono text-[var(--leaf)] font-semibold">
+                    <span className="text-[11px] font-mono text-[var(--leaf)] font-medium">
                       VERIFIKASI SUKSES
                     </span>
                   </div>

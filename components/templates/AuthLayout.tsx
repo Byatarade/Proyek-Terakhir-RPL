@@ -28,7 +28,7 @@ export function AuthLayout({
               <Receipt className="w-5 h-5" />
             </div>
             <div className="flex flex-col">
-              <span className="font-heading font-extrabold text-xl tracking-tight text-zinc-950 leading-none">
+              <span className="font-heading font-bold text-xl tracking-tight text-zinc-950 leading-none">
                 PayBuy
               </span>
               <span className="text-[10px] font-medium tracking-wide uppercase text-zinc-500 mt-0.5">
@@ -39,7 +39,7 @@ export function AuthLayout({
 
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[var(--muted)] hover:text-zinc-950 transition-colors py-1 px-2.5 rounded-md hover:bg-[var(--surface-2)]"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-[var(--muted)] hover:text-zinc-950 transition-colors py-1 px-2.5 rounded-md hover:bg-[var(--surface-2)]"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Kembali ke Beranda</span>
@@ -56,13 +56,13 @@ export function AuthLayout({
             <div className="ticket-notch-left top-1/2 -translate-y-1/2" aria-hidden="true" />
             <div className="ticket-notch-right top-1/2 -translate-y-1/2" aria-hidden="true" />
 
-            <div className="inline-flex items-center gap-2 self-start px-2.5 py-1 rounded-md bg-[var(--surface-2)] border border-[var(--line)] text-[var(--forest)] text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 self-start px-2.5 py-1 rounded-md bg-[var(--surface-2)] border border-[var(--line)] text-[var(--forest)] text-xs font-medium">
               <ShieldCheck className="w-3.5 h-3.5 text-[var(--leaf)]" />
               <span>Multi-Tenant & Terisolasi Aman</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="font-heading font-extrabold text-2xl text-[var(--ink)] leading-snug">
+              <h2 className="font-heading font-semibold text-2xl text-[var(--ink)] leading-snug">
                 Solusi Kasir & Pesan Mandiri untuk Warung dan Kafe
               </h2>
               <p className="text-sm text-[var(--muted)] leading-relaxed">
@@ -77,7 +77,7 @@ export function AuthLayout({
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[var(--leaf)] shrink-0 mt-0.5" />
                 <div>
-                  <strong className="font-semibold block">Pelanggan Tanpa Akun & Aplikasi</strong>
+                  <strong className="font-medium block">Pelanggan Tanpa Akun & Aplikasi</strong>
                   <span className="text-[var(--muted)] text-xs">
                     Pelanggan tinggal scan QR menu di meja atau konter dan langsung pesan.
                   </span>
@@ -87,7 +87,7 @@ export function AuthLayout({
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[var(--leaf)] shrink-0 mt-0.5" />
                 <div>
-                  <strong className="font-semibold block">Bayar Dulu, Masak Kemudian</strong>
+                  <strong className="font-medium block">Bayar Dulu, Masak Kemudian</strong>
                   <span className="text-[var(--muted)] text-xs">
                     Pesanan baru masuk ke layar dapur setelah pembayaran terkonfirmasi lunas.
                   </span>
@@ -97,7 +97,7 @@ export function AuthLayout({
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-[var(--leaf)] shrink-0 mt-0.5" />
                 <div>
-                  <strong className="font-semibold block">Nomor Antrian Atomik & Reset Harian</strong>
+                  <strong className="font-medium block">Nomor Antrian Atomik & Reset Harian</strong>
                   <span className="text-[var(--muted)] text-xs">
                     Panggilan antrian rapi, tidak ada nomor ganda, reset otomatis per hari.
                   </span>
@@ -107,14 +107,14 @@ export function AuthLayout({
 
             <div className="mt-2 pt-4 border-t border-[var(--line)] flex items-center justify-between text-xs text-[var(--muted)]">
               <span>Paket Gratis Aktif Selamanya</span>
-              <span className="font-semibold text-[var(--leaf)]">0% Biaya Tersembunyi</span>
+              <span className="font-medium text-[var(--leaf)]">0% Biaya Tersembunyi</span>
             </div>
           </div>
 
           {/* Form Card Container */}
           <div className="lg:col-span-7 bg-white border border-[var(--line)] rounded-xl p-6 sm:p-9 shadow-card relative">
             <div className="mb-6 sm:mb-8">
-              <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
+              <h1 className="font-heading font-semibold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
                 {title}
               </h1>
               <p className="text-sm text-[var(--muted)] mt-1.5 leading-relaxed">

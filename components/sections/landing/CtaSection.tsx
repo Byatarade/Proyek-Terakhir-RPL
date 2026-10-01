@@ -11,12 +11,12 @@ export function CtaSection() {
     <section className="bg-white py-16 lg:py-24">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white border border-[var(--line-strong)] rounded-3xl p-8 sm:p-12 lg:p-16 shadow-card text-center max-w-4xl mx-auto space-y-6">
-          <div className="inline-flex items-center gap-2 bg-[var(--surface-2)] border border-[var(--line)] text-zinc-950 px-3.5 py-1 rounded-full text-xs font-semibold tracking-wide">
+          <div className="inline-flex items-center gap-2 bg-[var(--surface-2)] border border-[var(--line)] text-zinc-950 px-3.5 py-1 rounded-full text-xs font-medium tracking-wide">
             <Store className="w-3.5 h-3.5 text-[var(--leaf)]" />
             <span>Mulai Dalam 2 Menit</span>
           </div>
 
-          <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight text-zinc-950 max-w-3xl mx-auto">
+          <h2 className="font-heading font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight text-zinc-950 max-w-3xl mx-auto">
             {cta.headline}
           </h2>
 

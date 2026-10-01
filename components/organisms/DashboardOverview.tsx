@@ -48,11 +48,11 @@ export function DashboardOverview({
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--forest)] bg-[var(--surface-2)] px-2.5 py-1 rounded-md border border-[var(--line)] mb-2">
+          <div className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--forest)] bg-[var(--surface-2)] px-2.5 py-1 rounded-md border border-[var(--line)] mb-2">
             <Store className="w-3.5 h-3.5 text-[var(--leaf)]" />
             <span>{currentDateFormatted} (WIB)</span>
           </div>
-          <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
+          <h1 className="font-heading font-semibold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
             Ringkasan Hari Ini
           </h1>
           <p className="text-sm text-[var(--muted)] mt-1">
@@ -112,10 +112,10 @@ export function DashboardOverview({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div className="lg:col-span-8 space-y-2">
-            <span className="text-[11px] font-semibold tracking-wider uppercase text-[var(--leaf)] block">
+            <span className="text-[11px] font-medium tracking-wider uppercase text-[var(--leaf)] block">
               1 QR Code Seumur Toko
             </span>
-            <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-[var(--ink)]">
+            <h2 className="font-heading font-semibold text-xl sm:text-2xl text-[var(--ink)]">
               Menu Toko & Pemesanan Mandiri Anda Siap Digunakan
             </h2>
             <p className="text-xs sm:text-sm text-[var(--muted)] leading-relaxed max-w-2xl">
@@ -130,7 +130,7 @@ export function DashboardOverview({
                 href={`/t/${storeSlug}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-semibold text-[var(--leaf)] hover:text-[var(--leaf-hover)] transition-colors inline-flex items-center gap-1"
+                className="text-xs font-medium text-[var(--leaf)] hover:text-[var(--leaf-hover)] transition-colors inline-flex items-center gap-1"
               >
                 <span>Lihat Tampilan Menu</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -156,7 +156,7 @@ export function DashboardOverview({
         </div>
 
         <div className="space-y-1.5 max-w-md mx-auto">
-          <h3 className="font-heading font-bold text-lg text-[var(--ink)]">
+          <h3 className="font-heading font-semibold text-lg text-[var(--ink)]">
             Belum Ada Transaksi Hari Ini
           </h3>
           <p className="text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
