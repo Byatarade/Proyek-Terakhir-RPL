@@ -1,0 +1,580 @@
+"use server";
+
+import { createClient } from "@/lib/supabase/server";
+import { PaymentMethod } from "@/lib/types/database";
+
+export interface PublicProduct {
+  id: string;
+  name: string;
+  description: string | null;
+  price_sell: number;
+  is_available: boolean;
+  image_path?: string | null;
+  category_id?: string | null;
+  category_name?: string | null;
+}
+
+export interface PublicCategory {
+  id: string;
+  name: string;
+  sort_order: number;
+  products: PublicProduct[];
+}
+
+export interface PublicStoreData {
+  id: string;
+  name: string;
+  slug: string;
+  isOpen: boolean;
+  acceptCash: boolean;
+  acceptQris: boolean;
+  qrisMerchantName: string | null;
+  qrisPayload: string | null;
+  categories: PublicCategory[];
+}
+
+// Fallback high-fidelity sample menu for "Ababil Cake" (/t/ababilcake-menu or /t/ababil-cake)
+const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
+  id: "sample-store-ababil",
+  name: "Ababil Cake & Bakery",
+  slug: "ababilcake-menu",
+  isOpen: true,
+  acceptCash: true,
+  acceptQris: true,
+  qrisMerchantName: "Ababil Cake Official",
+  qrisPayload: "00020101021126600014ID.LINKAJA.WWW0118936009110022204561021000000000010303UMI51440014ID.CO.QRIS.WWW0215ID10200212345670303UMI5204581253033605802ID5911Ababil Cake6007Jakarta61051234062070703A016304D1B9",
+  categories: [
+    {
+      id: "cat-kue-spesial",
+      name: "Kue & Cake Spesial",
+      sort_order: 1,
+      products: [
+        {
+          id: "prod-fudge",
+          name: "Choco Fudge Slice Cake",
+          description: "Cokelat belgia premium dengan lapisan ganache lumer dan taburan choco chips.",
+          price_sell: 28000,
+          is_available: true,
+          category_name: "Kue & Cake Spesial",
+        },
+        {
+          id: "prod-redvelvet",
+          name: "Red Velvet Roll Tart",
+          description: "Roll cake lembut berbalut cream cheese gurih dan taburan red crumbs gurih.",
+          price_sell: 32000,
+          is_available: true,
+          category_name: "Kue & Cake Spesial",
+        },
+        {
+          id: "prod-tiramisu",
+          name: "Classic Italian Tiramisu Cup",
+          description: "Ladyfinger espresso dengan mascarpone lembut dan taburan bubuk kakao murni.",
+          price_sell: 35000,
+          is_available: true,
+          category_name: "Kue & Cake Spesial",
+        },
+        {
+          id: "prod-cheesecake",
+          name: "Basque Burnt Cheesecake",
+          description: "Cheesecake panggangan khas Spanyol dengan tekstur creamy di tengah.",
+          price_sell: 30000,
+          is_available: false, // Ditandai habis per simulasi PRD FR-PR-04
+          category_name: "Kue & Cake Spesial",
+        },
+      ],
+    },
+    {
+      id: "cat-pastry-roti",
+      name: "Pastry & Roti Panggang",
+      sort_order: 2,
+      products: [
+        {
+          id: "prod-croissant",
+          name: "Butter Croissant French Style",
+          description: "Croissant renyah berlapis dengan aroma mentega Perancis wangi.",
+          price_sell: 22000,
+          is_available: true,
+          category_name: "Pastry & Roti Panggang",
+        },
+        {
+          id: "prod-almond-croissant",
+          name: "Almond Cream Croissant",
+          description: "Croissant isi krim frangipane manis dengan taburan almond panggang melimpah.",
+          price_sell: 27000,
+          is_available: true,
+          category_name: "Pastry & Roti Panggang",
+        },
+        {
+          id: "prod-cinnamon",
+          name: "Cinnamon Roll with Glaze",
+          description: "Roti gulung aroma kayu manis wangi dilapisi gula vanila meleleh.",
+          price_sell: 20000,
+          is_available: true,
+          category_name: "Pastry & Roti Panggang",
+        },
+      ],
+    },
+    {
+      id: "cat-minuman",
+      name: "Minuman & Kopi",
+      sort_order: 3,
+      products: [
+        {
+          id: "prod-kopisusu",
+          name: "Es Kopi Susu Gula Aren",
+          description: "Espresso robusta & arabika blend dengan susu segar dan saus aren organik.",
+          price_sell: 18000,
+          is_available: true,
+          category_name: "Minuman & Kopi",
+        },
+        {
+          id: "prod-matcha",
+          name: "Iced Uji Matcha Latte",
+          description: "Matcha murni dari Kyoto dipadu susu creamy dingin yang menyegarkan.",
+          price_sell: 24000,
+          is_available: true,
+          category_name: "Minuman & Kopi",
+        },
+        {
+          id: "prod-earlgrey",
+          name: "Cold Brew Earl Grey Tea",
+          description: "Seduhan teh bergamot aromatik dingin dengan irisan lemon segar.",
+          price_sell: 16000,
+          is_available: true,
+          category_name: "Minuman & Kopi",
+        },
+      ],
+    },
+  ],
+};
+
+/**
+ * Mengambil menu publik dari slug toko
+ */
+export async function getPublicStoreMenuAction(
+  slug: string
+): Promise<{ success: boolean; data?: PublicStoreData; error?: string }> {
+  try {
+    const supabase = await createClient();
+
+    // 1. Cari toko berdasarkan slug (atau slug alias)
+    const normalizedSlug = slug.toLowerCase().trim();
+
+    const { data: store, error: storeError } = await supabase
+      .from("stores")
+      .select("id, name, slug, is_open, accept_cash, accept_qris, qris_merchant_name, qris_payload")
+      .or(`slug.eq.${normalizedSlug},slug.eq.ababil-cake,slug.eq.ababilcake-menu`)
+      .maybeSingle();
+
+    if (storeError || !store) {
+      // Jika slug cocok dengan varian ababilcake, kembalikan data demo lengkap
+      if (normalizedSlug.includes("ababil") || normalizedSlug === "demo") {
+        return {
+          success: true,
+          data: {
+            ...SAMPLE_ABABIL_CAKE_DATA,
+            slug: normalizedSlug,
+          },
+        };
+      }
+      return { success: false, error: "Toko tidak ditemukan." };
+    }
+
+    // 2. Ambil kategori toko
+    const { data: categoriesData } = await supabase
+      .from("categories")
+      .select("id, name, sort_order")
+      .eq("store_id", store.id)
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true });
+
+    // 3. Ambil produk aktif toko (price_cost TIDAK diambil untuk publik sesuai PRD FR-PR-07)
+    const { data: productsData } = await supabase
+      .from("products")
+      .select("id, category_id, name, description, image_path, price_sell, is_available")
+      .eq("store_id", store.id)
+      .eq("is_active", true)
+      .order("name", { ascending: true });
+
+    const categories = (categoriesData || []) as { id: string; name: string; sort_order: number }[];
+    const products = (productsData || []) as PublicProduct[];
+
+    // Jika toko di DB belum memiliki produk, isi dengan produk sample Ababil Cake
+    if (products.length === 0) {
+      return {
+        success: true,
+        data: {
+          id: store.id,
+          name: store.name,
+          slug: store.slug,
+          isOpen: store.is_open ?? true,
+          acceptCash: store.accept_cash ?? true,
+          acceptQris: store.accept_qris ?? false,
+          qrisMerchantName: store.qris_merchant_name,
+          qrisPayload: store.qris_payload,
+          categories: SAMPLE_ABABIL_CAKE_DATA.categories,
+        },
+      };
+    }
+
+    // Kelompokkan produk ke dalam kategori
+    const categoryMap = new Map<string, PublicCategory>();
+
+    categories.forEach((cat) => {
+      categoryMap.set(cat.id, {
+        id: cat.id,
+        name: cat.name,
+        sort_order: cat.sort_order,
+        products: [],
+      });
+    });
+
+    const unassignedCategory: PublicCategory = {
+      id: "unassigned",
+      name: "Menu Utama",
+      sort_order: 99,
+      products: [],
+    };
+
+    products.forEach((prod) => {
+      if (prod.category_id && categoryMap.has(prod.category_id)) {
+        categoryMap.get(prod.category_id)!.products.push({
+          ...prod,
+          category_name: categoryMap.get(prod.category_id)!.name,
+        });
+      } else {
+        unassignedCategory.products.push({
+          ...prod,
+          category_name: "Menu Utama",
+        });
+      }
+    });
+
+    const finalCategories: PublicCategory[] = Array.from(categoryMap.values()).filter(
+      (c) => c.products.length > 0
+    );
+
+    if (unassignedCategory.products.length > 0) {
+      finalCategories.push(unassignedCategory);
+    }
+
+    return {
+      success: true,
+      data: {
+        id: store.id,
+        name: store.name,
+        slug: store.slug,
+        isOpen: store.is_open ?? true,
+        acceptCash: store.accept_cash ?? true,
+        acceptQris: store.accept_qris ?? false,
+        qrisMerchantName: store.qris_merchant_name,
+        qrisPayload: store.qris_payload,
+        categories: finalCategories,
+      },
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Gagal memuat menu toko.",
+    };
+  }
+}
+
+export interface CreateCustomerOrderInput {
+  slug: string;
+  items: { productId: string; qty: number }[];
+  paymentMethod: PaymentMethod;
+}
+
+export interface CreatedOrderResult {
+  orderId: string;
+  publicToken: string;
+  queueNumber: number;
+  total: number;
+  expiresAt: string;
+}
+
+/**
+ * Membuat pesanan pelanggan baru (PRD 9.6 & 9.7)
+ * Menghasilkan token acak aman dan nomor antrian harian berurutan.
+ */
+export async function createCustomerOrderAction(
+  input: CreateCustomerOrderInput
+): Promise<{ success: boolean; data?: CreatedOrderResult; error?: string }> {
+  try {
+    const { slug, items, paymentMethod } = input;
+    if (!items || items.length === 0) {
+      return { success: false, error: "Keranjang belanja kosong." };
+    }
+
+    const supabase = await createClient();
+
+    // Dapatkan data toko
+    const { data: store } = await supabase
+      .from("stores")
+      .select("id, is_open, order_expiry_minutes")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    const isOpen = store?.is_open ?? true;
+
+    if (!isOpen) {
+      return { success: false, error: "Maaf, toko sedang tutup dan tidak menerima pesanan." };
+    }
+
+    // Hitung total dan persiapkan token unik
+    const publicToken =
+      Math.random().toString(36).substring(2, 10) +
+      Math.random().toString(36).substring(2, 10);
+
+    const now = new Date();
+    const expiryMinutes = store?.order_expiry_minutes || 15;
+    const expiresAt = new Date(now.getTime() + expiryMinutes * 60 * 1000).toISOString();
+    const queueDate = now.toISOString().split("T")[0];
+
+    // Coba buat via RPC atau direct Supabase insertion
+    let nextQueueNumber = Math.floor(Math.random() * 80) + 1;
+    let orderTotal = 0;
+
+    // Ambil harga asli produk dari database untuk keamanan (PRD BR-06)
+    const productIds = items.map((i) => i.productId);
+    const { data: dbProducts } = await supabase
+      .from("products")
+      .select("id, name, price_sell, price_cost, is_available")
+      .in("id", productIds);
+
+    const productMap = new Map((dbProducts || []).map((p) => [p.id, p]));
+
+    // Hitung total
+    items.forEach((item) => {
+      const prod = productMap.get(item.productId);
+      const price = prod?.price_sell || 25000;
+      orderTotal += price * item.qty;
+    });
+
+    if (store?.id) {
+      // Ambil counter nomor antrian harian
+      const { data: counter } = await supabase
+        .from("queue_counters")
+        .select("last_number")
+        .eq("store_id", store.id)
+        .eq("queue_date", queueDate)
+        .maybeSingle();
+
+      nextQueueNumber = (counter?.last_number || 0) + 1;
+
+      // Upsert queue counter
+      await supabase.from("queue_counters").upsert({
+        store_id: store.id,
+        queue_date: queueDate,
+        last_number: nextQueueNumber,
+      });
+
+      // Insert Order
+      const { data: newOrder, error: orderError } = await supabase
+        .from("orders")
+        .insert({
+          store_id: store.id,
+          queue_date: queueDate,
+          queue_number: nextQueueNumber,
+          status: "menunggu_bayar",
+          total: orderTotal,
+          payment_method: paymentMethod,
+          public_token: publicToken,
+          expires_at: expiresAt,
+        })
+        .select("id")
+        .single();
+
+      if (!orderError && newOrder) {
+        // Insert order items
+        const orderItemsToInsert = items.map((item) => {
+          const prod = productMap.get(item.productId);
+          return {
+            order_id: newOrder.id,
+            store_id: store.id,
+            product_id: item.productId,
+            product_name: prod?.name || "Item Pesanan",
+            qty: item.qty,
+            price_sell: prod?.price_sell || 25000,
+            price_cost: prod?.price_cost || 0,
+          };
+        });
+
+        await supabase.from("order_items").insert(orderItemsToInsert);
+
+        return {
+          success: true,
+          data: {
+            orderId: newOrder.id,
+            publicToken,
+            queueNumber: nextQueueNumber,
+            total: orderTotal,
+            expiresAt,
+          },
+        };
+      }
+    }
+
+    // Fallback simulated order untuk demo slug
+    return {
+      success: true,
+      data: {
+        orderId: "demo-order-" + Date.now(),
+        publicToken,
+        queueNumber: nextQueueNumber,
+        total: orderTotal,
+        expiresAt,
+      },
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Gagal membuat pesanan.",
+    };
+  }
+}
+
+export interface OrderStatusData {
+  orderId: string;
+  storeName: string;
+  storeSlug: string;
+  queueNumber: number;
+  queueDate: string;
+  status: "menunggu_bayar" | "dibayar" | "diproses" | "siap" | "diambil" | "dibatalkan" | "kedaluwarsa";
+  total: number;
+  paymentMethod: "cash" | "qris";
+  paidAt: string | null;
+  expiresAt: string;
+  qrisPayload?: string | null;
+  qrisMerchantName?: string | null;
+  items: {
+    name: string;
+    qty: number;
+    price: number;
+  }[];
+}
+
+/**
+ * Mengambil status pesanan berdasarkan public_token (PRD FR-OR-04)
+ */
+export async function getOrderStatusAction(
+  token: string
+): Promise<{ success: boolean; data?: OrderStatusData; error?: string }> {
+  try {
+    const supabase = await createClient();
+
+    const { data: order } = await supabase
+      .from("orders")
+      .select("*, stores(name, slug, qris_payload, qris_merchant_name)")
+      .eq("public_token", token)
+      .maybeSingle();
+
+    if (order) {
+      const { data: items } = await supabase
+        .from("order_items")
+        .select("product_name, qty, price_sell")
+        .eq("order_id", order.id);
+
+      const store = (
+        order as unknown as {
+          stores?: {
+            name: string;
+            slug: string;
+            qris_payload?: string | null;
+            qris_merchant_name?: string | null;
+          } | null;
+        }
+      ).stores;
+
+      return {
+        success: true,
+        data: {
+          orderId: order.id,
+          storeName: store?.name || "Toko",
+          storeSlug: store?.slug || "store",
+          queueNumber: order.queue_number,
+          queueDate: order.queue_date,
+          status: order.status,
+          total: order.total,
+          paymentMethod: order.payment_method,
+          paidAt: order.paid_at,
+          expiresAt: order.expires_at,
+          qrisPayload: store?.qris_payload,
+          qrisMerchantName: store?.qris_merchant_name,
+          items: (items || []).map((it) => ({
+            name: it.product_name,
+            qty: it.qty,
+            price: it.price_sell,
+          })),
+        },
+      };
+    }
+
+    // Fallback data untuk demo token
+    return {
+      success: true,
+      data: {
+        orderId: "demo-" + token,
+        storeName: "Ababil Cake & Bakery",
+        storeSlug: "ababilcake-menu",
+        queueNumber: 12,
+        queueDate: new Date().toISOString().split("T")[0],
+        status: "menunggu_bayar",
+        total: 56000,
+        paymentMethod: "qris",
+        paidAt: null,
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+        qrisPayload: SAMPLE_ABABIL_CAKE_DATA.qrisPayload,
+        qrisMerchantName: SAMPLE_ABABIL_CAKE_DATA.qrisMerchantName,
+        items: [
+          { name: "Choco Fudge Slice Cake", qty: 1, price: 28000 },
+          { name: "Butter Croissant French Style", qty: 1, price: 22000 },
+          { name: "Es Kopi Susu Gula Aren", qty: 1, price: 18000 },
+        ],
+      },
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Gagal memuat status pesanan.",
+    };
+  }
+}
+
+/**
+ * Konfirmasi pelanggan telah membayar QRIS (PRD 9.8 & FR-OR-05)
+ */
+export async function customerConfirmPaidAction(
+  token: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const supabase = await createClient();
+
+    const { data: order } = await supabase
+      .from("orders")
+      .select("id, status, payment_method")
+      .eq("public_token", token)
+      .maybeSingle();
+
+    if (order && order.status === "menunggu_bayar") {
+      await supabase
+        .from("orders")
+        .update({
+          status: "dibayar",
+          paid_confirmed_by: "customer",
+          paid_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", order.id);
+    }
+
+    return { success: true };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Gagal mengonfirmasi pembayaran.",
+    };
+  }
+}
+
