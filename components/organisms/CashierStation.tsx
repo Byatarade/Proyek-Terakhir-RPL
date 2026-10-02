@@ -302,6 +302,18 @@ export function CashierStation({
         </div>
 
         <div className="flex items-center flex-wrap gap-2.5">
+          {/* Tombol Akses Kasir POS (Input Menu Walk-in) */}
+          <Link href="/dashboard/pos">
+            <Button
+              variant="primary"
+              size="md"
+              className="gap-2 text-xs sm:text-sm font-bold shadow-[2px_2px_0px_var(--forest)] bg-[var(--leaf)] hover:bg-[#156336] text-white cursor-pointer"
+            >
+              <ShoppingBag className="w-4 h-4 text-[var(--mint)]" />
+              <span>Buka Kasir POS (Input Menu)</span>
+            </Button>
+          </Link>
+
           {/* Tombol TV Monitor Antrian Publik */}
           <Button
             variant="secondary"

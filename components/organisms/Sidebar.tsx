@@ -15,6 +15,7 @@ import {
   X,
   Store,
   ExternalLink,
+  ShoppingBag,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserRole } from "@/lib/types/database";
@@ -40,7 +41,13 @@ const NAV_GROUPS: NavGroup[] = [
         roles: ["owner", "admin_gudang", "kasir", "koki"],
       },
       {
-        label: "Layar Kasir",
+        label: "Kasir POS (Input Menu)",
+        href: "/dashboard/pos",
+        icon: <ShoppingBag className="w-4 h-4" />,
+        roles: ["owner", "kasir"],
+      },
+      {
+        label: "Layar Kasir (Antrian)",
         href: "/dashboard/kasir",
         icon: <Receipt className="w-4 h-4" />,
         roles: ["owner", "kasir"],

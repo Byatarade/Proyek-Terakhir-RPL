@@ -41,9 +41,9 @@ export default async function DashboardKasirPage() {
   const storeName = store?.name || "Toko Saya";
   const storeSlug = store?.slug || "";
 
-  // Ambil pesanan awal untuk kasir
-  const res = await getCashierOrdersAction();
-  const initialOrders = res.success && res.data ? res.data : [];
+  // Ambil pesanan antrian aktif untuk layar kasir PRD
+  const ordersRes = await getCashierOrdersAction();
+  const initialOrders = ordersRes.success && ordersRes.data ? ordersRes.data : [];
 
   return (
     <CashierStation

@@ -7,3 +7,5 @@ export * from "./DashboardOverview";
 export * from "./OnboardingWizard";
 export * from "./StoreQrManagement";
 export * from "./CashierStation";
+export * from "./CashierPosModal";
+export * from "./CashierPosStation";

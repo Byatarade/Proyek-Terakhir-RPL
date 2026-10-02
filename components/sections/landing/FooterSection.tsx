@@ -170,7 +170,7 @@ export const Footer: React.FC<FooterProps> = ({ className = "" }) => {
             Syarat & Ketentuan
           </Link>
           <div className="text-center">
-            © {new Date().getFullYear()} PayBuy. All Rights Reserved
+            © {new Date().getFullYear()} PayBuy. All Rights Reserved. Developed by Byatarade
           </div>
           <Link
             href="#"
