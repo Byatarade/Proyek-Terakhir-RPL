@@ -5,6 +5,9 @@ import { getPublicStoreMenuAction } from "@/lib/public-menu/actions";
 import { PublicStoreShell } from "@/components/templates/PublicStoreShell";
 import { PublicStoreMenu } from "@/components/organisms/PublicStoreMenu";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface PublicMenuPageProps {
   params: Promise<{
     slug: string;

@@ -165,6 +165,7 @@ export async function createCategoryAction(name: string): Promise<ActionResponse
     }
 
     revalidatePath("/dashboard/menu");
+    revalidatePath("/t/[slug]", "page");
     return { success: true, data: data as CategoryData };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Gagal menambah kategori." };
@@ -188,6 +189,7 @@ export async function updateCategoryAction(id: string, name: string): Promise<Ac
     if (error) return { success: false, error: error.message };
 
     revalidatePath("/dashboard/menu");
+    revalidatePath("/t/[slug]", "page");
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Gagal memperbarui kategori." };
@@ -208,6 +210,7 @@ export async function deleteCategoryAction(id: string): Promise<ActionResponse> 
     if (error) return { success: false, error: error.message };
 
     revalidatePath("/dashboard/menu");
+    revalidatePath("/t/[slug]", "page");
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Gagal menghapus kategori." };
@@ -263,6 +266,7 @@ export async function createProductAction(input: SaveProductInput): Promise<Acti
     if (error) return { success: false, error: error.message };
 
     revalidatePath("/dashboard/menu");
+    revalidatePath("/t/[slug]", "page");
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Gagal menambah produk." };
@@ -297,6 +301,7 @@ export async function updateProductAction(id: string, input: SaveProductInput): 
     if (error) return { success: false, error: error.message };
 
     revalidatePath("/dashboard/menu");
+    revalidatePath("/t/[slug]", "page");
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Gagal memperbarui produk." };
@@ -320,6 +325,7 @@ export async function toggleProductAvailabilityAction(
     if (error) return { success: false, error: error.message };
 
     revalidatePath("/dashboard/menu");
+    revalidatePath("/t/[slug]", "page");
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Gagal mengubah ketersediaan." };
@@ -343,6 +349,7 @@ export async function toggleProductActiveAction(
     if (error) return { success: false, error: error.message };
 
     revalidatePath("/dashboard/menu");
+    revalidatePath("/t/[slug]", "page");
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Gagal mengubah visibilitas." };
@@ -377,6 +384,7 @@ export async function deleteProductAction(id: string): Promise<ActionResponse> {
     }
 
     revalidatePath("/dashboard/menu");
+    revalidatePath("/t/[slug]", "page");
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Gagal menghapus produk." };

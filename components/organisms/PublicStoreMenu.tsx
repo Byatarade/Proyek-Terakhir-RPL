@@ -184,10 +184,12 @@ export function PublicStoreMenu({
               <ShoppingBag className="w-6 h-6" />
             </div>
             <h3 className="font-heading font-bold text-base text-[var(--forest)]">
-              Menu Tidak Ditemukan
+              {searchQuery.trim() ? "Menu Tidak Ditemukan" : "Menu Belum Tersedia"}
             </h3>
             <p className="text-xs text-[var(--muted)] max-w-xs mx-auto">
-              Tidak ada produk yang cocok dengan pencarian &quot;{searchQuery}&quot;. Silakan coba kata kunci lain.
+              {searchQuery.trim()
+                ? `Tidak ada produk yang cocok dengan pencarian "${searchQuery}". Silakan coba kata kunci lain.`
+                : "Toko ini belum menambahkan daftar menu yang tersedia. Silakan hubungi kasir atau coba kembali nanti."}
             </p>
           </div>
         ) : (

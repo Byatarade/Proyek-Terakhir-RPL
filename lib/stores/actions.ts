@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { validateQris } from "@/lib/payments/qris";
+import { revalidatePath } from "next/cache";
 
 export interface StoreOnboardingData {
   id: string;
@@ -190,6 +191,10 @@ export async function saveStorePaymentSettingsAction(
         error: updateError?.message || "Gagal memperbarui pengaturan pembayaran toko.",
       };
     }
+
+    revalidatePath("/dashboard/pengaturan");
+    revalidatePath(`/t/${updatedData.slug}`);
+    revalidatePath("/t/[slug]", "page");
 
     return {
       success: true,

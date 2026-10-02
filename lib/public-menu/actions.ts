@@ -157,7 +157,12 @@ export async function getPublicStoreMenuAction(
   slug: string
 ): Promise<{ success: boolean; data?: PublicStoreData; error?: string }> {
   try {
-    const supabase = await createClient();
+    let supabase: any;
+    try {
+      supabase = createAdminClient();
+    } catch {
+      supabase = await createClient();
+    }
 
     // 1. Cari toko berdasarkan slug (atau slug alias)
     const normalizedSlug = slug.toLowerCase().trim();
@@ -169,8 +174,8 @@ export async function getPublicStoreMenuAction(
       .maybeSingle();
 
     if (storeError || !store) {
-      // Jika slug cocok dengan varian ababilcake, kembalikan data demo lengkap
-      if (normalizedSlug.includes("ababil") || normalizedSlug === "demo") {
+      // Jika slug cocok dengan varian demo khusus ababilcake-menu atau demo
+      if (normalizedSlug === "ababilcake-menu" || normalizedSlug === "demo") {
         return {
           success: true,
           data: {
@@ -201,8 +206,25 @@ export async function getPublicStoreMenuAction(
     const categories = (categoriesData || []) as { id: string; name: string; sort_order: number }[];
     const products = (productsData || []) as PublicProduct[];
 
-    // Jika toko di DB belum memiliki produk, isi dengan produk sample Ababil Cake
+    // Jika toko di DB belum memiliki produk aktif
     if (products.length === 0) {
+      if (normalizedSlug === "ababilcake-menu" || normalizedSlug === "demo") {
+        return {
+          success: true,
+          data: {
+            id: store.id,
+            name: store.name,
+            slug: store.slug,
+            isOpen: store.is_open ?? true,
+            acceptCash: store.accept_cash ?? true,
+            acceptQris: store.accept_qris ?? false,
+            qrisMerchantName: store.qris_merchant_name,
+            qrisPayload: store.qris_payload,
+            categories: SAMPLE_ABABIL_CAKE_DATA.categories,
+          },
+        };
+      }
+
       return {
         success: true,
         data: {
@@ -214,7 +236,7 @@ export async function getPublicStoreMenuAction(
           acceptQris: store.accept_qris ?? false,
           qrisMerchantName: store.qris_merchant_name,
           qrisPayload: store.qris_payload,
-          categories: SAMPLE_ABABIL_CAKE_DATA.categories,
+          categories: [],
         },
       };
     }
@@ -312,10 +334,11 @@ export async function createCustomerOrderAction(
     const supabase = createAdminClient();
 
     // Dapatkan data toko
+    const normalizedSlug = slug.toLowerCase().trim();
     const { data: store } = await supabase
       .from("stores")
       .select("id, is_open, order_expiry_minutes")
-      .eq("slug", slug)
+      .eq("slug", normalizedSlug)
       .maybeSingle();
 
     const isOpen = store?.is_open ?? true;
@@ -527,10 +550,11 @@ export async function getOrderStatusAction(
 
     // Jika order belum ditemukan di database (misal demo token), ambil data toko dari slug
     if (slug) {
+      const normalizedSlug = slug.toLowerCase().trim();
       const { data: storeBySlug } = await supabase
         .from("stores")
         .select("name, slug, qris_payload, qris_merchant_name")
-        .eq("slug", slug)
+        .eq("slug", normalizedSlug)
         .maybeSingle();
 
       if (storeBySlug) {
