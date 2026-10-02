@@ -87,7 +87,7 @@ export async function registerOwnerAction(
   const origin =
     headerList.get("origin") ||
     process.env.NEXT_PUBLIC_APP_URL ||
-    "http://localhost:3000";
+    "https://paybuy.byatara.dev";
 
   // Call Supabase Auth signUp with metadata for handle_new_user trigger
   const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -268,7 +268,7 @@ export async function forgotPasswordAction(
   const origin =
     headerList.get("origin") ||
     process.env.NEXT_PUBLIC_APP_URL ||
-    "http://localhost:3000";
+    "https://paybuy.byatara.dev";
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}/auth/callback?next=/dashboard/pengaturan`,
@@ -299,7 +299,7 @@ export async function resendVerificationEmailAction(
     const origin =
       headerList.get("origin") ||
       process.env.NEXT_PUBLIC_APP_URL ||
-      "http://localhost:3000";
+      "https://paybuy.byatara.dev";
 
     const { error } = await supabase.auth.resend({
       type: "signup",
