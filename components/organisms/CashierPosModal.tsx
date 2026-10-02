@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo, useTransition } from "react";
+import React, { useState, useMemo, useTransition, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Search,
   Plus,
@@ -23,7 +24,12 @@ import {
   Loader2,
   AlertCircle,
   Sparkles,
+  Maximize2,
+  AlertTriangle,
+  Settings,
 } from "lucide-react";
+import QRCode from "qrcode";
+import { toDynamicQris } from "@/lib/payments/qris";
 import {
   CashierCatalog,
   CashierProductItem,
@@ -67,6 +73,12 @@ export function CashierPosModal({
   const [cashReceivedInput, setCashReceivedInput] = useState<string>("");
   const [orderNote, setOrderNote] = useState<string>("");
 
+  // QRIS State
+  const qrisConfig = catalog.storeQris;
+  const [qrisDataUrl, setQrisDataUrl] = useState<string | null>(null);
+  const [isGeneratingQr, setIsGeneratingQr] = useState<boolean>(false);
+  const [showLargeQrModal, setShowLargeQrModal] = useState<boolean>(false);
+
   // Submission State
   const [isSubmitting, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -105,6 +117,56 @@ export function CashierPosModal({
   const parsedCashReceived = Number(cashReceivedInput.replace(/\D/g, "")) || 0;
   const changeAmount = parsedCashReceived - subtotal;
   const isCashInsufficient = paymentMethod === "cash" && (parsedCashReceived < subtotal || subtotal === 0);
+
+  // Generate Dynamic QRIS jika metode pembayaran QRIS dipilih
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function generateQrisImage() {
+      if (paymentMethod !== "qris" || !qrisConfig?.qrisPayload) {
+        setQrisDataUrl(null);
+        return;
+      }
+
+      setIsGeneratingQr(true);
+      try {
+        let finalPayload = qrisConfig.qrisPayload;
+        if (subtotal > 0) {
+          try {
+            finalPayload = toDynamicQris(qrisConfig.qrisPayload, subtotal);
+          } catch (err) {
+            console.warn("Gagal konversi ke dynamic QRIS:", err);
+            finalPayload = qrisConfig.qrisPayload;
+          }
+        }
+
+        const url = await QRCode.toDataURL(finalPayload, {
+          width: 320,
+          margin: 2,
+          color: {
+            dark: "#000000",
+            light: "#FFFFFF",
+          },
+        });
+
+        if (!isCancelled) {
+          setQrisDataUrl(url);
+        }
+      } catch (err) {
+        console.error("Gagal membuat QRIS:", err);
+      } finally {
+        if (!isCancelled) {
+          setIsGeneratingQr(false);
+        }
+      }
+    }
+
+    generateQrisImage();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [paymentMethod, subtotal, qrisConfig?.qrisPayload]);
 
   // Filtered Products
   const filteredProducts = useMemo(() => {
@@ -801,6 +863,98 @@ export function CashierPosModal({
                   </div>
                 )}
 
+                {/* QRIS Presentation UI */}
+                {paymentMethod === "qris" && (
+                  <div className="p-3 rounded-xl bg-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] space-y-2.5 animate-in fade-in zoom-in-95 duration-150">
+                    {/* Header QRIS */}
+                    <div className="flex items-center justify-between border-b border-zinc-200 pb-1.5">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-[var(--leaf)] animate-pulse" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--leaf)]">
+                          {subtotal > 0 ? "QRIS Dinamis (Nominal Terisi)" : "QRIS Toko"}
+                        </span>
+                      </div>
+                      <span className="font-heading font-extrabold text-[11px] text-zinc-950 uppercase tracking-wider truncate max-w-[150px]">
+                        {qrisConfig?.qrisMerchantName || storeName}
+                      </span>
+                    </div>
+
+                    {qrisConfig?.qrisPayload ? (
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        {/* QR Code Container */}
+                        <div className="p-2.5 bg-white rounded-xl border border-[var(--forest)] shadow-xs flex flex-col items-center">
+                          {isGeneratingQr ? (
+                            <div className="w-36 h-36 flex flex-col items-center justify-center bg-zinc-50 rounded-lg">
+                              <Loader2 className="w-6 h-6 animate-spin text-[var(--leaf)]" />
+                              <span className="text-[10px] text-zinc-500 mt-1 font-medium">
+                                Membuat QRIS...
+                              </span>
+                            </div>
+                          ) : qrisDataUrl ? (
+                            <>
+                              <img
+                                src={qrisDataUrl}
+                                alt={`QRIS ${storeName}`}
+                                className="w-36 h-36 sm:w-40 sm:h-40 object-contain"
+                              />
+                              <div className="text-[9px] font-mono text-zinc-500 font-semibold mt-0.5">
+                                Standar QRIS Bank Indonesia (ASPI)
+                              </div>
+                            </>
+                          ) : (
+                            <div className="w-36 h-36 flex items-center justify-center bg-zinc-50 text-[10px] text-zinc-400">
+                              Gagal memuat QRIS
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Tombol Perbesar QR untuk Pelanggan */}
+                        {qrisDataUrl && (
+                          <button
+                            type="button"
+                            onClick={() => setShowLargeQrModal(true)}
+                            className="text-[11px] text-[var(--forest)] hover:text-[var(--leaf)] font-bold underline flex items-center gap-1 cursor-pointer"
+                          >
+                            <Maximize2 className="w-3 h-3" />
+                            <span>Perbesar Tampilan QR untuk Pelanggan</span>
+                          </button>
+                        )}
+
+                        {/* Rincian Petunjuk Bayar */}
+                        <div className="w-full p-2 rounded-lg bg-[var(--surface-2)] border border-[var(--forest)] space-y-0.5 text-left text-[11px]">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-zinc-700">Nominal Transfer:</span>
+                            <span className="font-heading font-extrabold text-xs text-[var(--forest)]">
+                              {formatRupiah(subtotal)}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-zinc-600 leading-tight">
+                            Tunjukkan QR ini ke pembeli. Scan menggunakan GoPay, OVO, DANA, BCA, ShopeePay, atau m-Banking.
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Warning jika toko belum atur QRIS di pengaturan */
+                      <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-500 text-amber-900 space-y-1.5">
+                        <div className="flex items-center gap-1.5 font-heading font-bold text-[11px]">
+                          <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                          <span>Kode QRIS Toko Belum Diatur</span>
+                        </div>
+                        <p className="text-[10px] text-amber-800 leading-relaxed">
+                          Toko <strong>{storeName}</strong> belum menyimpan kode QRIS di pengaturan toko.
+                        </p>
+                        <Link
+                          href="/dashboard/pengaturan"
+                          className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-900 hover:text-black underline"
+                        >
+                          <Settings className="w-3 h-3" />
+                          <span>Atur QRIS Toko Sekarang &rarr;</span>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Submit Error */}
                 {submitError && (
                   <div className="p-2.5 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700 flex items-center gap-2">
@@ -834,6 +988,56 @@ export function CashierPosModal({
           </div>
         )}
       </div>
+
+      {/* Modal Tampilan Penuh QRIS untuk Pelanggan */}
+      {showLargeQrModal && qrisDataUrl && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs no-print animate-in fade-in duration-150">
+          <div className="w-full max-w-sm bg-white rounded-2xl border-2 border-[var(--forest)] shadow-[8px_8px_0px_var(--forest)] p-6 text-center space-y-4">
+            <div className="flex items-center justify-between border-b border-zinc-200 pb-2">
+              <span className="font-heading font-bold text-xs text-[var(--forest)] uppercase tracking-wider">
+                Pindai untuk Membayar
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowLargeQrModal(false)}
+                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="font-heading font-extrabold text-xl text-zinc-950">
+                {qrisConfig?.qrisMerchantName || storeName}
+              </h3>
+              <div className="font-heading font-extrabold text-3xl text-[var(--forest)]">
+                {formatRupiah(subtotal)}
+              </div>
+            </div>
+
+            <div className="p-3 bg-white border-2 border-[var(--forest)] rounded-xl shadow-[3px_3px_0px_var(--forest)] inline-block mx-auto">
+              <img
+                src={qrisDataUrl}
+                alt="QRIS Pelanggan"
+                className="w-64 h-64 sm:w-72 sm:h-72 object-contain mx-auto"
+              />
+            </div>
+
+            <p className="text-xs text-zinc-500 font-medium leading-relaxed">
+              Buka aplikasi GoPay, OVO, DANA, BCA, ShopeePay, atau m-Banking Anda, lalu scan kode QRIS di atas.
+            </p>
+
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => setShowLargeQrModal(false)}
+              className="w-full text-xs font-bold"
+            >
+              Tutup Tampilan QR
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

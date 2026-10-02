@@ -384,6 +384,11 @@ export interface CashierCategoryItem {
 export interface CashierCatalog {
   categories: CashierCategoryItem[];
   products: CashierProductItem[];
+  storeQris?: {
+    acceptQris: boolean;
+    qrisMerchantName: string | null;
+    qrisPayload: string | null;
+  };
 }
 
 export interface CreateWalkinOrderInput {
@@ -402,7 +407,7 @@ export interface CreatedWalkinOrderResult {
 }
 
 /**
- * Mengambil katalog produk aktif untuk mesin kasir POS
+ * Mengambil katalog produk aktif dan data QRIS toko untuk mesin kasir POS
  */
 export async function getCashierCatalogAction(): Promise<ActionResponse<CashierCatalog>> {
   try {
@@ -423,7 +428,7 @@ export async function getCashierCatalogAction(): Promise<ActionResponse<CashierC
 
     const admin = createAdminClient();
 
-    const [categoriesRes, productsRes] = await Promise.all([
+    const [categoriesRes, productsRes, storeRes] = await Promise.all([
       admin
         .from("categories")
         .select("id, name, sort_order")
@@ -436,6 +441,11 @@ export async function getCashierCatalogAction(): Promise<ActionResponse<CashierC
         .eq("store_id", profile.store_id)
         .eq("is_active", true)
         .order("name", { ascending: true }),
+      admin
+        .from("stores")
+        .select("id, name, accept_cash, accept_qris, qris_merchant_name, qris_payload")
+        .eq("id", profile.store_id)
+        .maybeSingle(),
     ]);
 
     const categories: CashierCategoryItem[] = (categoriesRes.data || []).map((c: any) => ({
@@ -452,11 +462,20 @@ export async function getCashierCatalogAction(): Promise<ActionResponse<CashierC
       imagePath: p.image_path,
     }));
 
+    const storeQris = storeRes.data
+      ? {
+          acceptQris: storeRes.data.accept_qris ?? false,
+          qrisMerchantName: storeRes.data.qris_merchant_name,
+          qrisPayload: storeRes.data.qris_payload,
+        }
+      : undefined;
+
     return {
       success: true,
       data: {
         categories,
         products,
+        storeQris,
       },
     };
   } catch (err) {

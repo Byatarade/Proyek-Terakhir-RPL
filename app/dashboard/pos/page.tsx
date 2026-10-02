@@ -34,12 +34,19 @@ export default async function DashboardPosPage() {
 
   const { data: store } = await supabase
     .from("stores")
-    .select("id, name, slug")
+    .select("id, name, slug, accept_qris, qris_merchant_name, qris_payload")
     .eq("id", profile.store_id)
     .maybeSingle();
 
   const storeName = store?.name || "Toko Saya";
   const storeSlug = store?.slug || "";
+  const storeQris = store
+    ? {
+        acceptQris: store.accept_qris ?? false,
+        qrisMerchantName: store.qris_merchant_name,
+        qrisPayload: store.qris_payload,
+      }
+    : undefined;
 
   // Ambil katalog produk aktif untuk mesin kasir
   const catalogRes = await getCashierCatalogAction();
@@ -50,6 +57,7 @@ export default async function DashboardPosPage() {
       initialCatalog={initialCatalog}
       storeName={storeName}
       storeSlug={storeSlug}
+      storeQris={storeQris}
     />
   );
 }
