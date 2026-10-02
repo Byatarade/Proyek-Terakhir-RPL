@@ -6,3 +6,4 @@ export * from "./TopBar";
 export * from "./DashboardOverview";
 export * from "./OnboardingWizard";
 export * from "./StoreQrManagement";
+export * from "./CashierStation";
