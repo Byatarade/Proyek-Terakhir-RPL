@@ -32,6 +32,7 @@ import {
   cancelOrderAction,
   getCashierOrdersAction,
 } from "@/lib/cashier/actions";
+import { callCustomerOrderAction } from "@/lib/kitchen/actions";
 import { formatRupiah, cn } from "@/lib/utils";
 import { Button } from "@/components/atoms/Button";
 import { OrderStatus } from "@/lib/types/database";
@@ -180,6 +181,8 @@ export function CashierStation({
     callQueueVoice(order.queueNumber);
     setCalledOrderId(order.id);
     setTimeout(() => setCalledOrderId(null), 3000);
+    // Kirim sinyal panggil ke database agar berdering di ponsel pelanggan (QR menu)
+    callCustomerOrderAction(order.id).catch(() => {});
   };
 
   // 3. Tandai Pesanan Sudah Diambil (FR-KS-03)

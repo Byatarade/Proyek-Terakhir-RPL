@@ -471,6 +471,8 @@ export interface OrderStatusData {
   paymentMethod: "cash" | "qris";
   paidAt: string | null;
   expiresAt: string;
+  cancelReason?: string | null;
+  updatedAt?: string;
   qrisPayload?: string | null;
   qrisMerchantName?: string | null;
   items: {
@@ -537,6 +539,8 @@ export async function getOrderStatusAction(
           paymentMethod: order.payment_method,
           paidAt: order.paid_at,
           expiresAt: order.expires_at,
+          cancelReason: order.cancel_reason,
+          updatedAt: order.updated_at,
           qrisPayload: finalQrisPayload,
           qrisMerchantName: store?.qris_merchant_name || null,
           items: (items || []).map((it) => ({
@@ -634,20 +638,31 @@ export async function customerConfirmPaidAction(
 
     const { data: order } = await supabase
       .from("orders")
-      .select("id, status, payment_method")
+      .select("id, status, payment_method, store_id")
       .eq("public_token", token)
       .maybeSingle();
 
     if (order && order.status === "menunggu_bayar") {
+      const nowIso = new Date().toISOString();
       await supabase
         .from("orders")
         .update({
           status: "dibayar",
           paid_confirmed_by: "customer",
-          paid_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          paid_at: nowIso,
+          updated_at: nowIso,
         })
         .eq("id", order.id);
+
+      // Catat log transisi status pesanan
+      await supabase.from("order_status_logs").insert({
+        order_id: order.id,
+        store_id: order.store_id,
+        from_status: "menunggu_bayar",
+        to_status: "dibayar",
+        actor_type: "customer",
+        note: "Pelanggan menekan tombol 'Saya sudah bayar' (QRIS)",
+      });
     }
 
     return { success: true };
