@@ -525,7 +525,7 @@ export default function OrderStatusPage() {
                     Sedang Dimasak
                   </span>
                   <h3 className="font-heading font-bold text-base sm:text-lg text-[var(--forest)] mt-0.5">
-                    Pesananmu Sedang Dimasak! 👨‍🍳🔥
+                    Pesananmu Sedang Dimasak!
                   </h3>
                 </div>
               </div>

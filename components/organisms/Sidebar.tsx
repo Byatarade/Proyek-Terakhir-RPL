@@ -234,17 +234,17 @@ export function Sidebar({
                           href={item.href}
                           onClick={onClose}
                           className={cn(
-                            "flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-[13px] font-medium transition-all group relative",
+                            "flex items-center gap-3 px-3 py-2 rounded-[8px] text-xs sm:text-[13px] transition-all group relative border-2",
                             isActive
-                              ? "bg-emerald-50/80 text-[var(--leaf)] font-semibold border border-emerald-100"
-                              : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-950 border border-transparent"
+                              ? "bg-[var(--surface-2)] text-[var(--forest)] font-bold border-[var(--forest)] shadow-[3px_3px_0px_var(--forest)]"
+                              : "text-[var(--muted)] hover:text-[var(--ink)] font-medium border-transparent hover:bg-zinc-50"
                           )}
                         >
                           <span
                             className={cn(
                               "shrink-0 transition-colors",
                               isActive
-                                ? "text-[var(--leaf)]"
+                                ? "text-[var(--forest)]"
                                 : "text-zinc-400 group-hover:text-zinc-700"
                             )}
                           >
@@ -252,7 +252,7 @@ export function Sidebar({
                           </span>
                           <span className="truncate">{item.label}</span>
                           {isActive && (
-                            <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--leaf)]" />
+                            <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--forest)]" />
                           )}
                         </Link>
                       );
