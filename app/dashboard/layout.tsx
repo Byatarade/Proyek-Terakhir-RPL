@@ -3,50 +3,24 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardShell } from "@/components/templates/DashboardShell";
 import { UserRole } from "@/lib/types/database";
+import { getAuthenticatedProfile } from "@/lib/supabase/auth-cache";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Uses React cache() — user, profile, and store are cached in a single call
+  const { user, profile: profileData, store } = await getAuthenticatedProfile();
 
   if (!user) {
     redirect("/masuk?next=/dashboard");
   }
 
-  // Load user profile
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  const profileData = profile as {
-    is_active?: boolean;
-    role?: UserRole;
-    store_id?: string;
-    full_name?: string;
-  } | null;
-
   if (profileData && profileData.is_active === false) {
+    const supabase = await createClient();
     await supabase.auth.signOut();
     redirect("/masuk?error=inactive");
-  }
-
-  // Load store details
-  let store: { name: string; slug: string; is_open: boolean } | null = null;
-  if (profileData?.store_id) {
-    const { data: storeData } = await supabase
-      .from("stores")
-      .select("name, slug, is_open")
-      .eq("id", profileData.store_id)
-      .maybeSingle();
-    store = storeData;
   }
 
   const role: UserRole = profileData?.role || "owner";

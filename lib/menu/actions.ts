@@ -67,31 +67,33 @@ export async function getStoreMenuDataAction(): Promise<ActionResponse<MenuManag
       return { success: false, error: "Profil toko tidak ditemukan." };
     }
 
-    // Get store info
-    const { data: store } = await supabase
-      .from("stores")
-      .select("id, name, slug")
-      .eq("id", profileData.store_id)
-      .single();
+    // Fetch store info, categories, and products in parallel (saves ~200-400ms)
+    const [storeRes, categoriesRes, productsRes] = await Promise.all([
+      supabase
+        .from("stores")
+        .select("id, name, slug")
+        .eq("id", profileData.store_id)
+        .single(),
+      supabase
+        .from("categories")
+        .select("id, name, sort_order")
+        .eq("store_id", profileData.store_id)
+        .order("sort_order", { ascending: true })
+        .order("name", { ascending: true }),
+      supabase
+        .from("products")
+        .select("*")
+        .eq("store_id", profileData.store_id)
+        .order("created_at", { ascending: false }),
+    ]);
 
+    const store = storeRes.data;
     if (!store) {
       return { success: false, error: "Data toko tidak ditemukan." };
     }
 
-    // Get categories
-    const { data: categoriesData } = await supabase
-      .from("categories")
-      .select("id, name, sort_order")
-      .eq("store_id", store.id)
-      .order("sort_order", { ascending: true })
-      .order("name", { ascending: true });
-
-    // Get products
-    const { data: productsData } = await supabase
-      .from("products")
-      .select("*")
-      .eq("store_id", store.id)
-      .order("created_at", { ascending: false });
+    const categoriesData = categoriesRes.data;
+    const productsData = productsRes.data;
 
     const categories = (categoriesData || []) as CategoryData[];
     const categoryMap = new Map(categories.map((c) => [c.id, c.name]));
@@ -181,10 +183,25 @@ export async function updateCategoryAction(id: string, name: string): Promise<Ac
     if (!trimmed) return { success: false, error: "Nama kategori tidak boleh kosong." };
 
     const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Sesi tidak ditemukan." };
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("store_id")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
+
     const { error } = await supabase
       .from("categories")
       .update({ name: trimmed })
-      .eq("id", id);
+      .eq("id", id)
+      .eq("store_id", profile.store_id);
 
     if (error) return { success: false, error: error.message };
 
@@ -202,10 +219,32 @@ export async function updateCategoryAction(id: string, name: string): Promise<Ac
 export async function deleteCategoryAction(id: string): Promise<ActionResponse> {
   try {
     const supabase = await createClient();
-    // Unlink products in this category
-    await supabase.from("products").update({ category_id: null }).eq("category_id", id);
-    // Delete category
-    const { error } = await supabase.from("categories").delete().eq("id", id);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Sesi tidak ditemukan." };
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("store_id")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
+
+    // Unlink products in this category (only for this store)
+    await supabase
+      .from("products")
+      .update({ category_id: null })
+      .eq("category_id", id)
+      .eq("store_id", profile.store_id);
+    // Delete category (only if belongs to this store)
+    const { error } = await supabase
+      .from("categories")
+      .delete()
+      .eq("id", id)
+      .eq("store_id", profile.store_id);
 
     if (error) return { success: false, error: error.message };
 
@@ -280,6 +319,20 @@ export async function updateProductAction(id: string, input: SaveProductInput): 
   try {
     const supabase = await createClient();
 
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Sesi tidak ditemukan." };
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("store_id")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
+
     if (!input.name.trim()) return { success: false, error: "Nama produk wajib diisi." };
     if (input.price_sell < 0) return { success: false, error: "Harga jual tidak valid." };
 
@@ -296,7 +349,8 @@ export async function updateProductAction(id: string, input: SaveProductInput): 
         image_path: input.image_path || null,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", id);
+      .eq("id", id)
+      .eq("store_id", profile.store_id);
 
     if (error) return { success: false, error: error.message };
 
@@ -317,10 +371,25 @@ export async function toggleProductAvailabilityAction(
 ): Promise<ActionResponse> {
   try {
     const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Sesi tidak ditemukan." };
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("store_id")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
+
     const { error } = await supabase
       .from("products")
       .update({ is_available: isAvailable, updated_at: new Date().toISOString() })
-      .eq("id", id);
+      .eq("id", id)
+      .eq("store_id", profile.store_id);
 
     if (error) return { success: false, error: error.message };
 
@@ -341,10 +410,25 @@ export async function toggleProductActiveAction(
 ): Promise<ActionResponse> {
   try {
     const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Sesi tidak ditemukan." };
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("store_id")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
+
     const { error } = await supabase
       .from("products")
       .update({ is_active: isActive, updated_at: new Date().toISOString() })
-      .eq("id", id);
+      .eq("id", id)
+      .eq("store_id", profile.store_id);
 
     if (error) return { success: false, error: error.message };
 
@@ -363,23 +447,43 @@ export async function deleteProductAction(id: string): Promise<ActionResponse> {
   try {
     const supabase = await createClient();
 
-    // Check if product was ever ordered
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Sesi tidak ditemukan." };
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("store_id")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
+
+    // Check if product was ever ordered (scoped to this store)
     const { count } = await supabase
       .from("order_items")
       .select("*", { count: "exact", head: true })
-      .eq("product_id", id);
+      .eq("product_id", id)
+      .eq("store_id", profile.store_id);
 
     if (count && count > 0) {
       // Soft-delete to preserve order history
       const { error } = await supabase
         .from("products")
         .update({ is_active: false, is_available: false, updated_at: new Date().toISOString() })
-        .eq("id", id);
+        .eq("id", id)
+        .eq("store_id", profile.store_id);
 
       if (error) return { success: false, error: error.message };
     } else {
       // Hard delete if never ordered
-      const { error } = await supabase.from("products").delete().eq("id", id);
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", id)
+        .eq("store_id", profile.store_id);
       if (error) return { success: false, error: error.message };
     }
 

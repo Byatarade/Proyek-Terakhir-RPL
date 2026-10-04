@@ -2,8 +2,8 @@ import React from "react";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { StoreQrManagement } from "@/components/organisms/StoreQrManagement";
+import { getAuthenticatedProfile } from "@/lib/supabase/auth-cache";
 
 export const metadata: Metadata = {
   title: "Cetak & Unduh QR Menu Toko - PayBuy",
@@ -11,32 +11,13 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardQrPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, profile, store } = await getAuthenticatedProfile();
 
   if (!user) {
     redirect("/masuk?next=/dashboard/qr");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("store_id, role")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (!profile?.store_id) {
-    redirect("/onboarding");
-  }
-
-  const { data: store } = await supabase
-    .from("stores")
-    .select("id, name, slug, is_open")
-    .eq("id", profile.store_id)
-    .maybeSingle();
-
-  if (!store || !store.slug) {
+  if (!profile?.store_id || !store || !store.slug) {
     redirect("/onboarding");
   }
 

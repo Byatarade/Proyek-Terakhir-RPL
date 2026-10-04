@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DashboardOverview } from "@/components/organisms";
 import { ExpenseItem } from "@/lib/finance/actions";
+import { getAuthenticatedProfile } from "@/lib/supabase/auth-cache";
 
 export const metadata: Metadata = {
   title: "Beranda Dashboard - PayBuy",
@@ -19,18 +19,8 @@ export interface DashboardProductProfit {
 }
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("store_id, role")
-    .eq("id", user?.id || "")
-    .maybeSingle();
-
-  let store: { name: string; slug: string; is_open: boolean } | null = null;
+  // Use cached auth & store — eliminates duplicate getUser() + profiles + stores queries
+  const { profile, store } = await getAuthenticatedProfile();
 
   // Today metrics
   let todaySales = 0;
@@ -54,13 +44,6 @@ export default async function DashboardPage() {
   let topProducts: DashboardProductProfit[] = [];
 
   if (profile?.store_id) {
-    const { data: storeData } = await supabase
-      .from("stores")
-      .select("name, slug, is_open")
-      .eq("id", profile.store_id)
-      .maybeSingle();
-    store = storeData;
-
     const admin = createAdminClient();
 
     // Date boundaries
@@ -70,14 +53,27 @@ export default async function DashboardPage() {
       .toISOString()
       .split("T")[0];
 
-    // 1. Fetch Month Orders (includes today)
-    const { data: orders } = await admin
-      .from("orders")
-      .select("id, queue_date, total, status, payment_method, queue_number, created_at")
-      .eq("store_id", profile.store_id)
-      .gte("queue_date", firstDayOfMonth)
-      .lte("queue_date", todayStr)
-      .order("created_at", { ascending: false });
+    // Fetch orders AND expenses in parallel (saves ~150-300ms vs serial)
+    const [ordersRes, expensesRes] = await Promise.all([
+      admin
+        .from("orders")
+        .select("id, queue_date, total, status, payment_method, queue_number, created_at")
+        .eq("store_id", profile.store_id)
+        .gte("queue_date", firstDayOfMonth)
+        .lte("queue_date", todayStr)
+        .order("created_at", { ascending: false }),
+      admin
+        .from("expenses")
+        .select("id, store_id, spent_on, category, amount, note, created_by, created_at")
+        .eq("store_id", profile.store_id)
+        .gte("spent_on", firstDayOfMonth)
+        .lte("spent_on", todayStr)
+        .order("spent_on", { ascending: false })
+        .order("created_at", { ascending: false }),
+    ]);
+
+    const orders = ordersRes.data;
+    const expenses = expensesRes.data;
 
     if (orders) {
       // Active orders
@@ -157,16 +153,7 @@ export default async function DashboardPage() {
       }
     }
 
-    // 2. Fetch Expenses in current month
-    const { data: expenses } = await admin
-      .from("expenses")
-      .select("id, store_id, spent_on, category, amount, note, created_by, created_at")
-      .eq("store_id", profile.store_id)
-      .gte("spent_on", firstDayOfMonth)
-      .lte("spent_on", todayStr)
-      .order("spent_on", { ascending: false })
-      .order("created_at", { ascending: false });
-
+    // Process expenses (already fetched in parallel above)
     if (expenses) {
       recentExpenses = expenses.slice(0, 6) as ExpenseItem[];
 

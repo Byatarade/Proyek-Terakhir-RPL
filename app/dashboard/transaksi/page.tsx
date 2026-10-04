@@ -1,12 +1,12 @@
 import React from "react";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { getTransactionsAction } from "@/lib/transactions/actions";
 import { TransactionHistory } from "@/components/organisms/TransactionHistory";
 import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
+import { getAuthenticatedProfile } from "@/lib/supabase/auth-cache";
 
 export const metadata: Metadata = {
   title: "Riwayat Transaksi - PayBuy",
@@ -14,10 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardTransaksiPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = await getAuthenticatedProfile();
 
   if (!user) {
     redirect("/masuk?next=/dashboard/transaksi");

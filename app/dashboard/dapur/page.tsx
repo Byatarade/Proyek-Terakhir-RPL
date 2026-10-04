@@ -1,9 +1,9 @@
 import React from "react";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { getKitchenOrdersAction } from "@/lib/kitchen/actions";
 import { KitchenDisplay } from "@/components/organisms/KitchenDisplay";
+import { getAuthenticatedProfile } from "@/lib/supabase/auth-cache";
 
 export const dynamic = "force-dynamic";
 
@@ -13,20 +13,11 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardDapurPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, profile, store } = await getAuthenticatedProfile();
 
   if (!user) {
     redirect("/masuk?next=/dashboard/dapur");
   }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("store_id, role")
-    .eq("id", user.id)
-    .maybeSingle();
 
   if (!profile?.store_id) {
     redirect("/onboarding");
@@ -36,12 +27,6 @@ export default async function DashboardDapurPage() {
   if (profile.role !== "owner" && profile.role !== "koki") {
     redirect("/dashboard");
   }
-
-  const { data: store } = await supabase
-    .from("stores")
-    .select("id, name, slug")
-    .eq("id", profile.store_id)
-    .maybeSingle();
 
   const storeName = store?.name || "Toko Saya";
   const storeSlug = store?.slug || "";

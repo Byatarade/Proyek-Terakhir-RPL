@@ -1,12 +1,12 @@
 import React from "react";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { getProfitLossReportAction } from "@/lib/finance/actions";
 import { ProfitLossReport } from "@/components/organisms/ProfitLossReport";
 import { AlertCircle, Lock } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
+import { getAuthenticatedProfile } from "@/lib/supabase/auth-cache";
 
 export const metadata: Metadata = {
   title: "Riwayat Laba Rugi & Biaya - PayBuy",
@@ -14,20 +14,11 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardLaporanPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, profile } = await getAuthenticatedProfile();
 
   if (!user) {
     redirect("/masuk?next=/dashboard/laporan");
   }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, store_id")
-    .eq("id", user.id)
-    .maybeSingle();
 
   const role = profile?.role || "owner";
 
