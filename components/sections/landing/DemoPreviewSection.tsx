@@ -247,7 +247,7 @@ export function DemoPreviewSection() {
         {/* Tab 3: Layar Kasir */}
         {activeTab === "cashier" && (
           <div className="max-w-[700px] mx-auto bg-white border border-[var(--line-strong)] rounded-2xl p-6 shadow-card space-y-4">
-            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[var(--line)] pb-4 gap-3">
               <div>
                 <h4 className="font-heading font-semibold text-xl text-zinc-950">
                   Monitoring Antrian & Kasir
@@ -263,7 +263,7 @@ export function DemoPreviewSection() {
 
             {/* Active Cashier Rows */}
             <div className="space-y-2.5">
-              <div className="border border-[var(--line)] rounded-xl p-3.5 flex items-center justify-between hover:border-[var(--line-strong)] transition-colors">
+              <div className="border border-[var(--line)] rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between hover:border-[var(--line-strong)] transition-colors gap-3">
                 <div className="flex items-center gap-3">
                   <span className="font-heading font-semibold text-2xl text-zinc-950 tabular-nums tracking-tight">
                     #040
@@ -272,22 +272,22 @@ export function DemoPreviewSection() {
                     <span className="text-xs font-medium text-zinc-950 block">
                       3 Item • Rp 48.000
                     </span>
-                    <Badge variant="mint" size="sm">
+                    <Badge variant="mint" size="sm" className="mt-1">
                       Siap Diambil
                     </Badge>
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="secondary" size="sm" className="gap-1 text-xs">
+                <div className="flex w-full sm:w-auto gap-2">
+                  <Button variant="secondary" size="sm" className="flex-1 sm:flex-none gap-1 text-xs">
                     <Bell className="w-3.5 h-3.5 text-[var(--leaf)]" /> Panggil
                   </Button>
-                  <Button variant="primary" size="sm" className="gap-1 text-xs">
+                  <Button variant="primary" size="sm" className="flex-1 sm:flex-none gap-1 text-xs">
                     <Check className="w-3.5 h-3.5" /> Diserahkan
                   </Button>
                 </div>
               </div>
 
-              <div className="border border-[var(--line)] rounded-xl p-3.5 flex items-center justify-between bg-[var(--surface-2)]/50">
+              <div className="border border-[var(--line)] rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between bg-[var(--surface-2)]/50 gap-3">
                 <div className="flex items-center gap-3">
                   <span className="font-heading font-semibold text-2xl text-zinc-950 tabular-nums tracking-tight">
                     #043
@@ -296,12 +296,12 @@ export function DemoPreviewSection() {
                     <span className="text-xs font-medium text-zinc-950 block">
                       2 Item • Rp 32.000
                     </span>
-                    <Badge variant="amber" size="sm">
+                    <Badge variant="amber" size="sm" className="mt-1">
                       Menunggu Bayar (Tunai)
                     </Badge>
                   </div>
                 </div>
-                <Button variant="primary" size="sm" className="text-xs">
+                <Button variant="primary" size="sm" className="w-full sm:w-auto text-xs">
                   Konfirmasi Bayar
                 </Button>
               </div>
