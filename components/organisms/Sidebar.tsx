@@ -226,6 +226,8 @@ export function Sidebar({
                       const isActive =
                         item.href === "/dashboard"
                           ? pathname === "/dashboard"
+                          : item.href === "/dashboard/laporan"
+                          ? pathname.startsWith("/dashboard/laporan") || pathname.startsWith("/dashboard/laba-rugi")
                           : pathname.startsWith(item.href);
 
                       return (

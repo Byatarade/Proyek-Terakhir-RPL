@@ -35,12 +35,12 @@ import {
   ProfitLossReportData,
   ExpenseItem,
   SaveExpenseInput,
-  EXPENSE_CATEGORIES,
   getProfitLossReportAction,
   createExpenseAction,
   updateExpenseAction,
   deleteExpenseAction,
 } from "@/lib/finance/actions";
+import { EXPENSE_CATEGORIES } from "@/lib/finance/constants";
 
 export interface ProfitLossReportProps {
   initialData: ProfitLossReportData;

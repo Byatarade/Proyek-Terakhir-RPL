@@ -92,17 +92,6 @@ export interface ActionResponse<T = unknown> {
   error?: string;
 }
 
-export const EXPENSE_CATEGORIES = [
-  "Bahan Baku & Dapur",
-  "Operasional & Kemasan",
-  "Gaji & Upah Pegawai",
-  "Utilitas (Listrik, Air & Gas)",
-  "Sewa Tempat / Gerobak",
-  "Pemasaran & Promosi",
-  "Pemeliharaan Alat",
-  "Lain-lain",
-] as const;
-
 /**
  * Mengambil Laporan Laba Rugi dan Biaya Toko (PRD FR-LR-02 & FR-LR-05)
  */
