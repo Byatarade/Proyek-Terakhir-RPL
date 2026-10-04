@@ -60,17 +60,17 @@ export const Footer: React.FC<FooterProps> = ({ className = "" }) => {
 
             {/* Email */}
             <a
-              href="mailto:kontak@paybuy.id"
+              href="mailto:kontak@paybuy.byatara.dev"
               className="text-lg sm:text-xl font-semibold text-zinc-950 mt-4 hover:underline tracking-tight"
             >
-              kontak@paybuy.id
+              kontak@paybuy.byatara.dev
             </a>
 
             {/* Address */}
             <p className="text-xs sm:text-sm text-zinc-700/90 mt-3 leading-relaxed max-w-xs font-normal">
-              Gedung Inovasi UMKM Lt. 3, <br />
-              Jl. Kebon Sirih No. 45, Jakarta Pusat, <br />
-              DKI Jakarta, 10150
+              Kerten, Laweyan, <br />
+              Kota Surakarta, <br />
+              Jawa Tengah, Indonesia
             </p>
           </div>
 
