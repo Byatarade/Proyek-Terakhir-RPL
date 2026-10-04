@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { landingContent } from "@/content/landing";
 import { Button } from "@/components/atoms/Button";
-import { Receipt, Menu, X, ArrowRight, Store, User } from "lucide-react";
+import { Receipt, Menu, X, ArrowRight, Store, User, DollarSign } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 export function NavbarSection() {
@@ -40,8 +40,8 @@ export function NavbarSection() {
           href="/"
           className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--leaf)] rounded-lg"
         >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-zinc-950 text-[var(--leaf)] flex items-center justify-center shadow-subtle group-hover:bg-zinc-800 transition-colors">
-            <Receipt className="w-5 h-5" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[var(--leaf)] text-white flex items-center justify-center shadow-subtle group-hover:bg-[var(--leaf-hover)] transition-colors">
+            <DollarSign className="w-5 h-5" />
           </div>
           <div className="flex flex-col">
             <span className="font-heading font-bold text-xl sm:text-2xl tracking-tight text-zinc-950 leading-none">

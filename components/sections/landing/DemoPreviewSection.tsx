@@ -44,7 +44,7 @@ export function DemoPreviewSection() {
               onClick={() => setActiveTab("customer")}
               className={`flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all cursor-pointer ${
                 activeTab === "customer"
-                  ? "bg-zinc-950 text-white shadow-sm"
+                  ? "bg-[var(--leaf)] text-white shadow-sm"
                   : "text-[var(--muted)] hover:text-zinc-950"
               }`}
             >
@@ -56,7 +56,7 @@ export function DemoPreviewSection() {
               onClick={() => setActiveTab("kitchen")}
               className={`flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all cursor-pointer ${
                 activeTab === "kitchen"
-                  ? "bg-zinc-950 text-white shadow-sm"
+                  ? "bg-[var(--leaf)] text-white shadow-sm"
                   : "text-[var(--muted)] hover:text-zinc-950"
               }`}
             >
@@ -68,7 +68,7 @@ export function DemoPreviewSection() {
               onClick={() => setActiveTab("cashier")}
               className={`flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all cursor-pointer ${
                 activeTab === "cashier"
-                  ? "bg-zinc-950 text-white shadow-sm"
+                  ? "bg-[var(--leaf)] text-white shadow-sm"
                   : "text-[var(--muted)] hover:text-zinc-950"
               }`}
             >
@@ -82,7 +82,7 @@ export function DemoPreviewSection() {
         {activeTab === "customer" && (
           <div className="max-w-[420px] mx-auto bg-white border border-[var(--line-strong)] rounded-2xl shadow-card overflow-hidden">
             {/* Mobile Header Bar */}
-            <div className="bg-zinc-950 text-white p-4 flex items-center justify-between">
+            <div className="bg-[var(--leaf)] text-white p-4 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--mint)] block">
                   MENU ONLINE TOKO
@@ -97,7 +97,7 @@ export function DemoPreviewSection() {
 
             {/* Category Filter Chips */}
             <div className="p-3 bg-[var(--surface-2)]/60 border-b border-[var(--line)] flex gap-2 overflow-x-auto text-xs font-medium">
-              <span className="px-3 py-1 bg-zinc-950 text-white rounded-full shrink-0">
+              <span className="px-3 py-1 bg-[var(--leaf)] text-white rounded-full shrink-0">
                 Semua Menu
               </span>
               <span className="px-3 py-1 bg-white text-zinc-900 border border-[var(--line)] rounded-full shrink-0">
@@ -155,7 +155,7 @@ export function DemoPreviewSection() {
             {/* Sticky Cart Footer Mock */}
             <div className="p-3.5 bg-white border-t border-[var(--line)] flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-medium text-zinc-950">
-                <div className="w-6 h-6 rounded-full bg-zinc-950 text-white flex items-center justify-center text-[11px]">
+                <div className="w-6 h-6 rounded-full bg-[var(--leaf)] text-white flex items-center justify-center text-[11px]">
                   2
                 </div>
                 <span>Total: Rp 40.000</span>

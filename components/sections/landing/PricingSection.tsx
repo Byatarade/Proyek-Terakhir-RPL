@@ -59,11 +59,11 @@ export function PricingSection() {
 
                 {/* Price Display */}
                 <div className="my-5">
-                  <div className="flex items-baseline gap-1.5">
+                  <div className="flex items-baseline gap-1.5 min-h-[72px] sm:min-h-[88px]">
                     <span className="font-heading font-bold text-3xl sm:text-4xl text-zinc-950 tabular-nums tracking-tight">
                       {plan.price}
                     </span>
-                    <span className="text-xs font-medium text-[var(--muted)]">
+                    <span className="text-xs font-medium text-[var(--muted)] shrink-0">
                       / {plan.period}
                     </span>
                   </div>
