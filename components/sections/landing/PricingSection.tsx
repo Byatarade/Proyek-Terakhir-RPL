@@ -67,14 +67,16 @@ export function PricingSection() {
                       / {plan.period}
                     </span>
                   </div>
-                  <p className="text-xs sm:text-sm text-[var(--muted)] mt-2 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[var(--muted)] mt-2 leading-relaxed min-h-[64px]">
                     {plan.description}
                   </p>
                 </div>
 
                 {/* Target Audience Note */}
-                <div className="p-2.5 rounded-xl bg-[var(--surface-2)]/70 border border-[var(--line)] text-xs text-[var(--muted)] mb-4">
-                  <strong className="text-zinc-950">Target:</strong> {plan.target}
+                <div className="p-3 rounded-xl bg-[var(--surface-2)]/70 border border-[var(--line)] text-xs text-[var(--muted)] mb-4 min-h-[80px] flex items-center">
+                  <div>
+                    <strong className="text-zinc-950">Target:</strong> {plan.target}
+                  </div>
                 </div>
 
                 {/* Perforation */}
