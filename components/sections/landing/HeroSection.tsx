@@ -8,6 +8,7 @@ import { StampLunas } from "@/components/molecules/StampLunas";
 import { TicketCard, TicketPerforation } from "@/components/molecules/TicketCard";
 import { formatRupiah } from "@/lib/utils";
 import { ArrowRight, CheckCircle2, QrCode, Clock, Check } from "lucide-react";
+import { DashboardMacWindow } from "@/components/molecules/DashboardMacWindow";
 
 export function HeroSection() {
   const { hero } = landingContent;
@@ -157,6 +158,45 @@ export function HeroSection() {
                   </div>
                 </div>
               </TicketCard>
+            </div>
+          </div>
+        </div>
+
+        {/* Showcase Dashboard macOS Window */}
+        <div className="mt-14 sm:mt-20 pt-10 border-t border-[var(--line)]">
+          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-2">
+            <span className="text-[11px] font-extrabold uppercase tracking-widest text-[var(--leaf)] block">
+              SHOWCASE DASHBOARD KASIR & OPERASIONAL
+            </span>
+            <h2 className="font-heading font-bold text-2xl sm:text-3xl lg:text-4xl text-zinc-950 tracking-tight">
+              Satu Layar untuk Seluruh Kendali Toko
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-500 max-w-lg mx-auto">
+              Pantau antrian pesanan, konfirmasi pembayaran kasir, dan sinkronisasi pesanan ke dapur secara langsung tanpa perlu aplikasi tambahan.
+            </p>
+          </div>
+
+          <div className="relative max-w-5xl mx-auto">
+            {/* Ambient Background Glow */}
+            <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-4/5 h-64 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none -z-10" />
+
+            {/* macOS Window with Red, Yellow, Green Buttons */}
+            <DashboardMacWindow />
+
+            {/* Feature Trust Points below the Mac Window */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-y-2.5 gap-x-8 text-xs sm:text-sm text-zinc-600">
+              <span className="inline-flex items-center gap-2 font-medium">
+                <CheckCircle2 className="w-4 h-4 text-[var(--leaf)] shrink-0" />
+                Pemanggilan Antrian Terhubung Layar TV
+              </span>
+              <span className="inline-flex items-center gap-2 font-medium">
+                <CheckCircle2 className="w-4 h-4 text-[var(--leaf)] shrink-0" />
+                Mendukung Pembayaran QRIS Dinamis & Tunai
+              </span>
+              <span className="inline-flex items-center gap-2 font-medium">
+                <CheckCircle2 className="w-4 h-4 text-[var(--leaf)] shrink-0" />
+                Terhubung Otomatis ke Layar Monitor Dapur
+              </span>
             </div>
           </div>
         </div>
