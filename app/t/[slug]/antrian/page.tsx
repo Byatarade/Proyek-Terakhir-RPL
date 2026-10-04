@@ -165,10 +165,10 @@ export default function PublicQueuePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--forest)] text-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-white text-zinc-900 flex items-center justify-center p-4">
         <div className="text-center space-y-3">
-          <Loader2 className="w-10 h-10 animate-spin text-[var(--mint)] mx-auto" />
-          <p className="font-heading font-semibold text-sm tracking-wider text-[var(--mint)]">
+          <Loader2 className="w-10 h-10 animate-spin text-[var(--leaf)] mx-auto" />
+          <p className="font-heading font-semibold text-sm tracking-wider text-zinc-700">
             Memuat Layar Antrian Restoran...
           </p>
         </div>
@@ -181,14 +181,13 @@ export default function PublicQueuePage() {
   const lastCalled = queueData?.lastCalledNumber || (readyNumbers.length > 0 ? readyNumbers[0] : null);
 
   return (
-    // Latar Hutan, nomor siap sangat besar berlatar Mint bertepi Putih/Hutan (design.md 14)
-    <div className="min-h-screen bg-[var(--forest)] text-white flex flex-col justify-between selection:bg-[var(--mint)] selection:text-[var(--forest)]">
+    <div className="min-h-screen bg-white text-zinc-900 flex flex-col justify-between selection:bg-[var(--mint)] selection:text-[var(--forest)]">
       {/* Top Header Layar Antrian */}
-      <header className="px-6 py-4 bg-[#0a2c1e] border-b-2 border-[#17513A] flex items-center justify-between shadow-[0_4px_0px_#051810]">
+      <header className="px-6 py-4 bg-white border-b border-[var(--line)] flex items-center justify-between shadow-2xs">
         <div className="flex items-center gap-4">
           <Link
             href={`/t/${slug}`}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[#17513A] hover:bg-[#1f684b] text-white border border-[var(--mint)]/40 text-xs font-semibold transition-all"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-white hover:bg-zinc-50 text-zinc-700 border border-[var(--line)] text-xs font-semibold shadow-2xs transition-all"
             title="Kembali ke Menu Toko"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -196,10 +195,10 @@ export default function PublicQueuePage() {
           </Link>
 
           <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[var(--mint)] block">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[var(--leaf)] block">
               Papan Antrian Pesanan
             </span>
-            <h1 className="font-heading font-extrabold text-xl sm:text-2xl text-white tracking-wide">
+            <h1 className="font-heading font-extrabold text-xl sm:text-2xl text-zinc-950 tracking-wide">
               {queueData?.storeName || "Toko"}
             </h1>
           </div>
@@ -207,8 +206,8 @@ export default function PublicQueuePage() {
 
         {/* Toolbar Jam & Kontrol TV */}
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-[6px] bg-[#17513A] border border-[var(--mint)]/30 text-white font-heading font-bold text-sm tabular-nums">
-            <Clock className="w-4 h-4 text-[var(--mint)]" />
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-[8px] bg-zinc-50 border border-[var(--line)] text-zinc-800 font-heading font-bold text-sm tabular-nums shadow-2xs">
+            <Clock className="w-4 h-4 text-[var(--leaf)]" />
             <span>{currentTime}</span>
           </div>
 
@@ -222,10 +221,10 @@ export default function PublicQueuePage() {
               setSoundEnabled(!soundEnabled);
             }}
             className={cn(
-              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] border text-xs font-bold transition-all cursor-pointer",
+              "inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[8px] border text-xs font-bold transition-all cursor-pointer shadow-2xs",
               soundEnabled
-                ? "bg-[var(--mint)] text-[var(--forest)] border-white shadow-[2px_2px_0px_white]"
-                : "bg-[#17513A] text-white border-[var(--mint)]/40 hover:bg-[#1f684b]"
+                ? "bg-[var(--leaf)] text-white border-[var(--leaf)] hover:bg-[#166B3A]"
+                : "bg-white text-zinc-700 border-[var(--line)] hover:bg-zinc-50"
             )}
             title={soundEnabled ? "Panggilan suara aktif" : "Aktifkan suara panggilan"}
           >
@@ -236,7 +235,7 @@ export default function PublicQueuePage() {
               </>
             ) : (
               <>
-                <VolumeX className="w-4 h-4 text-[var(--mint)]" />
+                <VolumeX className="w-4 h-4 text-zinc-400" />
                 <span>Aktifkan Suara</span>
               </>
             )}
@@ -245,7 +244,7 @@ export default function PublicQueuePage() {
           <button
             type="button"
             onClick={toggleFullscreen}
-            className="p-2 rounded-[6px] bg-[#17513A] hover:bg-[#1f684b] text-white border border-[var(--mint)]/40 transition-all cursor-pointer"
+            className="p-2 rounded-[8px] bg-white hover:bg-zinc-50 text-zinc-700 border border-[var(--line)] shadow-2xs transition-all cursor-pointer"
             title="Layar Penuh (TV Mode)"
           >
             {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -254,32 +253,32 @@ export default function PublicQueuePage() {
       </header>
 
       {/* Main Queue Display: 2 Columns (Sedang Dimasak vs Siap Diambil) */}
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white">
         {/* Kolom Kiri (Lg 5 Kolom): SEDANG DIMASAK / DISIAPKAN */}
-        <section className="lg:col-span-5 flex flex-col bg-[#0b3323] border-3 border-[#17513A] rounded-[10px] p-5 shadow-[6px_6px_0px_#051810]">
-          <div className="flex items-center justify-between border-b-2 border-dashed border-[#17513A] pb-3 mb-4">
+        <section className="lg:col-span-5 flex flex-col bg-white border-2 border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-sm">
+          <div className="flex items-center justify-between border-b border-dashed border-[var(--line)] pb-3.5 mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-[6px] bg-[#17513A] text-[var(--mint)] flex items-center justify-center border border-[var(--mint)]/30">
+              <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200">
                 <ChefHat className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="font-heading font-extrabold text-base sm:text-lg text-white uppercase tracking-wider">
+                <h2 className="font-heading font-extrabold text-base sm:text-lg text-zinc-900 uppercase tracking-wider">
                   Sedang Dimasak
                 </h2>
-                <span className="text-[11px] text-[var(--mint)] opacity-80 block">
+                <span className="text-[11px] text-zinc-500 block">
                   Koki sedang menyiapkan pesanan
                 </span>
               </div>
             </div>
-            <span className="px-2.5 py-1 rounded-[6px] bg-[#17513A] font-heading font-bold text-xs tabular-nums text-[var(--mint)] border border-[var(--mint)]/30">
+            <span className="px-3 py-1 rounded-full bg-zinc-100 font-heading font-bold text-xs tabular-nums text-zinc-700 border border-zinc-200">
               {cookingNumbers.length} Antrian
             </span>
           </div>
 
           {cookingNumbers.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-[#17513A] rounded-[8px]">
-              <ChefHat className="w-10 h-10 text-[var(--mint)]/50 mb-2" />
-              <p className="font-heading font-semibold text-sm text-[var(--mint)]/70">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-zinc-200 rounded-xl bg-zinc-50/50">
+              <ChefHat className="w-12 h-12 text-zinc-300 mb-2" />
+              <p className="font-heading font-semibold text-sm text-zinc-400">
                 Tidak ada pesanan dalam proses masak
               </p>
             </div>
@@ -288,12 +287,12 @@ export default function PublicQueuePage() {
               {cookingNumbers.map((num) => (
                 <div
                   key={num}
-                  className="bg-[#134631] border-2 border-[var(--mint)]/30 rounded-[8px] p-3 text-center shadow-[3px_3px_0px_#051810]"
+                  className="bg-zinc-50 hover:bg-white border-2 border-zinc-200 hover:border-zinc-300 rounded-xl p-3 text-center shadow-2xs transition-all"
                 >
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--mint)] opacity-80 block">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 block">
                     Antrian
                   </span>
-                  <div className="font-heading font-extrabold text-3xl sm:text-4xl text-white tabular-nums tracking-tight mt-0.5">
+                  <div className="font-heading font-extrabold text-3xl sm:text-4xl text-zinc-900 tabular-nums tracking-tight mt-0.5">
                     {String(num).padStart(3, "0")}
                   </div>
                 </div>
@@ -302,34 +301,34 @@ export default function PublicQueuePage() {
           )}
         </section>
 
-        {/* Kolom Kanan (Lg 7 Kolom): SIAP DIAMBIL (Nomor Sangat Besar Berlatar Mint bertepi Hutan/Putih) */}
-        <section className="lg:col-span-7 flex flex-col bg-[#0b3323] border-3 border-[var(--mint)] rounded-[10px] p-5 shadow-[6px_6px_0px_#051810]">
-          <div className="flex items-center justify-between border-b-2 border-dashed border-[#17513A] pb-3 mb-4">
+        {/* Kolom Kanan (Lg 7 Kolom): SIAP DIAMBIL DI KASIR */}
+        <section className="lg:col-span-7 flex flex-col bg-emerald-50/40 border-2 border-emerald-300 rounded-2xl p-5 sm:p-6 shadow-[0_4px_20px_rgba(27,127,69,0.06)]">
+          <div className="flex items-center justify-between border-b border-dashed border-emerald-200 pb-3.5 mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-[6px] bg-[var(--mint)] text-[var(--forest)] flex items-center justify-center border-2 border-white shadow-[2px_2px_0px_white]">
+              <div className="w-9 h-9 rounded-xl bg-[var(--leaf)] text-white flex items-center justify-center border border-emerald-700 shadow-xs">
                 <Bell className="w-5 h-5 stroke-[2.5]" />
               </div>
               <div>
-                <h2 className="font-heading font-extrabold text-base sm:text-lg text-[var(--mint)] uppercase tracking-wider">
+                <h2 className="font-heading font-extrabold text-base sm:text-lg text-[var(--leaf)] uppercase tracking-wider">
                   Siap Diambil di Kasir
                 </h2>
-                <span className="text-[11px] text-white opacity-90 block">
+                <span className="text-[11px] text-zinc-600 block">
                   Silakan menuju konter kasir membawa nomor antrian
                 </span>
               </div>
             </div>
-            <span className="px-3 py-1 rounded-[6px] bg-[var(--mint)] font-heading font-extrabold text-xs tabular-nums text-[var(--forest)] border-2 border-white shadow-[2px_2px_0px_white]">
+            <span className="px-3.5 py-1 rounded-full bg-[var(--leaf)] font-heading font-extrabold text-xs tabular-nums text-white shadow-xs">
               {readyNumbers.length} Siap
             </span>
           </div>
 
           {readyNumbers.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-[#17513A] rounded-[8px]">
-              <Bell className="w-12 h-12 text-[var(--mint)]/40 mb-3" />
-              <p className="font-heading font-bold text-base text-[var(--mint)]">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-emerald-200 rounded-xl bg-white/80">
+              <Bell className="w-12 h-12 text-emerald-300 mb-3" />
+              <p className="font-heading font-bold text-base text-zinc-800">
                 Belum ada pesanan yang siap diambil
               </p>
-              <p className="text-xs text-white/70 max-w-xs mt-1">
+              <p className="text-xs text-zinc-500 max-w-xs mt-1">
                 Nomor antrian yang sudah matang akan langsung muncul di sini.
               </p>
             </div>
@@ -337,14 +336,14 @@ export default function PublicQueuePage() {
             <div className="space-y-4">
               {/* Highlight Nomor Paling Baru Dipanggil */}
               {lastCalled && (
-                <div className="p-4 rounded-[8px] bg-[var(--mint)] border-3 border-white text-[var(--forest)] text-center shadow-[4px_4px_0px_white]">
-                  <span className="inline-block px-3 py-0.5 rounded-[4px] bg-[var(--forest)] text-white text-[10px] font-extrabold uppercase tracking-widest mb-1">
+                <div className="p-5 sm:p-6 rounded-2xl bg-[var(--leaf)] border-2 border-emerald-700 text-white text-center shadow-[0_8px_24px_rgba(27,127,69,0.22)]">
+                  <span className="inline-block px-3.5 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase tracking-widest mb-1 backdrop-blur-xs">
                     Panggilan Terakhir
                   </span>
-                  <div className="font-heading font-extrabold text-6xl sm:text-7xl lg:text-8xl tabular-nums tracking-tight">
+                  <div className="font-heading font-black text-6xl sm:text-7xl lg:text-8xl tabular-nums tracking-tight">
                     {String(lastCalled).padStart(3, "0")}
                   </div>
-                  <span className="text-xs font-bold block mt-1">
+                  <span className="text-xs sm:text-sm font-semibold block mt-1 text-emerald-100">
                     Pesanan Siap! Silakan ambil di kasir
                   </span>
                 </div>
@@ -358,13 +357,18 @@ export default function PublicQueuePage() {
                     <div
                       key={num}
                       className={cn(
-                        "rounded-[8px] p-3 text-center border-3 transition-all",
+                        "rounded-xl p-3.5 text-center border-2 transition-all shadow-xs",
                         isLatest
-                          ? "bg-[var(--mint)] text-[var(--forest)] border-white shadow-[3px_3px_0px_white]"
-                          : "bg-white text-[var(--forest)] border-[var(--forest)] shadow-[3px_3px_0px_#17513A]"
+                          ? "bg-[var(--leaf)] text-white border-emerald-700 shadow-md ring-2 ring-emerald-300"
+                          : "bg-white text-zinc-950 border-emerald-300 hover:border-emerald-500 hover:shadow-md"
                       )}
                     >
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider opacity-80 block">
+                      <span
+                        className={cn(
+                          "text-[10px] font-extrabold uppercase tracking-wider block",
+                          isLatest ? "text-emerald-100 opacity-90" : "text-emerald-700"
+                        )}
+                      >
                         Siap Diambil
                       </span>
                       <div className="font-heading font-extrabold text-4xl sm:text-5xl tabular-nums tracking-tight mt-0.5">
@@ -380,7 +384,8 @@ export default function PublicQueuePage() {
       </main>
 
       {/* Footer Info Ticker Bar */}
-      <footer className="px-6 py-3 bg-[#0a2c1e] border-t-2 border-[#17513A] text-center text-xs font-medium text-[var(--mint)]">
+      <footer className="px-6 py-3.5 bg-white border-t border-[var(--line)] text-center text-xs font-medium text-zinc-500 flex items-center justify-center gap-2 shadow-2xs">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block" />
         <span>
           Harap memperhatikan nomor antrian yang tampil di layar. Tunjukkan bukti nota di ponselmu saat mengambil pesanan di kasir.
         </span>
