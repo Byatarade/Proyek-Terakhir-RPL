@@ -10,10 +10,14 @@ import {
   Receipt,
   Store,
   CheckCircle2,
+  TrendingUp,
+  Wallet,
+  BarChart3,
+  Plus,
 } from "lucide-react";
 import { StatCard } from "@/components/molecules/StatCard";
 import { Button } from "@/components/atoms/Button";
-import { formatRupiah } from "@/lib/utils";
+import { cn, formatRupiah } from "@/lib/utils";
 
 export interface DashboardOverviewProps {
   storeName?: string;
@@ -23,14 +27,21 @@ export interface DashboardOverviewProps {
   todaySales?: number;
   todayOrdersCount?: number;
   activeOrdersCount?: number;
+  todayExpenses?: number;
+  todayGrossProfit?: number;
+  todayNetProfit?: number;
 }
 
 export function DashboardOverview({
   storeSlug,
   isOpen,
+  role = "owner",
   todaySales = 0,
   todayOrdersCount = 0,
   activeOrdersCount = 0,
+  todayExpenses = 0,
+  todayGrossProfit = 0,
+  todayNetProfit = 0,
 }: DashboardOverviewProps) {
   const currentDateFormatted = new Intl.DateTimeFormat("id-ID", {
     weekday: "long",
@@ -40,8 +51,10 @@ export function DashboardOverview({
     timeZone: "Asia/Jakarta",
   }).format(new Date());
 
+  const isOwner = role === "owner";
+
   return (
-    <div className="space-y-6 sm:space-y-8 bg-white">
+    <div className="space-y-6 sm:space-y-8 bg-white select-none">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -53,7 +66,7 @@ export function DashboardOverview({
             Ringkasan Hari Ini
           </h1>
           <p className="text-sm text-zinc-500 mt-1">
-            Pantau penjualan, pesanan masuk, dan aktivitas operasional toko Anda.
+            Pantau penjualan, laba rugi, pesanan masuk, dan aktivitas operasional toko Anda.
           </p>
         </div>
 
@@ -78,21 +91,41 @@ export function DashboardOverview({
         <StatCard
           label="Penjualan Hari Ini"
           value={formatRupiah(todaySales)}
-          subtitle="Dari seluruh pesanan lunas"
+          subtitle={`${todayOrdersCount} pesanan masuk`}
           icon={<DollarSign className="w-4 h-4 text-[var(--leaf)]" />}
         />
-        <StatCard
-          label="Pesanan Hari Ini"
-          value={`${todayOrdersCount} Pesanan`}
-          subtitle="Total pesanan masuk"
-          icon={<ShoppingBag className="w-4 h-4 text-[var(--blue)]" />}
-        />
+
+        {isOwner ? (
+          <StatCard
+            label="Laba Bersih Hari Ini"
+            value={formatRupiah(todayNetProfit)}
+            subtitle={
+              todayExpenses > 0
+                ? `Biaya operasional: ${formatRupiah(todayExpenses)}`
+                : "Belum ada catatan biaya hari ini"
+            }
+            icon={<TrendingUp className="w-4 h-4 text-[var(--forest)]" />}
+            trend={{
+              value: todayNetProfit >= 0 ? "Untung" : "Defisit",
+              isPositive: todayNetProfit >= 0,
+            }}
+          />
+        ) : (
+          <StatCard
+            label="Pesanan Hari Ini"
+            value={`${todayOrdersCount} Pesanan`}
+            subtitle="Total pesanan masuk"
+            icon={<ShoppingBag className="w-4 h-4 text-[var(--blue)]" />}
+          />
+        )}
+
         <StatCard
           label="Antrian / Pesanan Aktif"
           value={`${activeOrdersCount} Antrian`}
           subtitle="Diproses atau siap diambil"
           icon={<Clock className="w-4 h-4 text-[var(--amber)]" />}
         />
+
         <StatCard
           label="Status Operasional"
           value={isOpen ? "Toko Buka" : "Toko Tutup"}
@@ -100,6 +133,111 @@ export function DashboardOverview({
           icon={<CheckCircle2 className="w-4 h-4 text-[var(--leaf)]" />}
         />
       </div>
+
+      {/* Owner Financial & Quick Action Section (PRD Section 9.13 & design.md) */}
+      {isOwner && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          {/* Laba Rugi & Biaya Shortcut Card */}
+          <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs hover:border-[var(--forest)] transition-all flex flex-col justify-between group">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-[var(--surface-2)] border border-[var(--line)] flex items-center justify-center text-[var(--forest)]">
+                  <BarChart3 className="w-5 h-5 text-[var(--leaf)]" />
+                </div>
+                <Link href="/dashboard/laporan">
+                  <span className="text-xs font-semibold text-[var(--leaf)] hover:underline inline-flex items-center gap-1">
+                    <span>Lihat Laporan Lengkap</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </Link>
+              </div>
+
+              <h3 className="font-heading font-bold text-lg text-zinc-950 pt-2">
+                Riwayat Laba Rugi & Biaya
+              </h3>
+              <p className="text-xs text-zinc-500 leading-relaxed font-normal">
+                Lihat rincian laba kotor, harga pokok makanan (HPP), rincian penjualan per produk, dan catat pengeluaran operasional toko.
+              </p>
+
+              <div className="pt-2 grid grid-cols-3 gap-2 text-xs">
+                <div className="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200/80">
+                  <span className="text-[10px] text-zinc-400 font-semibold uppercase block">
+                    Penjualan
+                  </span>
+                  <span className="font-bold text-zinc-900 font-mono tabular-nums">
+                    {formatRupiah(todaySales)}
+                  </span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200/80">
+                  <span className="text-[10px] text-zinc-400 font-semibold uppercase block">
+                    Laba Kotor
+                  </span>
+                  <span className="font-bold text-[var(--forest)] font-mono tabular-nums">
+                    {formatRupiah(todayGrossProfit)}
+                  </span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200/80">
+                  <span className="text-[10px] text-zinc-400 font-semibold uppercase block">
+                    Biaya Hari Ini
+                  </span>
+                  <span className="font-bold text-red-600 font-mono tabular-nums">
+                    {formatRupiah(todayExpenses)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 flex items-center gap-2">
+              <Link href="/dashboard/laporan" className="w-full">
+                <Button variant="secondary" size="sm" className="w-full text-xs">
+                  Buka Laba Rugi
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Riwayat Transaksi Shortcut Card */}
+          <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs hover:border-[var(--forest)] transition-all flex flex-col justify-between group">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-700">
+                  <Clock className="w-5 h-5 text-zinc-700" />
+                </div>
+                <Link href="/dashboard/transaksi">
+                  <span className="text-xs font-semibold text-zinc-700 hover:underline inline-flex items-center gap-1">
+                    <span>Semua Transaksi</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </Link>
+              </div>
+
+              <h3 className="font-heading font-bold text-lg text-zinc-950 pt-2">
+                Riwayat Transaksi Pesanan
+              </h3>
+              <p className="text-xs text-zinc-500 leading-relaxed font-normal">
+                Daftar seluruh transaksi yang masuk dari QR menu atau kasir manual, status pembayaran, serta pencarian nota nomor antrian.
+              </p>
+
+              <div className="pt-2 p-3 rounded-lg bg-zinc-50 border border-zinc-200/80 flex items-center justify-between text-xs">
+                <span className="text-zinc-600 font-medium">
+                  Total Pesanan Terdaftar Hari Ini:
+                </span>
+                <span className="font-bold text-zinc-900 font-mono tabular-nums">
+                  {todayOrdersCount} Transaksi
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-4 flex items-center gap-2">
+              <Link href="/dashboard/transaksi" className="w-full">
+                <Button variant="secondary" size="sm" className="w-full text-xs">
+                  Buka Riwayat Transaksi
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* QR & Menu Activation Banner: Minimalist Landing Card Style */}
       <div className="bg-white border border-[var(--line)] rounded-2xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
@@ -143,37 +281,6 @@ export function DashboardOverview({
               </Button>
             </Link>
           </div>
-        </div>
-      </div>
-
-      {/* Recent Orders Empty State / Overview Card */}
-      <div className="bg-white border border-[var(--line)] rounded-2xl p-8 sm:p-10 text-center space-y-4 shadow-xs">
-        <div className="w-14 h-14 rounded-2xl bg-zinc-50 border border-zinc-200 flex items-center justify-center text-[var(--leaf)] mx-auto">
-          <Receipt className="w-7 h-7" />
-        </div>
-
-        <div className="space-y-1.5 max-w-md mx-auto">
-          <h3 className="font-heading font-bold text-lg text-zinc-950">
-            Belum Ada Transaksi Hari Ini
-          </h3>
-          <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed font-normal">
-            Pesanan dari pelanggan yang memindai QR menu akan langsung tercatat dan diperbarui otomatis di sini, layar kasir, dan layar dapur.
-          </p>
-        </div>
-
-        <div className="pt-2 flex flex-wrap justify-center gap-3">
-          <Link href="/dashboard/menu">
-            <Button variant="secondary" size="md" className="gap-2 text-xs sm:text-sm">
-              <span>Kelola Daftar Menu</span>
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
-          <Link href="/dashboard/pengaturan">
-            <Button variant="secondary" size="md" className="gap-2 text-xs sm:text-sm">
-              <QrCode className="w-4 h-4 text-[var(--leaf)]" />
-              <span>Kelola QRIS & Pembayaran</span>
-            </Button>
-          </Link>
         </div>
       </div>
     </div>
