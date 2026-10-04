@@ -16,6 +16,7 @@ import {
   Store,
   ExternalLink,
   ShoppingBag,
+  DollarSign,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserRole } from "@/lib/types/database";
@@ -151,8 +152,8 @@ export function Sidebar({
               href="/dashboard"
               className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--leaf)] rounded-lg p-1"
             >
-              <div className="w-8 h-8 rounded-xl bg-zinc-950 text-[var(--leaf)] flex items-center justify-center shadow-xs group-hover:bg-zinc-800 transition-colors">
-                <Receipt className="w-4 h-4 text-[var(--leaf)]" />
+              <div className="w-8 h-8 rounded-xl bg-[var(--leaf)] text-white flex items-center justify-center shadow-xs group-hover:bg-[var(--leaf-hover)] transition-colors">
+                <DollarSign className="w-4 h-4 text-white" />
               </div>
               <div className="flex flex-col">
                 <span className="font-heading font-bold text-base tracking-tight text-zinc-950 leading-none">
