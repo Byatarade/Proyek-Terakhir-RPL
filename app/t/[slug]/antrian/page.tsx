@@ -14,7 +14,6 @@ import {
   ArrowLeft,
   Loader2,
   UtensilsCrossed,
-  Sparkles,
 } from "lucide-react";
 import { getPublicQueueAction, PublicQueueData } from "@/lib/kitchen/actions";
 import { createClient } from "@/lib/supabase/client";

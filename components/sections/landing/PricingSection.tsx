@@ -4,7 +4,7 @@ import { landingContent } from "@/content/landing";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { TicketCard, TicketPerforation } from "@/components/molecules/TicketCard";
-import { Check, Sparkles, Tag, ArrowRight } from "lucide-react";
+import { Check, Tag, ArrowRight } from "lucide-react";
 
 export function PricingSection() {
   const { pricing } = landingContent;
@@ -52,7 +52,6 @@ export function PricingSection() {
                     </Badge>
                   ) : (
                     <Badge variant="mint" size="sm">
-                      <Sparkles className="w-3 h-3 text-zinc-900" />
                       {plan.badge.text}
                     </Badge>
                   )}

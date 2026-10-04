@@ -18,7 +18,6 @@ import {
   Bell,
   Tv,
   ExternalLink,
-  Sparkles,
   AlertTriangle,
   RotateCcw,
 } from "lucide-react";

@@ -18,7 +18,6 @@ import {
   ShieldCheck,
   Loader2,
   RefreshCw,
-  Sparkles,
   Info,
 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
@@ -373,7 +372,6 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
           {/* Header */}
           <div className="mb-6">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--surface-2)] border border-[var(--line)] text-xs font-semibold text-[var(--forest)] mb-2.5">
-              <Sparkles className="w-3.5 h-3.5 text-[var(--leaf)]" />
               <span>Langkah Utama: Pengaturan Pembayaran</span>
             </div>
             <h1 className="font-heading font-semibold text-2xl sm:text-3xl text-[var(--ink)] tracking-tight">
@@ -503,7 +501,6 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
                     onClick={handleUseDemoQris}
                     className="text-xs font-semibold text-[var(--leaf)] hover:underline flex items-center gap-1"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
                     <span>Gunakan QRIS Simulasi Demo</span>
                   </button>
                 </div>

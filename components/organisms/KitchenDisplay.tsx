@@ -17,7 +17,6 @@ import {
   Check,
   Loader2,
   Layers,
-  Sparkles,
   Bell,
 } from "lucide-react";
 import {

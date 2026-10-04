@@ -10,7 +10,6 @@ import {
   Copy,
   Check,
   ExternalLink,
-  Sparkles,
   Smartphone,
   ShieldCheck,
   Info,
@@ -285,7 +284,6 @@ export function StoreQrManagement({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--line)] pb-5 no-print">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--surface-2)] text-[var(--leaf)] text-xs font-bold mb-2">
-            <Sparkles className="w-3.5 h-3.5" />
             <span>1 QR Code Seumur Toko (FR-QR-04)</span>
           </div>
           <h1 className="font-heading font-bold text-2xl sm:text-3xl text-zinc-950 tracking-tight">

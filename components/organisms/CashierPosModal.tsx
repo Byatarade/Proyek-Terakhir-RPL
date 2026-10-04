@@ -23,7 +23,6 @@ import {
   Cookie,
   Loader2,
   AlertCircle,
-  Sparkles,
   Maximize2,
   AlertTriangle,
   Settings,

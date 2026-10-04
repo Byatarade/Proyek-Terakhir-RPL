@@ -12,7 +12,6 @@ import {
   ArrowLeft,
   Clock,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Badge } from "@/components/atoms/Badge";
@@ -200,7 +199,6 @@ export function EmailVerificationPending({
         <TicketPerforation className="my-2" />
 
         <div className="text-xs text-[var(--muted)] flex items-start gap-2">
-          <Sparkles className="w-4 h-4 text-[var(--leaf)] shrink-0 mt-0.5" />
           <span>
             Buka email tersebut lalu klik tombol <strong>&ldquo;Konfirmasi Akun&rdquo;</strong> untuk
             langsung melanjutkan ke halaman <strong>Pengaturan QRIS Toko</strong>.
