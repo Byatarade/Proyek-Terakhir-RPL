@@ -171,7 +171,7 @@ export const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           </Link>
           <div className="text-center">
             © {new Date().getFullYear()} PayBuy. All Rights Reserved. Developed by{" "}
-            <a href="byatara.dev" className="underline underline-offset-4">
+            <a href="https://byatara.dev" className="underline underline-offset-4">
               Byatarade
             </a>
           </div>
