@@ -23,11 +23,11 @@ export default async function DashboardQrPage() {
 
   // Dapatkan hostname aktif saat ini dari request headers atau env
   const headersList = await headers();
-  const host = headersList.get("host") || "paybuy.byatara.dev";
+  const host = headersList.get("host") || "paybuy.web.id";
   const proto = headersList.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ||
-    (host.includes("byatara.dev") ? "https://paybuy.byatara.dev" : `${proto}://${host}`);
+    (host.includes("web.id") ? "https://paybuy.web.id" : `${proto}://${host}`);
 
   return (
     <StoreQrManagement

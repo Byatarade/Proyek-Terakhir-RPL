@@ -35,6 +35,7 @@ yarn-error.log*
 .env.local
 prd.md
 architecture.md
+design.md
 
 # vercel
 .vercel

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://paybuy.byatara.dev";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://paybuy.web.id";
 
   return [
     {

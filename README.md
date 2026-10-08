@@ -350,7 +350,7 @@ Pastikan perangkat Anda telah terpasang:
 ### 2. Kloning Repository
 Buka terminal dan jalankan perintah:
 ```bash
-git clone https://github.com/Byatarade/Proyek-Akhir-Laravel-Kelas-12.git pay-buy
+git clone https://github.com/Byatarade/Proyek-Terakhir-RPL.git pay-buy
 cd pay-buy
 ```
 
@@ -455,17 +455,13 @@ Proyek ini dirancang, diarsitekruri, dan dibangun dengan dedikasi penuh oleh:
 *Developer & Creator of PayBuy*
 
 [![GitHub Profile](https://img.shields.io/badge/GitHub-Byatarade-181717?style=for-the-badge&logo=github)](https://github.com/Byatarade)
-[![Project Repository](https://img.shields.io/badge/Repository-Proyek--Akhir--Laravel--Kelas--12-1B7F45?style=for-the-badge&logo=git)](https://github.com/Byatarade/Proyek-Akhir-Laravel-Kelas-12)
+[![Project Repository](https://img.shields.io/badge/Repository-Proyek--Terakhir--RPL-1B7F45?style=for-the-badge&logo=git)](https://github.com/Byatarade/Proyek-Terakhir-RPL)
 
 *"Dibuat untuk memajukan dan memodernisasi efisiensi usaha kuliner UMKM di seluruh Indonesia."*
 
 </div>
 
 ---
-
-## 📄 Lisensi
-
-Proyek ini dilisensikan di bawah lisensi terbuka **[MIT License](LICENSE)**. Anda dipersilakan untuk mempelajari, mengembangkan, dan memodifikasi kode sumber proyek ini sesuai kebutuhan edukasi maupun pengembangan bisnis.
 
 <div align="center">
   <sub>PayBuy © 2026. Seluruh hak cipta dilindungi.</sub>

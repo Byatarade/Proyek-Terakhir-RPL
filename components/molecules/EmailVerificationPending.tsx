@@ -189,7 +189,7 @@ export function EmailVerificationPending({
               {slug && (
                 <div>
                   <span className="block text-[11px] font-medium uppercase">Tautan Menu:</span>
-                  <span className="font-mono font-semibold text-[var(--leaf)]">paybuy.byatara.dev/t/{slug}</span>
+                  <span className="font-mono font-semibold text-[var(--leaf)]">paybuy.web.id/t/{slug}</span>
                 </div>
               )}
             </div>

@@ -33,7 +33,7 @@ export function StoreQrManagement({
   storeSlug,
   initialBaseUrl,
 }: StoreQrManagementProps) {
-  const OFFICIAL_DOMAIN = "https://paybuy.byatara.dev";
+  const OFFICIAL_DOMAIN = "https://paybuy.web.id";
   const [baseUrl, setBaseUrl] = useState<string>(initialBaseUrl || OFFICIAL_DOMAIN);
   const [tableLabel, setTableLabel] = useState<string>("Meja & Kasir");
   const [qrColor, setQrColor] = useState<"forest" | "black">("forest");
@@ -49,14 +49,14 @@ export function StoreQrManagement({
   // Deteksi URL asal browser (domain tempat aplikasi berjalan)
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Jika browser membuka domain resmi atau subdomain byatara.dev, prioritaskan https://paybuy.byatara.dev
-      if (window.location.host.includes("byatara.dev")) {
-        setBaseUrl("https://paybuy.byatara.dev");
+      // Jika browser membuka domain resmi atau subdomain web.id, prioritaskan https://paybuy.web.id
+      if (window.location.host.includes("web.id")) {
+        setBaseUrl("https://paybuy.web.id");
       } else if (window.location.origin.includes("localhost")) {
-        // Jika sedang di localhost, tetap gunakan domain live resmi https://paybuy.byatara.dev agar QR dapat discan ponsel
-        setBaseUrl("https://paybuy.byatara.dev");
+        // Jika sedang di localhost, tetap gunakan domain live resmi https://paybuy.web.id agar QR dapat discan ponsel
+        setBaseUrl("https://paybuy.web.id");
       } else {
-        setBaseUrl(window.location.origin || "https://paybuy.byatara.dev");
+        setBaseUrl(window.location.origin || "https://paybuy.web.id");
       }
     }
   }, []);

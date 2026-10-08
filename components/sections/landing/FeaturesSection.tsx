@@ -62,7 +62,7 @@ export function FeaturesSection() {
                   TAUTAN RESMI MENU ANDA
                 </span>
                 <div className="font-mono font-medium text-sm text-zinc-950 bg-white px-3 py-1 rounded-lg border border-[var(--line)] shadow-subtle">
-                  paybuy.byatara.dev/t/kopi-kawan
+                  paybuy.web.id/t/kopi-kawan
                 </div>
                 <p className="text-xs text-zinc-500 font-normal pt-0.5">
                   Siap dicetak untuk tent card meja, stiker, dan poster kasir

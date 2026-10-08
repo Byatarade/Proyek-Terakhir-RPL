@@ -21,7 +21,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://paybuy.byatara.dev";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://paybuy.web.id";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),

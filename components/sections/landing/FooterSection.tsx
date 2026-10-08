@@ -60,10 +60,10 @@ export const Footer: React.FC<FooterProps> = ({ className = "" }) => {
 
             {/* Email */}
             <a
-              href="mailto:kontak@paybuy.byatara.dev"
+              href="mailto:kontak@paybuy.web.id"
               className="text-lg sm:text-xl font-semibold text-zinc-950 mt-4 hover:underline tracking-tight"
             >
-              kontak@paybuy.byatara.dev
+              kontak@paybuy.web.id
             </a>
 
             {/* Address */}

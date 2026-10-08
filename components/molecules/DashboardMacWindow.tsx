@@ -13,7 +13,7 @@ interface DashboardMacWindowProps {
 
 export function DashboardMacWindow({
   className,
-  url = "paybuy.byatara.dev/dashboard/kasir",
+  url = "paybuy.web.id/dashboard/kasir",
   title = "Layar Kasir & Operasional",
 }: DashboardMacWindowProps) {
   return (

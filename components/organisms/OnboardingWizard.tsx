@@ -320,7 +320,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
               </span>
               <div className="mt-1.5 flex flex-col sm:flex-row items-start sm:items-center gap-2">
                 <code className="px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-mono text-[var(--leaf)] font-semibold flex-1 select-all break-all">
-                  paybuy.byatara.dev/t/{store.slug}
+                  paybuy.web.id/t/{store.slug}
                 </code>
                 <Button
                   type="button"
@@ -837,7 +837,7 @@ export function OnboardingWizard({ initialStore }: OnboardingWizardProps) {
                 Tautan Menu Publik
               </span>
               <div className="flex items-center justify-between mt-1 text-xs font-mono text-[var(--leaf)] font-semibold">
-                <span>paybuy.byatara.dev/t/{store.slug}</span>
+                <span>paybuy.web.id/t/{store.slug}</span>
                 <Link
                   href={`/t/${store.slug}`}
                   target="_blank"

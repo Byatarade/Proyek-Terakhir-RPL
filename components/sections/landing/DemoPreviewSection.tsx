@@ -249,7 +249,7 @@ export function DemoPreviewSection() {
         {activeTab === "cashier" && (
           <div className="max-w-4xl mx-auto space-y-4">
             <DashboardMacWindow
-              url="paybuy.byatara.dev/dashboard/kasir"
+              url="paybuy.web.id/dashboard/kasir"
               title="Layar Kasir & Operasional Toko PayBuy"
             />
             <div className="flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs text-zinc-500 pt-2">
