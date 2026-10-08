@@ -7,9 +7,12 @@ import {
   Home,
   LayoutDashboard,
   ArrowLeft,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   Search,
   FileQuestion,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   Store,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";

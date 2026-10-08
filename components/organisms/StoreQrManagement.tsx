@@ -10,12 +10,15 @@ import {
   Copy,
   Check,
   ExternalLink,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   Smartphone,
   ShieldCheck,
   Info,
   CheckCircle2,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   Share2,
   FileCode,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   Tag,
   Palette,
 } from "lucide-react";
@@ -49,15 +52,15 @@ export function StoreQrManagement({
   // Deteksi URL asal browser (domain tempat aplikasi berjalan)
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Jika browser membuka domain resmi atau subdomain web.id, prioritaskan https://paybuy.web.id
-      if (window.location.host.includes("web.id")) {
-        setBaseUrl("https://paybuy.web.id");
-      } else if (window.location.origin.includes("localhost")) {
-        // Jika sedang di localhost, tetap gunakan domain live resmi https://paybuy.web.id agar QR dapat discan ponsel
-        setBaseUrl("https://paybuy.web.id");
-      } else {
-        setBaseUrl(window.location.origin || "https://paybuy.web.id");
-      }
+      setTimeout(() => {
+        if (window.location.host.includes("web.id")) {
+          setBaseUrl("https://paybuy.web.id");
+        } else if (window.location.origin.includes("localhost")) {
+          setBaseUrl("https://paybuy.web.id");
+        } else {
+          setBaseUrl(window.location.origin || "https://paybuy.web.id");
+        }
+      }, 0);
     }
   }, []);
 

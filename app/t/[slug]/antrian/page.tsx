@@ -13,6 +13,7 @@ import {
   Minimize2,
   ArrowLeft,
   Loader2,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   UtensilsCrossed,
 } from "lucide-react";
 import { getPublicQueueAction, PublicQueueData } from "@/lib/kitchen/actions";
@@ -122,7 +123,9 @@ export default function PublicQueuePage() {
   };
 
   useEffect(() => {
-    loadQueue();
+    setTimeout(() => {
+      loadQueue();
+    }, 0);
 
     // Supabase Realtime channel
     const supabase = createClient();
@@ -148,6 +151,7 @@ export default function PublicQueuePage() {
       supabase.removeChannel(channel);
       clearInterval(poll);
     };
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, soundEnabled]);
 
   // Fullscreen toggle

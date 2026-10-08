@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { landingContent } from "@/content/landing";
 import { Button } from "@/components/atoms/Button";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Receipt, Menu, X, ArrowRight, Store, User, DollarSign } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 

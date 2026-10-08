@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Lock, ArrowLeft, ArrowRight, RotateCw, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 

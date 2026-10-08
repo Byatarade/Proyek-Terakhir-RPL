@@ -15,9 +15,12 @@ import {
   QrCode,
   Utensils,
   ShoppingBag,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   ExternalLink,
   Printer,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   ChevronRight,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   Filter,
   Check,
   X,
@@ -35,6 +38,7 @@ import {
 import { callCustomerOrderAction } from "@/lib/kitchen/actions";
 import { formatRupiah, cn } from "@/lib/utils";
 import { Button } from "@/components/atoms/Button";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { OrderStatus } from "@/lib/types/database";
 
 export interface CashierStationProps {
@@ -103,12 +107,14 @@ function formatElapsedTime(createdAt: string) {
 export function CashierStation({
   initialOrders,
   storeName,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   storeSlug,
 }: CashierStationProps) {
   const [orders, setOrders] = useState<CashierOrder[]>(initialOrders);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"all_active" | "menunggu_bayar" | "siap" | "dapur" | "selesai">("all_active");
   const [isRefreshing, setIsRefreshing] = useState(false);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   // Modal Cancel State

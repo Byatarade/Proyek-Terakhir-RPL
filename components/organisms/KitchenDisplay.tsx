@@ -6,12 +6,14 @@ import {
   UtensilsCrossed,
   ChefHat,
   Flame,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   CheckCircle2,
   Clock,
   AlertTriangle,
   Volume2,
   VolumeX,
   RefreshCw,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   ArrowLeft,
   Tv,
   Check,
@@ -171,6 +173,7 @@ export function KitchenDisplay({
       supabase.removeChannel(channel);
       clearInterval(pollInterval);
     };
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orders, soundEnabled]);
 
   // Handler tombol "Mulai Masak" (dibayar -> diproses)

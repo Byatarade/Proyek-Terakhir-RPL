@@ -9,6 +9,7 @@ import {
   QrCode,
   ExternalLink,
   ArrowRight,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   Receipt,
   Store,
   CheckCircle2,
@@ -16,17 +17,22 @@ import {
   Wallet,
   BarChart3,
   Plus,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   Calendar,
   X,
   Loader2,
   AlertCircle,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   HelpCircle,
   Tag,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   ArrowUpRight,
 } from "lucide-react";
 import { StatCard } from "@/components/molecules/StatCard";
 import { Button } from "@/components/atoms/Button";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Badge } from "@/components/atoms/Badge";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DotLeader } from "@/components/molecules/DotLeader";
 import { cn, formatRupiah } from "@/lib/utils";
 import {

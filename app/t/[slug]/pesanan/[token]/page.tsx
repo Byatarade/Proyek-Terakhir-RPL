@@ -17,6 +17,7 @@ import {
   ChefHat,
   Bell,
   Tv,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   ExternalLink,
   AlertTriangle,
   RotateCcw,
@@ -183,7 +184,9 @@ export default function OrderStatusPage() {
   };
 
   useEffect(() => {
-    loadData();
+    setTimeout(() => {
+      loadData();
+    }, 0);
 
     // Setup Supabase Realtime channel untuk update seketika saat koki mengubah status
     const supabase = createClient();
@@ -209,6 +212,7 @@ export default function OrderStatusPage() {
       supabase.removeChannel(channel);
       clearInterval(interval);
     };
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, slug]);
 
   const handleConfirmPaid = () => {

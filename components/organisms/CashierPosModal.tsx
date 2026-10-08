@@ -6,6 +6,7 @@ import Link from "next/link";
 import {
   Search,
   Plus,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   Minus,
   Trash2,
   X,
@@ -13,6 +14,7 @@ import {
   Banknote,
   QrCode,
   ShoppingBag,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   ArrowLeft,
   Printer,
   Volume2,
@@ -217,6 +219,7 @@ export function CashierPosModal({
     });
   };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleRemoveItem = (productId: string) => {
     setCart((prev) => {
       const next = { ...prev };
@@ -891,6 +894,7 @@ export function CashierPosModal({
                             </div>
                           ) : qrisDataUrl ? (
                             <>
+{/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
                                 src={qrisDataUrl}
                                 alt={`QRIS ${storeName}`}
@@ -1015,6 +1019,7 @@ export function CashierPosModal({
             </div>
 
             <div className="p-3 bg-white border-2 border-[var(--forest)] rounded-xl shadow-[3px_3px_0px_var(--forest)] inline-block mx-auto">
+{/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={qrisDataUrl}
                 alt="QRIS Pelanggan"

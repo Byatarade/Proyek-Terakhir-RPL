@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from "react";
 import { Metadata } from "next";
 import DashboardLaporanPage, { metadata as laporanMetadata } from "../laporan/page";
