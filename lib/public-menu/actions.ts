@@ -687,3 +687,67 @@ export async function customerConfirmPaidAction(
   }
 }
 
+/**
+ * Membatalkan pesanan mandiri oleh pelanggan (PRD 9.6 FR-OR-06 & BR-08)
+ * Hanya dapat dilakukan jika status pesanan masih 'menunggu_bayar'.
+ */
+export async function customerCancelOrderAction(
+  token: string,
+  reason?: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const supabase = createAdminClient();
+
+    const { data: order } = await supabase
+      .from("orders")
+      .select("id, status, store_id")
+      .eq("public_token", token)
+      .maybeSingle();
+
+    if (!order) {
+      return { success: false, error: "Pesanan tidak ditemukan." };
+    }
+
+    if (order.status !== "menunggu_bayar") {
+      return {
+        success: false,
+        error: "Pesanan sudah diproses atau dibayar dan tidak dapat dibatalkan lagi.",
+      };
+    }
+
+    const cancelReason = reason?.trim() || "Dibatalkan mandiri oleh pelanggan";
+    const nowIso = new Date().toISOString();
+
+    const { error: updateError } = await supabase
+      .from("orders")
+      .update({
+        status: "dibatalkan",
+        cancel_reason: cancelReason,
+        updated_at: nowIso,
+      })
+      .eq("id", order.id);
+
+    if (updateError) {
+      return { success: false, error: updateError.message };
+    }
+
+    // Catat log transisi status pesanan
+    await supabase.from("order_status_logs").insert({
+      order_id: order.id,
+      store_id: order.store_id,
+      from_status: "menunggu_bayar",
+      to_status: "dibatalkan",
+      actor_type: "customer",
+      note: `Dibatalkan oleh pelanggan: ${cancelReason}`,
+    });
+
+    return { success: true };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Gagal membatalkan pesanan.",
+    };
+  }
+}
+
+

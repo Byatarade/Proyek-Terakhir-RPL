@@ -21,12 +21,14 @@ import {
   ExternalLink,
   AlertTriangle,
   RotateCcw,
+  XCircle,
 } from "lucide-react";
 import QRCode from "qrcode";
 import { formatRupiah, cn } from "@/lib/utils";
 import {
   getOrderStatusAction,
   customerConfirmPaidAction,
+  customerCancelOrderAction,
   OrderStatusData,
 } from "@/lib/public-menu/actions";
 import { createClient } from "@/lib/supabase/client";
@@ -103,7 +105,11 @@ export default function OrderStatusPage() {
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [showCallModal, setShowCallModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [cancelError, setCancelError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isCancelling, startCancelTransition] = useTransition();
 
   const prevStatusRef = useRef<string | null>(null);
   const prevUpdatedAtRef = useRef<string | null>(null);
@@ -219,6 +225,22 @@ export default function OrderStatusPage() {
     startTransition(async () => {
       await customerConfirmPaidAction(token);
       await loadData();
+    });
+  };
+
+  const handleCancelOrder = () => {
+    setCancelError(null);
+    startCancelTransition(async () => {
+      const res = await customerCancelOrderAction(token, cancelReason || undefined);
+      if (res.success) {
+        try {
+          localStorage.removeItem(`paybuy_active_order_${slug}`);
+        } catch {}
+        setShowCancelModal(false);
+        await loadData();
+      } else {
+        setCancelError(res.error || "Gagal membatalkan pesanan.");
+      }
     });
   };
 
@@ -439,28 +461,40 @@ export default function OrderStatusPage() {
                     {formatRupiah(order.total)}
                   </div>
 
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    onClick={handleConfirmPaid}
-                    disabled={isPending}
-                    className="w-full gap-2 text-sm sm:text-base font-bold shadow-[3px_3px_0px_var(--forest)] h-12 cursor-pointer"
-                  >
-                    {isPending ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Mengonfirmasi...</span>
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle2 className="w-4 h-4" />
-                        <span>Saya Sudah Bayar</span>
-                      </>
-                    )}
-                  </Button>
+                  <div className="space-y-2 pt-1">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      onClick={handleConfirmPaid}
+                      disabled={isPending || isCancelling}
+                      className="w-full gap-2 text-sm sm:text-base font-bold shadow-[3px_3px_0px_var(--forest)] h-12 cursor-pointer"
+                    >
+                      {isPending ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Mengonfirmasi...</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>Saya Sudah Bayar</span>
+                        </>
+                      )}
+                    </Button>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowCancelModal(true)}
+                      disabled={isPending || isCancelling}
+                      className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-red-600 hover:text-red-800 hover:underline cursor-pointer transition-colors p-1"
+                    >
+                      <XCircle className="w-3.5 h-3.5" />
+                      <span>Batalkan Pesanan Ini</span>
+                    </button>
+                  </div>
                 </>
               ) : (
-                <div className="space-y-2 py-2">
+                <div className="space-y-3 py-2">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--forest)]">
                     Pembayaran Tunai di Kasir
                   </span>
@@ -471,6 +505,18 @@ export default function OrderStatusPage() {
                     Sebutkan nomor antrian kamu <strong className="text-[var(--forest)] font-bold">{formattedQueue}</strong> kepada kasir untuk membayar sebesar{" "}
                     <strong className="text-[var(--forest)] font-bold tabular-nums">{formatRupiah(order.total)}</strong>.
                   </p>
+
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowCancelModal(true)}
+                      disabled={isPending || isCancelling}
+                      className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-[6px] bg-white hover:bg-red-50 text-red-700 border-2 border-red-700 shadow-[2px_2px_0px_#b91c1c] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-xs font-bold cursor-pointer transition-all"
+                    >
+                      <XCircle className="w-4 h-4 stroke-[2]" />
+                      <span>Batalkan Pesanan Ini</span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -781,6 +827,83 @@ export default function OrderStatusPage() {
               >
                 <Bell className="w-4 h-4 text-[var(--forest)]" />
                 <span>Dengarkan Ulang Suara Panggilan</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL BATALKAN PESANAN MANDIRI OLEH PELANGGAN (PRD FR-OR-06) */}
+      {showCancelModal && order && order.status === "menunggu_bayar" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="fixed inset-0 bg-[#12201A]/80 transition-opacity animate-in fade-in duration-200"
+            onClick={() => !isCancelling && setShowCancelModal(false)}
+            aria-hidden="true"
+          />
+
+          <div className="relative w-full max-w-[400px] bg-white rounded-[8px] border-3 border-[var(--forest)] shadow-[6px_6px_0px_var(--forest)] overflow-hidden z-10 p-5 text-center space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-[8px] bg-red-100 text-[var(--danger)] border-2 border-[var(--danger)] shadow-[2px_2px_0px_var(--danger)] flex items-center justify-center mx-auto">
+              <AlertTriangle className="w-6 h-6 stroke-[2.2]" />
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="font-heading font-extrabold text-lg text-[var(--forest)]">
+                Batalkan Pesanan Ini?
+              </h3>
+              <p className="text-xs text-[var(--muted)] max-w-xs mx-auto leading-relaxed">
+                Nomor antrian <strong className="text-[var(--forest)] font-bold">#{formattedQueue}</strong> yang belum dibayar akan dibatalkan secara permanen.
+              </p>
+            </div>
+
+            {cancelError && (
+              <div className="p-2.5 rounded-[6px] bg-red-50 border border-red-200 text-xs text-red-700 font-semibold">
+                {cancelError}
+              </div>
+            )}
+
+            <div className="text-left space-y-1.5">
+              <label className="text-[11px] font-bold text-[var(--forest)] uppercase tracking-wider block">
+                Alasan Pembatalan (Opsional):
+              </label>
+              <select
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                className="w-full h-10 px-3 rounded-[6px] border-2 border-[var(--control)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--forest)]"
+              >
+                <option value="">-- Pilih Alasan --</option>
+                <option value="Ingin mengganti menu makanan / minuman">Ingin mengganti menu</option>
+                <option value="Salah memilih metode pembayaran">Salah memilih metode pembayaran</option>
+                <option value="Berubah pikiran / batal pesan">Berubah pikiran</option>
+                <option value="Lainnya">Alasan lainnya</option>
+              </select>
+            </div>
+
+            <div className="flex gap-2 pt-2 border-t-2 border-dashed border-[var(--line)]">
+              <Button
+                type="button"
+                variant="secondary"
+                size="md"
+                onClick={() => setShowCancelModal(false)}
+                disabled={isCancelling}
+                className="flex-1 text-xs font-bold"
+              >
+                Kembali
+              </Button>
+              <button
+                type="button"
+                onClick={handleCancelOrder}
+                disabled={isCancelling}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-[6px] bg-[var(--danger)] hover:bg-red-700 text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-xs font-bold cursor-pointer transition-all disabled:opacity-50"
+              >
+                {isCancelling ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Membatalkan...</span>
+                  </>
+                ) : (
+                  <span>Ya, Batalkan</span>
+                )}
               </button>
             </div>
           </div>
