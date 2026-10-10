@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { PaymentMethod } from "@/lib/types/database";
 import { toDynamicQris } from "@/lib/payments/qris";
 import { rateLimitOrderCreation } from "@/lib/rate-limit";
+import { checkAndExpireSingleOrder } from "@/lib/orders/expiry";
 
 export interface PublicProduct {
   id: string;
@@ -512,6 +513,21 @@ export async function getOrderStatusAction(
       .maybeSingle();
 
     if (order) {
+      // Auto-expiry check: jika pesanan masih menunggu bayar tapi batas waktu expires_at sudah lewat (PRD BR-04)
+      if (
+        order.status === "menunggu_bayar" &&
+        order.expires_at &&
+        new Date().getTime() > new Date(order.expires_at).getTime()
+      ) {
+        await checkAndExpireSingleOrder({
+          id: order.id,
+          store_id: order.store_id,
+          status: order.status,
+          expires_at: order.expires_at,
+        });
+        order.status = "kedaluwarsa";
+      }
+
       const { data: items } = await supabase
         .from("order_items")
         .select("product_name, qty, price_sell")

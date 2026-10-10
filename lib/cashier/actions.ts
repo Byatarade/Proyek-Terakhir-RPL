@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { OrderStatus, PaymentMethod, PaidConfirmer } from "@/lib/types/database";
+import { cleanupExpiredOrders } from "@/lib/orders/expiry";
 
 export interface CashierOrderItem {
   id: string;
@@ -61,6 +62,9 @@ export async function getCashierOrdersAction(): Promise<ActionResponse<CashierOr
     if (!profile?.store_id) {
       return { success: false, error: "Toko tidak terhubung ke profil Anda." };
     }
+
+    // Pembersihan otomatis pesanan kedaluwarsa untuk toko ini (FR-ST-05, BR-04)
+    await cleanupExpiredOrders(profile.store_id);
 
     const admin = createAdminClient();
 
