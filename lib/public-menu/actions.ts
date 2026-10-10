@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PaymentMethod } from "@/lib/types/database";
 import { toDynamicQris } from "@/lib/payments/qris";
+import { rateLimitOrderCreation } from "@/lib/rate-limit";
 
 export interface PublicProduct {
   id: string;
@@ -330,6 +331,17 @@ export async function createCustomerOrderAction(
     const { slug, items, paymentMethod } = input;
     if (!items || items.length === 0) {
       return { success: false, error: "Keranjang belanja kosong." };
+    }
+
+    // Pengecekan pembatasan laju (Rate Limiting) per IP & slug toko (PRD 9.6 FR-OR-07)
+    const rateLimit = await rateLimitOrderCreation(slug);
+    if (!rateLimit.success) {
+      return {
+        success: false,
+        error:
+          rateLimit.error ||
+          "Terlalu banyak pesanan dibuat dalam waktu singkat. Mohon tunggu sebelum membuat pesanan baru.",
+      };
     }
 
     const supabase = createAdminClient();
