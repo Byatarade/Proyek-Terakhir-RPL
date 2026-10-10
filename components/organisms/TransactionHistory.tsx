@@ -27,6 +27,7 @@ import {
   ShoppingBag,
   RefreshCw,
   Eye,
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Badge } from "@/components/atoms/Badge";
@@ -145,6 +146,120 @@ export function TransactionHistory({ initialData }: TransactionHistoryProps) {
     return matchStatus && matchPayment && matchSearch;
   });
 
+  const handleExportCsv = () => {
+    if (filteredTransactions.length === 0) {
+      alert("Tidak ada transaksi yang dapat diekspor.");
+      return;
+    }
+
+    const headers = [
+      "ID Pesanan",
+      "No. Antrian",
+      "Tanggal",
+      "Waktu Pesan",
+      "Status Pesanan",
+      "Metode Pembayaran",
+      "Konfirmasi Bayar Oleh",
+      "Waktu Bayar",
+      "Total Transaksi (Rp)",
+      "Rincian Menu",
+      "Jumlah Item",
+      "Alasan Pembatalan",
+      "Token Akses",
+    ];
+
+    const statusLabelMap: Record<string, string> = {
+      menunggu_bayar: "Menunggu Bayar",
+      dibayar: "Sudah Dibayar",
+      diproses: "Sedang Dimasak",
+      siap: "Siap Diambil",
+      diambil: "Selesai (Diambil)",
+      dibatalkan: "Dibatalkan",
+      kedaluwarsa: "Kedaluwarsa",
+    };
+
+    const paymentLabelMap: Record<string, string> = {
+      cash: "Tunai",
+      qris: "QRIS",
+    };
+
+    const confirmerLabelMap: Record<string, string> = {
+      cashier: "Kasir",
+      customer: "Pelanggan",
+      gateway: "Payment Gateway",
+    };
+
+    const escapeCsv = (val: string | number | null | undefined) => {
+      if (val === null || val === undefined) return '""';
+      const str = String(val).replace(/"/g, '""');
+      return `"${str}"`;
+    };
+
+    const rows = filteredTransactions.map((tx) => {
+      const queueFormatted = String(tx.queueNumber).padStart(3, "0");
+      const dateFormatted = tx.queueDate || (tx.createdAt ? tx.createdAt.split("T")[0] : "-");
+      const timeFormatted = tx.createdAt
+        ? new Date(tx.createdAt).toLocaleTimeString("id-ID", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "-";
+
+      const paidAtFormatted = tx.paidAt
+        ? new Date(tx.paidAt).toLocaleTimeString("id-ID", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "-";
+
+      const statusLabel = statusLabelMap[tx.status] || tx.status;
+      const paymentLabel = paymentLabelMap[tx.paymentMethod] || tx.paymentMethod;
+      const confirmerLabel = tx.paidConfirmedBy
+        ? confirmerLabelMap[tx.paidConfirmedBy] || tx.paidConfirmedBy
+        : "-";
+
+      const menuDetails = tx.items
+        .map(
+          (item) =>
+            `${item.qty}x ${item.productName} (@Rp ${item.priceSell.toLocaleString("id-ID")})`
+        )
+        .join("; ");
+
+      const totalQty = tx.items.reduce((sum, it) => sum + it.qty, 0);
+
+      return [
+        escapeCsv(tx.id),
+        escapeCsv(`#${queueFormatted}`),
+        escapeCsv(dateFormatted),
+        escapeCsv(timeFormatted),
+        escapeCsv(statusLabel),
+        escapeCsv(paymentLabel),
+        escapeCsv(confirmerLabel),
+        escapeCsv(paidAtFormatted),
+        escapeCsv(tx.total),
+        escapeCsv(menuDetails),
+        escapeCsv(totalQty),
+        escapeCsv(tx.cancelReason || "-"),
+        escapeCsv(tx.publicToken),
+      ].join(",");
+    });
+
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows].join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const dateStr = new Date().toISOString().split("T")[0];
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `riwayat-transaksi-${data.storeSlug || "toko"}-${dateStr}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-6 sm:space-y-8 bg-white select-none">
       {/* Header */}
@@ -162,16 +277,30 @@ export function TransactionHistory({ initialData }: TransactionHistoryProps) {
           </p>
         </div>
 
-        <Button
-          variant="secondary"
-          size="md"
-          onClick={() => handleFilterChange(datePreset)}
-          disabled={isPending}
-          className="gap-2 text-xs sm:text-sm self-start sm:self-auto"
-        >
-          <RefreshCw className={cn("w-4 h-4 text-zinc-600", isPending && "animate-spin")} />
-          <span>Segarkan</span>
-        </Button>
+        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={handleExportCsv}
+            disabled={isPending || filteredTransactions.length === 0}
+            className="gap-2 text-xs sm:text-sm font-semibold cursor-pointer"
+            title="Unduh rekapan riwayat transaksi dalam format CSV / Excel"
+          >
+            <Download className="w-4 h-4 text-[var(--leaf)]" />
+            <span>Ekspor CSV ({filteredTransactions.length})</span>
+          </Button>
+
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => handleFilterChange(datePreset)}
+            disabled={isPending}
+            className="gap-2 text-xs sm:text-sm self-start sm:self-auto"
+          >
+            <RefreshCw className={cn("w-4 h-4 text-zinc-600", isPending && "animate-spin")} />
+            <span>Segarkan</span>
+          </Button>
+        </div>
       </div>
 
       {/* Summary Stat Pills */}
