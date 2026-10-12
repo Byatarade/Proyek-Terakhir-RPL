@@ -33,8 +33,8 @@ export default async function DashboardPosPage() {
       }
     : undefined;
 
-  // Ambil katalog produk aktif untuk mesin kasir
-  const catalogRes = await getCashierCatalogAction();
+  // Ambil katalog produk aktif untuk mesin kasir langsung menggunakan store_id
+  const catalogRes = await getCashierCatalogAction(profile.store_id);
   const initialCatalog = catalogRes.success && catalogRes.data ? catalogRes.data : { categories: [], products: [] };
 
   return (

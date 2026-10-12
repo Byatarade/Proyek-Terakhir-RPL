@@ -48,22 +48,6 @@ export async function updateSession(request: NextRequest) {
       redirectUrl.searchParams.set("next", pathname);
       return NextResponse.redirect(redirectUrl);
     }
-
-    // Verify user is active
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    const profileData = profile as { is_active?: boolean } | null;
-    if (profileData && profileData.is_active === false) {
-      await supabase.auth.signOut();
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = "/masuk";
-      redirectUrl.searchParams.set("error", "inactive");
-      return NextResponse.redirect(redirectUrl);
-    }
   }
 
   // Protect /onboarding routes

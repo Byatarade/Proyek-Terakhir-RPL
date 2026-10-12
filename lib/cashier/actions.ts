@@ -41,35 +41,41 @@ export interface ActionResponse<T = unknown> {
 /**
  * Mengambil daftar pesanan toko untuk layar kasir (FR-KS-01)
  */
-export async function getCashierOrdersAction(): Promise<ActionResponse<CashierOrder[]>> {
+export async function getCashierOrdersAction(
+  providedStoreId?: string
+): Promise<ActionResponse<CashierOrder[]>> {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    let effectiveStoreId = providedStoreId;
 
-    if (authError || !user) {
-      return { success: false, error: "Sesi tidak ditemukan. Silakan masuk kembali." };
+    if (!effectiveStoreId) {
+      const supabase = await createClient();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        return { success: false, error: "Sesi tidak ditemukan. Silakan masuk kembali." };
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("store_id")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (!profile?.store_id) {
+        return { success: false, error: "Toko tidak terhubung ke profil Anda." };
+      }
+
+      effectiveStoreId = profile.store_id;
     }
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("store_id, role")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (!profile?.store_id) {
-      return { success: false, error: "Toko tidak terhubung ke profil Anda." };
-    }
-
-    // Pembersihan otomatis pesanan kedaluwarsa untuk toko ini (FR-ST-05, BR-04)
-    await cleanupExpiredOrders(profile.store_id);
 
     const admin = createAdminClient();
-
-    // Ambil pesanan hari ini dan pesanan aktif (tidak terkunci tanggal jika masih aktif)
     const today = new Date().toISOString().split("T")[0];
+
+    // Jalankan pembersihan pesanan kedaluwarsa secara paralel tanpa memblokir query pesanan
+    cleanupExpiredOrders(effectiveStoreId).catch(() => {});
 
     const { data: orders, error: ordersError } = await admin
       .from("orders")
@@ -95,7 +101,7 @@ export async function getCashierOrdersAction(): Promise<ActionResponse<CashierOr
           price_sell
         )
       `)
-      .eq("store_id", profile.store_id)
+      .eq("store_id", effectiveStoreId)
       .or(`queue_date.eq.${today},status.in.(menunggu_bayar,dibayar,diproses,siap)`)
       .order("created_at", { ascending: false });
 
@@ -414,22 +420,30 @@ export interface CreatedWalkinOrderResult {
 /**
  * Mengambil katalog produk aktif dan data QRIS toko untuk mesin kasir POS
  */
-export async function getCashierCatalogAction(): Promise<ActionResponse<CashierCatalog>> {
+export async function getCashierCatalogAction(
+  providedStoreId?: string
+): Promise<ActionResponse<CashierCatalog>> {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    let effectiveStoreId = providedStoreId;
 
-    if (!user) return { success: false, error: "Sesi tidak ditemukan." };
+    if (!effectiveStoreId) {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("store_id")
-      .eq("id", user.id)
-      .single();
+      if (!user) return { success: false, error: "Sesi tidak ditemukan." };
 
-    if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("store_id")
+        .eq("id", user.id)
+        .single();
+
+      if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
+
+      effectiveStoreId = profile.store_id;
+    }
 
     const admin = createAdminClient();
 
@@ -437,19 +451,19 @@ export async function getCashierCatalogAction(): Promise<ActionResponse<CashierC
       admin
         .from("categories")
         .select("id, name, sort_order")
-        .eq("store_id", profile.store_id)
+        .eq("store_id", effectiveStoreId)
         .order("sort_order", { ascending: true })
         .order("name", { ascending: true }),
       admin
         .from("products")
         .select("id, category_id, name, price_sell, is_available, image_path")
-        .eq("store_id", profile.store_id)
+        .eq("store_id", effectiveStoreId)
         .eq("is_active", true)
         .order("name", { ascending: true }),
       admin
         .from("stores")
         .select("id, name, accept_cash, accept_qris, qris_merchant_name, qris_payload")
-        .eq("id", profile.store_id)
+        .eq("id", effectiveStoreId)
         .maybeSingle(),
     ]);
 

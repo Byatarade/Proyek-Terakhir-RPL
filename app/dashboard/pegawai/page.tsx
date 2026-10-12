@@ -25,7 +25,7 @@ export default async function DashboardPegawaiPage() {
   const role = profile?.role || "owner";
 
   // PRD Bagian 10: Kelola Pegawai hanya dapat diakses oleh Owner
-  if (role !== "owner") {
+  if (role !== "owner" || !profile?.store_id) {
     return (
       <div className="bg-white border-2 border-[var(--forest)] rounded-[8px] p-8 sm:p-12 text-center max-w-lg mx-auto space-y-4 my-8 shadow-[4px_4px_0px_var(--forest)]">
         <div className="w-14 h-14 rounded-[8px] bg-red-50 border-2 border-[var(--danger)] text-[var(--danger)] flex items-center justify-center mx-auto shadow-[2px_2px_0px_var(--danger)]">
@@ -48,7 +48,7 @@ export default async function DashboardPegawaiPage() {
     );
   }
 
-  const employeesRes = await getEmployeesAction();
+  const employeesRes = await getEmployeesAction(profile.store_id, user.id);
   const initialEmployees = employeesRes.success && employeesRes.data ? employeesRes.data : [];
 
   return <StaffManagement initialEmployees={initialEmployees} />;

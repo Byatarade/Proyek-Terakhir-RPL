@@ -2,6 +2,8 @@ import React from "react";
 import { Metadata } from "next";
 import { getStoreMenuDataAction } from "@/lib/menu/actions";
 import { ProductManagement } from "@/components/organisms/ProductManagement";
+import { getAuthenticatedProfile } from "@/lib/supabase/auth-cache";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Kelola Menu & Produk - PayBuy",
@@ -9,7 +11,17 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardMenuPage() {
-  const result = await getStoreMenuDataAction();
+  const { user, profile } = await getAuthenticatedProfile();
+
+  if (!user) {
+    redirect("/masuk?next=/dashboard/menu");
+  }
+
+  if (!profile?.store_id) {
+    redirect("/onboarding");
+  }
+
+  const result = await getStoreMenuDataAction(profile.store_id);
 
   if (!result.success || !result.data) {
     return (

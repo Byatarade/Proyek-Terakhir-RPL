@@ -43,28 +43,34 @@ export interface ActionResponse<T = unknown> {
 /**
  * Memuat seluruh data menu dan kategori untuk dashboard merchant
  */
-export async function getStoreMenuDataAction(): Promise<ActionResponse<MenuManagementData>> {
+export async function getStoreMenuDataAction(
+  providedStoreId?: string
+): Promise<ActionResponse<MenuManagementData>> {
   try {
+    let effectiveStoreId = providedStoreId;
     const supabase = await createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
 
-    if (authError || !user) {
-      return { success: false, error: "Sesi tidak ditemukan. Silakan masuk kembali." };
-    }
+    if (!effectiveStoreId) {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("store_id, role")
-      .eq("id", user.id)
-      .maybeSingle();
+      if (authError || !user) {
+        return { success: false, error: "Sesi tidak ditemukan. Silakan masuk kembali." };
+      }
 
-    const profileData = profile as { store_id?: string; role?: string } | null;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("store_id")
+        .eq("id", user.id)
+        .maybeSingle();
 
-    if (!profileData?.store_id) {
-      return { success: false, error: "Profil toko tidak ditemukan." };
+      if (!profile?.store_id) {
+        return { success: false, error: "Profil toko tidak ditemukan." };
+      }
+
+      effectiveStoreId = profile.store_id;
     }
 
     // Fetch store info, categories, and products in parallel (saves ~200-400ms)
@@ -72,18 +78,18 @@ export async function getStoreMenuDataAction(): Promise<ActionResponse<MenuManag
       supabase
         .from("stores")
         .select("id, name, slug")
-        .eq("id", profileData.store_id)
+        .eq("id", effectiveStoreId)
         .single(),
       supabase
         .from("categories")
         .select("id, name, sort_order")
-        .eq("store_id", profileData.store_id)
+        .eq("store_id", effectiveStoreId)
         .order("sort_order", { ascending: true })
         .order("name", { ascending: true }),
       supabase
         .from("products")
         .select("*")
-        .eq("store_id", profileData.store_id)
+        .eq("store_id", effectiveStoreId)
         .order("created_at", { ascending: false }),
     ]);
 

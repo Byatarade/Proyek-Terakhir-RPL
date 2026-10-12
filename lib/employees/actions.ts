@@ -33,30 +33,41 @@ export interface ActionResponse<T = unknown> {
 /**
  * Mengambil daftar seluruh staf pegawai toko milik owner (PRD 9.11 — FR-EM-01 s/d FR-EM-04)
  */
-export async function getEmployeesAction(): Promise<ActionResponse<EmployeeData[]>> {
+export async function getEmployeesAction(
+  providedStoreId?: string,
+  currentUserId?: string
+): Promise<ActionResponse<EmployeeData[]>> {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    let effectiveStoreId = providedStoreId;
+    let effectiveUserId = currentUserId;
 
-    if (authError || !user) {
-      return { success: false, error: "Sesi tidak ditemukan. Silakan masuk kembali." };
-    }
+    if (!effectiveStoreId || !effectiveUserId) {
+      const supabase = await createClient();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("store_id, role")
-      .eq("id", user.id)
-      .maybeSingle();
+      if (authError || !user) {
+        return { success: false, error: "Sesi tidak ditemukan. Silakan masuk kembali." };
+      }
 
-    if (!profile?.store_id) {
-      return { success: false, error: "Toko tidak terhubung ke profil Anda." };
-    }
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("store_id, role")
+        .eq("id", user.id)
+        .maybeSingle();
 
-    if (profile.role !== "owner") {
-      return { success: false, error: "Hanya pemilik toko (owner) yang dapat mengelola data pegawai." };
+      if (!profile?.store_id) {
+        return { success: false, error: "Toko tidak terhubung ke profil Anda." };
+      }
+
+      if (profile.role !== "owner") {
+        return { success: false, error: "Hanya pemilik toko (owner) yang dapat mengelola data pegawai." };
+      }
+
+      effectiveStoreId = profile.store_id;
+      effectiveUserId = user.id;
     }
 
     const admin = createAdminClient();
@@ -65,7 +76,7 @@ export async function getEmployeesAction(): Promise<ActionResponse<EmployeeData[
     const { data: profiles, error: profilesError } = await admin
       .from("profiles")
       .select("id, store_id, full_name, role, is_active, created_at, updated_at")
-      .eq("store_id", profile.store_id)
+      .eq("store_id", effectiveStoreId)
       .order("created_at", { ascending: true });
 
     if (profilesError) {
@@ -97,7 +108,7 @@ export async function getEmployeesAction(): Promise<ActionResponse<EmployeeData[
       isActive: p.is_active ?? true,
       createdAt: p.created_at,
       updatedAt: p.updated_at,
-      isCurrentUser: p.id === user.id,
+      isCurrentUser: p.id === effectiveUserId,
     }));
 
     return { success: true, data: employees };

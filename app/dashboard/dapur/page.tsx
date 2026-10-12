@@ -31,8 +31,8 @@ export default async function DashboardDapurPage() {
   const storeName = store?.name || "Toko Saya";
   const storeSlug = store?.slug || "";
 
-  // Ambil pesanan aktif dapur (dibayar & diproses)
-  const kitchenRes = await getKitchenOrdersAction();
+  // Ambil pesanan aktif dapur (dibayar & diproses) langsung menggunakan store_id
+  const kitchenRes = await getKitchenOrdersAction(profile.store_id);
   const initialOrders = kitchenRes.success && kitchenRes.data ? kitchenRes.data : [];
 
   return (

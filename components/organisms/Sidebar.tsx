@@ -242,6 +242,7 @@ export function Sidebar({
                         <Link
                           key={item.href}
                           href={item.href}
+                          prefetch={false}
                           onClick={onClose}
                           className={cn(
                             "flex items-center gap-3 px-3 py-2 rounded-[8px] text-xs sm:text-[13px] transition-all group relative border-2",

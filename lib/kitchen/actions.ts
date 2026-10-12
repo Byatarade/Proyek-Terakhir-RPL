@@ -48,26 +48,34 @@ export interface ActionResponse<T = unknown> {
  * Mengambil pesanan aktif dapur berstatus 'dibayar' dan 'diproses' (PRD FR-KT-01)
  * Diurutkan berurutan menurut waktu bayar (FIFO - yang bayar duluan dimasak duluan).
  */
-export async function getKitchenOrdersAction(): Promise<KitchenOrdersResponse> {
+export async function getKitchenOrdersAction(
+  providedStoreId?: string
+): Promise<KitchenOrdersResponse> {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    let effectiveStoreId = providedStoreId;
 
-    if (authError || !user) {
-      return { success: false, error: "Sesi tidak ditemukan. Silakan masuk kembali." };
-    }
+    if (!effectiveStoreId) {
+      const supabase = await createClient();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("store_id, role")
-      .eq("id", user.id)
-      .maybeSingle();
+      if (authError || !user) {
+        return { success: false, error: "Sesi tidak ditemukan. Silakan masuk kembali." };
+      }
 
-    if (!profile?.store_id) {
-      return { success: false, error: "Toko tidak terhubung ke profil Anda." };
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("store_id")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (!profile?.store_id) {
+        return { success: false, error: "Toko tidak terhubung ke profil Anda." };
+      }
+
+      effectiveStoreId = profile.store_id;
     }
 
     const admin = createAdminClient();
@@ -95,7 +103,7 @@ export async function getKitchenOrdersAction(): Promise<KitchenOrdersResponse> {
           qty
         )
       `)
-      .eq("store_id", profile.store_id)
+      .eq("store_id", effectiveStoreId)
       .or(`status.in.(dibayar,diproses),and(status.eq.siap,queue_date.eq.${today})`)
       .order("created_at", { ascending: true });
 

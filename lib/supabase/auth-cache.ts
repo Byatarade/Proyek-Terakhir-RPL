@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { UserRole } from "@/lib/types/database";
 
 export interface AuthenticatedProfile {
@@ -47,7 +48,9 @@ export const getAuthenticatedProfile = cache(async (): Promise<{
     return { user: null, profile: null, store: null };
   }
 
-  const { data: profile } = await supabase
+  const admin = createAdminClient();
+
+  const { data: profile } = await admin
     .from("profiles")
     .select("store_id, role, full_name, is_active")
     .eq("id", user.id)
@@ -62,7 +65,7 @@ export const getAuthenticatedProfile = cache(async (): Promise<{
 
   let store: CachedStore | null = null;
   if (typedProfile?.store_id) {
-    const { data: storeData } = await supabase
+    const { data: storeData } = await admin
       .from("stores")
       .select("id, name, slug, plan, is_open, accept_cash, accept_qris, qris_merchant_name, qris_payload")
       .eq("id", typedProfile.store_id)
