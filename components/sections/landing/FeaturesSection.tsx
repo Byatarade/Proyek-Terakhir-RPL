@@ -92,16 +92,16 @@ export function FeaturesSection() {
             </div>
 
             {/* Visual KDS Ticket Mini (Clean Slate) */}
-            <div className="bg-zinc-950 text-white border border-zinc-800 rounded-xl p-4 shadow-card">
-              <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5 mb-3">
-                <span className="font-heading font-semibold text-2xl text-[var(--mint)] tabular-nums tracking-tight">
+            <div className="bg-white text-zinc-950 border border-[var(--line-strong)] rounded-xl p-4 shadow-card">
+              <div className="flex items-center justify-between border-b border-[var(--line)] pb-2.5 mb-3">
+                <span className="font-heading font-semibold text-2xl text-zinc-950 tabular-nums tracking-tight">
                   Antrian #043
                 </span>
-                <span className="text-[11px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 font-medium px-2 py-0.5 rounded-full">
+                <span className="text-[11px] font-mono bg-amber-50 text-amber-700 border border-amber-200 font-medium px-2 py-0.5 rounded-full">
                   Diproses (03:12)
                 </span>
               </div>
-              <p className="text-xs font-medium text-zinc-300 mb-3">
+              <p className="text-xs font-medium text-zinc-600 mb-3">
                 2× Nasi Goreng Spesial • 1× Es Teh Manis
               </p>
               <div>

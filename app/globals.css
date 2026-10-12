@@ -14,6 +14,7 @@
   --surface: #FFFFFF;
   --surface-2: #EAF4EC;
   --line: #CFE0D2;
+  --line-strong: #A8C5AE;
   --control: #6F8B78;
   --disabled-bg: #E3ECE5;
   --disabled-text: #7A8C80;
@@ -52,6 +53,7 @@
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   --color-control: var(--control);
   --color-disabled-bg: var(--disabled-bg);
   --color-disabled-text: var(--disabled-text);

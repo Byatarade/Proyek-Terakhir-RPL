@@ -71,7 +71,7 @@ export function DashboardMacWindow({
       {/* Window Body: Screenshot Content */}
       <div className="relative w-full bg-white overflow-hidden group">
         <Image
-          src="/images/dashboard-showcase.png"
+          src="/images/dashboard-preview.png"
           alt={title}
           width={1024}
           height={564}

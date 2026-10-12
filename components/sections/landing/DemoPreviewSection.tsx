@@ -39,43 +39,52 @@ export function DemoPreviewSection() {
             {interactiveDemo.description}
           </p>
 
-          {/* Minimalist Segmented Control */}
-          <div className="inline-flex p-1 mt-8 bg-white border border-[var(--line-strong)] rounded-full shadow-subtle">
+          {/* Minimalist Segmented Control / Step Chips */}
+          <div className="w-full max-w-md sm:max-w-none sm:w-auto grid grid-cols-3 sm:inline-flex p-1 mt-6 sm:mt-8 bg-white border border-[var(--line-strong)] rounded-full shadow-subtle mx-auto overflow-x-auto scrollbar-none">
             <button
               type="button"
               onClick={() => setActiveTab("customer")}
-              className={`flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all cursor-pointer ${
+              className={`flex items-center justify-center gap-1 sm:gap-2 px-1.5 sm:px-4 py-2 text-[11px] xs:text-xs sm:text-sm font-medium rounded-full transition-all cursor-pointer whitespace-nowrap min-w-0 ${
                 activeTab === "customer"
                   ? "bg-[var(--leaf)] text-white shadow-sm"
                   : "text-[var(--muted)] hover:text-zinc-950"
               }`}
             >
-              <Smartphone className="w-4 h-4" />
-              <span>1. Menu Pelanggan (HP)</span>
+              <Smartphone className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="truncate">
+                <span className="sm:hidden">1. Menu (HP)</span>
+                <span className="hidden sm:inline">1. Menu Pelanggan (HP)</span>
+              </span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("kitchen")}
-              className={`flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all cursor-pointer ${
+              className={`flex items-center justify-center gap-1 sm:gap-2 px-1.5 sm:px-4 py-2 text-[11px] xs:text-xs sm:text-sm font-medium rounded-full transition-all cursor-pointer whitespace-nowrap min-w-0 ${
                 activeTab === "kitchen"
                   ? "bg-[var(--leaf)] text-white shadow-sm"
                   : "text-[var(--muted)] hover:text-zinc-950"
               }`}
             >
-              <ChefHat className="w-4 h-4" />
-              <span>2. Layar Dapur (KDS)</span>
+              <ChefHat className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="truncate">
+                <span className="sm:hidden">2. Dapur (KDS)</span>
+                <span className="hidden sm:inline">2. Layar Dapur (KDS)</span>
+              </span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("cashier")}
-              className={`flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all cursor-pointer ${
+              className={`flex items-center justify-center gap-1 sm:gap-2 px-1.5 sm:px-4 py-2 text-[11px] xs:text-xs sm:text-sm font-medium rounded-full transition-all cursor-pointer whitespace-nowrap min-w-0 ${
                 activeTab === "cashier"
                   ? "bg-[var(--leaf)] text-white shadow-sm"
                   : "text-[var(--muted)] hover:text-zinc-950"
               }`}
             >
-              <Monitor className="w-4 h-4" />
-              <span>3. Layar Kasir Konter</span>
+              <Monitor className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="truncate">
+                <span className="sm:hidden">3. Kasir Konter</span>
+                <span className="hidden sm:inline">3. Layar Kasir Konter</span>
+              </span>
             </button>
           </div>
         </div>
