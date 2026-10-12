@@ -12,6 +12,7 @@ import {
   BarChart3,
   QrCode,
   Settings,
+  Users,
   X,
   Store,
   ExternalLink,
@@ -87,6 +88,12 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: "PENGATURAN",
     items: [
+      {
+        label: "Kelola Pegawai",
+        href: "/dashboard/pegawai",
+        icon: <Users className="w-4 h-4" />,
+        roles: ["owner"],
+      },
       {
         label: "Cetak QR Menu",
         href: "/dashboard/qr",

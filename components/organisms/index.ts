@@ -13,4 +13,5 @@ export * from "./KitchenDisplay";
 export * from "./ProductManagement";
 export * from "./ProfitLossReport";
 export * from "./TransactionHistory";
-
+export * from "./StoreSettings";
+export * from "./StaffManagement";
