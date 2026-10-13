@@ -736,49 +736,17 @@ export function CashierStation({
                   )}
                 </div>
 
-                {/* 3. Aksi Kasir (Target Sentuh Besar design.md 357 & 411) */}
-                <div className="p-3 pl-4 bg-zinc-50 border-t border-[var(--line)] flex items-center gap-2">
-                  {/* Status 1: Menunggu Bayar -> Konfirmasi Pembayaran */}
-                  {order.status === "menunggu_bayar" && (
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      onClick={() => handleConfirmPayment(order)}
-                      disabled={isThisPending}
-                      className="flex-1 gap-2 font-bold text-xs sm:text-sm h-12 shadow-[2px_2px_0px_var(--forest)]"
-                    >
-                      {isThisPending ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <CheckCircle2 className="w-4 h-4" />
-                      )}
-                      <span>Konfirmasi Bayar</span>
-                    </Button>
-                  )}
-
-                  {/* Status 2: Siap Diambil -> Panggil Antrian & Tandai Diambil */}
-                  {order.status === "siap" && (
-                    <>
-                      <Button
-                        variant="secondary"
-                        size="md"
-                        onClick={() => handleCallQueue(order)}
-                        className={cn(
-                          "gap-1.5 text-xs font-bold h-12 transition-all",
-                          isCallActive && "bg-[var(--mint)] border-[var(--forest)] text-[var(--forest)] font-extrabold ring-2 ring-[var(--forest)]"
-                        )}
-                        title="Panggil nomor antrian via speaker"
-                      >
-                        <Volume2 className={cn("w-4 h-4", isCallActive && "animate-bounce text-[var(--forest)]")} />
-                        <span>{isCallActive ? "Memanggil..." : "Panggil"}</span>
-                      </Button>
-
+                {/* 3. Aksi Kasir (Target Sentuh Besar & Rapi) */}
+                <div className="p-3 pl-4 bg-zinc-50 border-t border-[var(--line)]">
+                  {order.status === "siap" ? (
+                    <div className="space-y-2 w-full">
+                      {/* Tombol Utama: Tandai Sudah Diambil (Lebar Penuh, Tidak Terpotong) */}
                       <Button
                         variant="primary"
-                        size="lg"
+                        size="md"
                         onClick={() => handleMarkTaken(order)}
                         disabled={isThisPending}
-                        className="flex-1 gap-2 font-bold text-xs sm:text-sm h-12 shadow-[2px_2px_0px_var(--forest)]"
+                        className="w-full gap-2 font-bold text-xs sm:text-sm h-11 shadow-[2px_2px_0px_var(--forest)] whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5"
                       >
                         {isThisPending ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
@@ -787,46 +755,106 @@ export function CashierStation({
                         )}
                         <span>Tandai Sudah Diambil</span>
                       </Button>
-                    </>
-                  )}
 
-                  {/* Status 3: Sedang di Dapur (dibayar / diproses) -> Tombol percepat ke Siap */}
-                  {["dibayar", "diproses"].includes(order.status) && (
-                    <Button
-                      variant="secondary"
-                      size="md"
-                      onClick={() => handleMarkReady(order)}
-                      disabled={isThisPending}
-                      className="flex-1 gap-2 text-xs font-bold h-12 border-[var(--forest)] text-[var(--forest)]"
-                    >
-                      <Utensils className="w-4 h-4 text-[var(--leaf)]" />
-                      <span>Tandai Siap Diambil</span>
-                    </Button>
-                  )}
+                      {/* Baris Pendukung: Panggil Antrian, Cetak Nota, dan Batalkan */}
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="secondary"
+                          size="md"
+                          onClick={() => handleCallQueue(order)}
+                          className={cn(
+                            "flex-1 gap-1.5 text-xs font-bold h-10 transition-all whitespace-nowrap",
+                            isCallActive && "bg-[var(--mint)] border-[var(--forest)] text-[var(--forest)] font-extrabold ring-2 ring-[var(--forest)]"
+                          )}
+                          title="Panggil nomor antrian via speaker"
+                        >
+                          <Volume2 className={cn("w-4 h-4 shrink-0", isCallActive && "animate-bounce text-[var(--forest)]")} />
+                          <span>{isCallActive ? "Memanggil..." : "Panggil Antrian"}</span>
+                        </Button>
 
-                  {/* Cetak Nota Struk Kasir */}
-                  <button
-                    type="button"
-                    onClick={() => setReceiptModalOrder(order)}
-                    title="Cetak struk nota"
-                    className="p-3 rounded-xl border border-zinc-300 hover:bg-white text-zinc-700 hover:text-[var(--forest)] transition-colors h-12 w-12 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
-                  >
-                    <Printer className="w-4 h-4" />
-                  </button>
+                        {/* Cetak Nota Struk Kasir */}
+                        <button
+                          type="button"
+                          onClick={() => setReceiptModalOrder(order)}
+                          title="Cetak struk nota"
+                          className="p-2.5 rounded-xl border border-zinc-300 hover:bg-white text-zinc-700 hover:text-[var(--forest)] transition-colors h-10 w-10 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                        >
+                          <Printer className="w-4 h-4" />
+                        </button>
 
-                  {/* Tombol Batalkan Pesanan (jika belum selesai) */}
-                  {["menunggu_bayar", "dibayar", "diproses", "siap"].includes(order.status) && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCancelModalOrder(order);
-                        setCancelReason("");
-                      }}
-                      title="Batalkan pesanan ini"
-                      className="p-3 rounded-xl border border-red-200 hover:bg-red-50 text-red-600 transition-colors h-12 w-12 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
-                    >
-                      <XCircle className="w-4 h-4" />
-                    </button>
+                        {/* Tombol Batalkan Pesanan */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCancelModalOrder(order);
+                            setCancelReason("");
+                          }}
+                          title="Batalkan pesanan ini"
+                          className="p-2.5 rounded-xl border border-red-200 hover:bg-red-50 text-red-600 transition-colors h-10 w-10 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                        >
+                          <XCircle className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 w-full">
+                      {/* Status 1: Menunggu Bayar -> Konfirmasi Pembayaran */}
+                      {order.status === "menunggu_bayar" && (
+                        <Button
+                          variant="primary"
+                          size="md"
+                          onClick={() => handleConfirmPayment(order)}
+                          disabled={isThisPending}
+                          className="flex-1 gap-2 font-bold text-xs sm:text-sm h-11 shadow-[2px_2px_0px_var(--forest)] whitespace-nowrap"
+                        >
+                          {isThisPending ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <CheckCircle2 className="w-4 h-4" />
+                          )}
+                          <span>Konfirmasi Bayar</span>
+                        </Button>
+                      )}
+
+                      {/* Status 3: Sedang di Dapur (dibayar / diproses) -> Tombol percepat ke Siap */}
+                      {["dibayar", "diproses"].includes(order.status) && (
+                        <Button
+                          variant="secondary"
+                          size="md"
+                          onClick={() => handleMarkReady(order)}
+                          disabled={isThisPending}
+                          className="flex-1 gap-2 text-xs font-bold h-11 border-[var(--forest)] text-[var(--forest)] whitespace-nowrap"
+                        >
+                          <Utensils className="w-4 h-4 text-[var(--leaf)]" />
+                          <span>Tandai Siap Diambil</span>
+                        </Button>
+                      )}
+
+                      {/* Cetak Nota Struk Kasir */}
+                      <button
+                        type="button"
+                        onClick={() => setReceiptModalOrder(order)}
+                        title="Cetak struk nota"
+                        className="p-2.5 rounded-xl border border-zinc-300 hover:bg-white text-zinc-700 hover:text-[var(--forest)] transition-colors h-11 w-11 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                      >
+                        <Printer className="w-4 h-4" />
+                      </button>
+
+                      {/* Tombol Batalkan Pesanan (jika belum selesai) */}
+                      {["menunggu_bayar", "dibayar", "diproses"].includes(order.status) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCancelModalOrder(order);
+                            setCancelReason("");
+                          }}
+                          title="Batalkan pesanan ini"
+                          className="p-2.5 rounded-xl border border-red-200 hover:bg-red-50 text-red-600 transition-colors h-11 w-11 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                        >
+                          <XCircle className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
