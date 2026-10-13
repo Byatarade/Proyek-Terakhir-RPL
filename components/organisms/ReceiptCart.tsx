@@ -69,19 +69,19 @@ export function ReceiptCart({
           className
         )}
       >
-        <div className="w-full max-w-[520px] bg-[var(--forest)] text-white p-3 sm:p-3.5 rounded-[8px] border-2 border-[var(--forest)] shadow-[4px_4px_0px_rgba(15,61,42,0.6)] flex items-center justify-between pointer-events-auto transition-all animate-in fade-in slide-in-from-bottom-4 duration-200">
+        <div className="w-full max-w-[520px] bg-white text-zinc-900 p-3 sm:p-3.5 rounded-[8px] border-2 border-[var(--forest)] shadow-[4px_4px_0px_var(--forest)] flex items-center justify-between pointer-events-auto transition-all animate-in fade-in slide-in-from-bottom-4 duration-200">
           <div className="flex items-center gap-3 pl-1">
-            <div className="relative w-10 h-10 rounded-[6px] bg-[var(--forest-2)] border-2 border-[var(--mint)] flex items-center justify-center text-[var(--mint)] shrink-0 shadow-[2px_2px_0px_rgba(0,0,0,0.3)]">
+            <div className="relative w-10 h-10 rounded-[6px] bg-[var(--surface-2)] border-2 border-[var(--forest)] flex items-center justify-center text-[var(--forest)] shrink-0 shadow-[1px_1px_0px_var(--forest)]">
               <ShoppingBag className="w-5 h-5" />
-              <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-[4px] bg-[var(--mint)] text-[var(--forest)] text-[10px] font-bold border-2 border-[var(--forest)] leading-none shadow-xs">
+              <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-[4px] bg-[var(--leaf)] text-white text-[10px] font-bold border border-[var(--forest)] leading-none shadow-xs">
                 {totalItems}
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] text-[var(--mint)] font-semibold uppercase tracking-wider">
+              <span className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">
                 Total Pesanan
               </span>
-              <span className="font-heading font-bold text-base sm:text-lg text-white tabular-nums leading-tight">
+              <span className="font-heading font-extrabold text-base sm:text-lg text-[var(--forest)] tabular-nums leading-tight">
                 {formatRupiah(totalPrice)}
               </span>
             </div>
@@ -90,7 +90,7 @@ export function ReceiptCart({
           <button
             type="button"
             onClick={() => setIsOpen(true)}
-            className="inline-flex items-center gap-2 h-10 px-4 rounded-[6px] bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white border-2 border-white/60 shadow-[2px_2px_0px_#0A291C] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none text-xs sm:text-sm font-semibold cursor-pointer select-none transition-all"
+            className="inline-flex items-center gap-2 h-10 px-4 rounded-[6px] bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none text-xs sm:text-sm font-bold cursor-pointer select-none transition-all"
           >
             <span>Lihat Pesanan</span>
             <ArrowRight className="w-4 h-4 stroke-[2.5]" />
