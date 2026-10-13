@@ -16,6 +16,8 @@ import {
   Flame,
   ChefHat,
   Bell,
+  BellRing,
+  Volume2,
   Tv,
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ExternalLink,
@@ -616,52 +618,54 @@ export default function OrderStatusPage() {
             </div>
           )}
 
-          {/* D. Status: SIAP DIAMBIL (design.md 2.4 & 12.2: Mint bertepi Hutan) */}
+          {/* D. Status: SIAP DIAMBIL (Professional White Theme with Lucide Icons) */}
           {order.status === "siap" && (
-            <div className="p-5 rounded-[8px] bg-[var(--mint)] border-3 border-[var(--forest)] shadow-[5px_5px_0px_var(--forest)] space-y-4">
+            <div className="p-5 rounded-[12px] bg-white border-2 border-[var(--forest)] shadow-[4px_4px_0px_var(--forest)] space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-[8px] bg-[var(--forest)] text-white flex items-center justify-center border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] shrink-0">
-                  <Bell className="w-6 h-6 stroke-[2.2] animate-bounce" />
+                <div className="w-11 h-11 rounded-xl bg-emerald-50 text-[var(--leaf)] border-2 border-[var(--forest)] flex items-center justify-center shrink-0 shadow-[2px_2px_0px_var(--forest)]">
+                  <BellRing className="w-5 h-5 stroke-[2.5] animate-bounce text-[var(--leaf)]" />
                 </div>
-                <div>
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[4px] bg-[var(--forest)] text-white text-[10px] font-extrabold uppercase tracking-wider">
+                <div className="flex-1">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-[var(--forest)] text-[10px] font-extrabold uppercase tracking-wider border border-emerald-300">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--leaf)] animate-ping" />
                     Siap Diambil Sekarang
                   </span>
-                  <h3 className="font-heading font-extrabold text-xl text-[var(--forest)] mt-0.5">
-                    Pesananmu Sudah Siap! 🛎️
+                  <h3 className="font-heading font-extrabold text-lg sm:text-xl text-[var(--forest)] mt-1">
+                    Pesananmu Sudah Siap!
                   </h3>
                 </div>
               </div>
 
-              {/* Copy sesuai design.md 12.2: "Pesananmu sudah siap! Ambil di kasir dengan nomor 012." */}
-              <div className="p-4 rounded-[6px] bg-white border-2 border-[var(--forest)] text-center space-y-2 shadow-[3px_3px_0px_var(--forest)]">
-                <p className="font-heading font-extrabold text-base sm:text-lg text-[var(--forest)]">
-                  Pesananmu sudah siap! Ambil di kasir dengan nomor antrian:
+              {/* Box Nomor Antrian Panggilan Kasir */}
+              <div className="p-4 sm:p-5 rounded-xl bg-[var(--surface-2)] border-2 border-[var(--forest)] text-center space-y-2 shadow-[2px_2px_0px_var(--forest)]">
+                <p className="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">
+                  Ambil di kasir dengan nomor antrian:
                 </p>
                 <div className="font-heading font-extrabold text-5xl sm:text-6xl text-[var(--forest)] tabular-nums tracking-tight">
                   #{formattedQueue}
                 </div>
-                <p className="text-xs text-[var(--muted)] font-medium">
-                  Silakan menuju ke konter kasir dan tunjukkan layar ini kepada staf kami.
-                </p>
+                <div className="pt-1 flex items-center justify-center gap-1.5 text-xs text-[var(--forest)] font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-[var(--leaf)] shrink-0" />
+                  <span>Silakan ke meja kasir dan tunjukkan layar ini kepada staf</span>
+                </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                 <button
                   type="button"
                   onClick={playReadyChime}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-[6px] bg-white hover:bg-[var(--surface-2)] text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-xs font-bold transition-all cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-[8px] bg-white hover:bg-[var(--surface-2)] text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none text-xs font-bold transition-all cursor-pointer select-none"
                 >
-                  <Bell className="w-4 h-4 text-[var(--forest)]" />
+                  <Volume2 className="w-4 h-4 text-[var(--forest)] shrink-0" />
                   <span>Ulangi Bunyi Bel</span>
                 </button>
                 <Link
                   href={`/t/${slug}/antrian`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-[6px] bg-[var(--forest)] hover:bg-[var(--forest-2)] text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-xs font-bold transition-all"
+                  className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-[8px] bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none text-xs font-bold transition-all select-none"
                 >
-                  <Tv className="w-4 h-4" />
+                  <Tv className="w-4 h-4 shrink-0 text-white" />
                   <span>Lihat Layar TV</span>
                 </Link>
               </div>
