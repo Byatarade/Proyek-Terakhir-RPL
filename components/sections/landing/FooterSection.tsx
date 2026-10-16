@@ -68,9 +68,9 @@ export const Footer: React.FC<FooterProps> = ({ className = "" }) => {
 
             {/* Address */}
             <p className="text-xs sm:text-sm text-zinc-700/90 mt-3 leading-relaxed max-w-xs font-normal">
-              Kerten, Laweyan, <br />
-              Kota Surakarta, <br />
-              Jawa Tengah, Indonesia
+              Kota Surakarta<br />
+              Jawa Tengah, 
+              Indonesia
             </p>
           </div>
 
