@@ -239,12 +239,7 @@ export function CashierStation({
     });
   };
 
-  // 6. Opsi cepat kasir jika menu langsung siap tanpa proses masak panjang
-  const handleMarkReady = (order: CashierOrder) => {
-    handleFinishCookingAndCall(order);
-  };
-
-  // 5. Batalkan Pesanan (FR-KS-04)
+  // 6. Batalkan Pesanan (FR-KS-04)
   const handleConfirmCancel = () => {
     if (!cancelModalOrder || !cancelReason.trim()) return;
     startCancelTransition(async () => {
@@ -865,13 +860,13 @@ export function CashierStation({
 
                       {/* Status 2: Sudah Dibayar -> Kasir Klik "Mulai Dimasak" */}
                       {order.status === "dibayar" && (
-                        <div className="space-y-2 w-full">
+                        <div className="flex items-center gap-2 w-full">
                           <Button
                             variant="primary"
                             size="md"
                             onClick={() => handleStartCooking(order)}
                             disabled={isThisPending}
-                            className="w-full gap-2 font-bold text-xs sm:text-sm h-11 bg-amber-500 hover:bg-amber-600 text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
+                            className="flex-1 gap-2 font-bold text-xs sm:text-sm h-11 bg-amber-500 hover:bg-amber-600 text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
                           >
                             {isThisPending ? (
                               <Loader2 className="w-4 h-4 animate-spin" />
@@ -881,40 +876,26 @@ export function CashierStation({
                             <span>Mulai Dimasak</span>
                           </Button>
 
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="secondary"
-                              size="md"
-                              onClick={() => handleMarkReady(order)}
-                              disabled={isThisPending}
-                              className="flex-1 gap-1.5 text-xs font-semibold h-10 border-zinc-300 whitespace-nowrap"
-                              title="Jika menu cepat/minuman tanpa perlu proses masak"
-                            >
-                              <Check className="w-3.5 h-3.5 text-zinc-600" />
-                              <span>Langsung Siap</span>
-                            </Button>
+                          <button
+                            type="button"
+                            onClick={() => setReceiptModalOrder(order)}
+                            title="Cetak struk nota"
+                            className="p-2.5 rounded-xl border border-zinc-300 hover:bg-white text-zinc-700 hover:text-[var(--forest)] transition-colors h-11 w-11 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                          >
+                            <Printer className="w-4 h-4" />
+                          </button>
 
-                            <button
-                              type="button"
-                              onClick={() => setReceiptModalOrder(order)}
-                              title="Cetak struk nota"
-                              className="p-2.5 rounded-xl border border-zinc-300 hover:bg-white text-zinc-700 hover:text-[var(--forest)] transition-colors h-10 w-10 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
-                            >
-                              <Printer className="w-4 h-4" />
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setCancelModalOrder(order);
-                                setCancelReason("");
-                              }}
-                              title="Batalkan pesanan ini"
-                              className="p-2.5 rounded-xl border border-red-200 hover:bg-red-50 text-red-600 transition-colors h-10 w-10 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
-                            >
-                              <XCircle className="w-4 h-4" />
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCancelModalOrder(order);
+                              setCancelReason("");
+                            }}
+                            title="Batalkan pesanan ini"
+                            className="p-2.5 rounded-xl border border-red-200 hover:bg-red-50 text-red-600 transition-colors h-11 w-11 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                          >
+                            <XCircle className="w-4 h-4" />
+                          </button>
                         </div>
                       )}
 
