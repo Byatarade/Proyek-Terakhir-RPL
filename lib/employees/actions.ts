@@ -459,3 +459,80 @@ export async function toggleEmployeeStatusAction(
     };
   }
 }
+
+/**
+ * Menghapus akun pegawai toko oleh owner (Owner tidak dapat dihapus)
+ */
+export async function deleteEmployeeAction(
+  userId: string
+): Promise<ActionResponse<void>> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Sesi tidak ditemukan. Silakan masuk kembali." };
+
+    const { data: ownerProfile } = await supabase
+      .from("profiles")
+      .select("store_id, role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (!ownerProfile?.store_id || ownerProfile.role !== "owner") {
+      return { success: false, error: "Hanya pemilik toko (owner) yang berhak menghapus akun pegawai." };
+    }
+
+    // PROTEKSI: Akun owner / akun sendiri tidak bisa dihapus!
+    if (userId === user.id) {
+      return { success: false, error: "Akun pemilik toko (Owner) tidak dapat dihapus." };
+    }
+
+    const admin = createAdminClient();
+
+    // Verifikasi data profil target
+    const { data: targetProfile } = await admin
+      .from("profiles")
+      .select("id, store_id, role")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (!targetProfile || targetProfile.store_id !== ownerProfile.store_id) {
+      return { success: false, error: "Pegawai tidak ditemukan di toko Anda." };
+    }
+
+    // PROTEKSI EKSTRA: Tolak jika target adalah owner
+    if (targetProfile.role === "owner") {
+      return { success: false, error: "Akun pemilik toko (Owner) tidak dapat dihapus dari sistem." };
+    }
+
+    // 1. Hapus entri dari tabel profiles
+    const { error: deleteProfileError } = await admin
+      .from("profiles")
+      .delete()
+      .eq("id", userId)
+      .eq("store_id", ownerProfile.store_id);
+
+    if (deleteProfileError) {
+      return { success: false, error: deleteProfileError.message || "Gagal menghapus profil pegawai." };
+    }
+
+    // 2. Hapus entri auth user di Supabase Auth
+    try {
+      await admin.auth.admin.deleteUser(userId);
+    } catch {
+      // Abaikan jika akun auth sudah terhapus
+    }
+
+    revalidatePath("/dashboard/pegawai");
+    revalidatePath("/dashboard");
+
+    return { success: true };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Terjadi kesalahan saat menghapus data pegawai.",
+    };
+  }
+}
