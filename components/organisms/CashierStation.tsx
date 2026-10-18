@@ -27,6 +27,7 @@ import {
   AlertTriangle,
   Loader2,
   Monitor,
+  Flame,
 } from "lucide-react";
 import {
   CashierOrder,
@@ -205,19 +206,42 @@ export function CashierStation({
     });
   };
 
-  // 4. Ubah ke Siap Diambil (Opsi kasir mempercepat proses)
-  const handleMarkReady = (order: CashierOrder) => {
+  // 4. Ubah ke Sedang Dimasak (Kasir mulai proses masak / kirim instruksi ke dapur)
+  const handleStartCooking = (order: CashierOrder) => {
     setProcessingOrderId(order.id);
     startTransition(async () => {
-      const res = await updateOrderStatusAction(order.id, "siap", "Ditandai siap oleh kasir");
+      const res = await updateOrderStatusAction(order.id, "diproses", "Kasir memulai proses masak");
+      if (res.success) {
+        setOrders((prev) =>
+          prev.map((o) => (o.id === order.id ? { ...o, status: "diproses" } : o))
+        );
+      }
+      setProcessingOrderId(null);
+    });
+  };
+
+  // 5. Ubah ke Selesai Masak & Panggil Pelanggan
+  const handleFinishCookingAndCall = (order: CashierOrder) => {
+    setProcessingOrderId(order.id);
+    startTransition(async () => {
+      const res = await updateOrderStatusAction(order.id, "siap", "Pesanan selesai dimasak dan dipanggil oleh kasir");
       if (res.success) {
         setOrders((prev) =>
           prev.map((o) => (o.id === order.id ? { ...o, status: "siap" } : o))
         );
+        // Panggil suara chime lonceng + TTS nama/nomor antrian
         callQueueVoice(order.queueNumber);
+        setCalledOrderId(order.id);
+        setTimeout(() => setCalledOrderId(null), 3000);
+        callCustomerOrderAction(order.id).catch(() => {});
       }
       setProcessingOrderId(null);
     });
+  };
+
+  // 6. Opsi cepat kasir jika menu langsung siap tanpa proses masak panjang
+  const handleMarkReady = (order: CashierOrder) => {
+    handleFinishCookingAndCall(order);
   };
 
   // 5. Batalkan Pesanan (FR-KS-04)
@@ -412,7 +436,7 @@ export function CashierStation({
             {stats.kitchenCount} <span className="text-xs font-normal text-zinc-500">Pesanan</span>
           </div>
           <div className="text-xs text-[var(--muted)] mt-0.5">
-            Dalam proses tim koki dapur
+            Sedang dimasak di dapur
           </div>
         </div>
 
@@ -797,62 +821,166 @@ export function CashierStation({
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 w-full">
+                    <div className="space-y-2 w-full">
                       {/* Status 1: Menunggu Bayar -> Konfirmasi Pembayaran */}
                       {order.status === "menunggu_bayar" && (
-                        <Button
-                          variant="primary"
-                          size="md"
-                          onClick={() => handleConfirmPayment(order)}
-                          disabled={isThisPending}
-                          className="flex-1 gap-2 font-bold text-xs sm:text-sm h-11 shadow-[2px_2px_0px_var(--forest)] whitespace-nowrap"
-                        >
-                          {isThisPending ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <CheckCircle2 className="w-4 h-4" />
-                          )}
-                          <span>Konfirmasi Bayar</span>
-                        </Button>
+                        <div className="flex items-center gap-2 w-full">
+                          <Button
+                            variant="primary"
+                            size="md"
+                            onClick={() => handleConfirmPayment(order)}
+                            disabled={isThisPending}
+                            className="flex-1 gap-2 font-bold text-xs sm:text-sm h-11 shadow-[2px_2px_0px_var(--forest)] whitespace-nowrap"
+                          >
+                            {isThisPending ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <CheckCircle2 className="w-4 h-4" />
+                            )}
+                            <span>Konfirmasi Bayar</span>
+                          </Button>
+
+                          <button
+                            type="button"
+                            onClick={() => setReceiptModalOrder(order)}
+                            title="Cetak struk nota"
+                            className="p-2.5 rounded-xl border border-zinc-300 hover:bg-white text-zinc-700 hover:text-[var(--forest)] transition-colors h-11 w-11 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                          >
+                            <Printer className="w-4 h-4" />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCancelModalOrder(order);
+                              setCancelReason("");
+                            }}
+                            title="Batalkan pesanan ini"
+                            className="p-2.5 rounded-xl border border-red-200 hover:bg-red-50 text-red-600 transition-colors h-11 w-11 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                          >
+                            <XCircle className="w-4 h-4" />
+                          </button>
+                        </div>
                       )}
 
-                      {/* Status 3: Sedang di Dapur (dibayar / diproses) -> Tombol percepat ke Siap */}
-                      {["dibayar", "diproses"].includes(order.status) && (
-                        <Button
-                          variant="secondary"
-                          size="md"
-                          onClick={() => handleMarkReady(order)}
-                          disabled={isThisPending}
-                          className="flex-1 gap-2 text-xs font-bold h-11 border-[var(--forest)] text-[var(--forest)] whitespace-nowrap"
-                        >
-                          <Utensils className="w-4 h-4 text-[var(--leaf)]" />
-                          <span>Tandai Siap Diambil</span>
-                        </Button>
+                      {/* Status 2: Sudah Dibayar -> Kasir Klik "Mulai Dimasak" */}
+                      {order.status === "dibayar" && (
+                        <div className="space-y-2 w-full">
+                          <Button
+                            variant="primary"
+                            size="md"
+                            onClick={() => handleStartCooking(order)}
+                            disabled={isThisPending}
+                            className="w-full gap-2 font-bold text-xs sm:text-sm h-11 bg-amber-500 hover:bg-amber-600 text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
+                          >
+                            {isThisPending ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Flame className="w-4 h-4 fill-amber-200 text-white" />
+                            )}
+                            <span>Mulai Dimasak</span>
+                          </Button>
+
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="secondary"
+                              size="md"
+                              onClick={() => handleMarkReady(order)}
+                              disabled={isThisPending}
+                              className="flex-1 gap-1.5 text-xs font-semibold h-10 border-zinc-300 whitespace-nowrap"
+                              title="Jika menu cepat/minuman tanpa perlu proses masak"
+                            >
+                              <Check className="w-3.5 h-3.5 text-zinc-600" />
+                              <span>Langsung Siap</span>
+                            </Button>
+
+                            <button
+                              type="button"
+                              onClick={() => setReceiptModalOrder(order)}
+                              title="Cetak struk nota"
+                              className="p-2.5 rounded-xl border border-zinc-300 hover:bg-white text-zinc-700 hover:text-[var(--forest)] transition-colors h-10 w-10 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                            >
+                              <Printer className="w-4 h-4" />
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCancelModalOrder(order);
+                                setCancelReason("");
+                              }}
+                              title="Batalkan pesanan ini"
+                              className="p-2.5 rounded-xl border border-red-200 hover:bg-red-50 text-red-600 transition-colors h-10 w-10 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                            >
+                              <XCircle className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
                       )}
 
-                      {/* Cetak Nota Struk Kasir */}
-                      <button
-                        type="button"
-                        onClick={() => setReceiptModalOrder(order)}
-                        title="Cetak struk nota"
-                        className="p-2.5 rounded-xl border border-zinc-300 hover:bg-white text-zinc-700 hover:text-[var(--forest)] transition-colors h-11 w-11 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
-                      >
-                        <Printer className="w-4 h-4" />
-                      </button>
+                      {/* Status 3: Sedang Dimasak -> Kasir Klik "Selesai Masak & Panggil" */}
+                      {order.status === "diproses" && (
+                        <div className="space-y-2 w-full">
+                          <Button
+                            variant="primary"
+                            size="md"
+                            onClick={() => handleFinishCookingAndCall(order)}
+                            disabled={isThisPending}
+                            className="w-full gap-2 font-bold text-xs sm:text-sm h-11 bg-[var(--leaf)] hover:bg-[#156336] text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
+                          >
+                            {isThisPending ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Volume2 className="w-4 h-4 text-[var(--mint)] animate-pulse" />
+                            )}
+                            <span>Selesai Masak & Panggil</span>
+                          </Button>
 
-                      {/* Tombol Batalkan Pesanan (jika belum selesai) */}
-                      {["menunggu_bayar", "dibayar", "diproses"].includes(order.status) && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setCancelModalOrder(order);
-                            setCancelReason("");
-                          }}
-                          title="Batalkan pesanan ini"
-                          className="p-2.5 rounded-xl border border-red-200 hover:bg-red-50 text-red-600 transition-colors h-11 w-11 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
-                        >
-                          <XCircle className="w-4 h-4" />
-                        </button>
+                          <div className="flex items-center gap-2">
+                            <span className="flex-1 text-[11px] font-semibold text-blue-800 bg-blue-50 border border-blue-200 rounded-lg px-2.5 py-2 flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping shrink-0" />
+                              <span className="truncate">Sedang dimasak di dapur</span>
+                            </span>
+
+                            <button
+                              type="button"
+                              onClick={() => setReceiptModalOrder(order)}
+                              title="Cetak struk nota"
+                              className="p-2.5 rounded-xl border border-zinc-300 hover:bg-white text-zinc-700 hover:text-[var(--forest)] transition-colors h-10 w-10 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                            >
+                              <Printer className="w-4 h-4" />
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCancelModalOrder(order);
+                                setCancelReason("");
+                              }}
+                              title="Batalkan pesanan ini"
+                              className="p-2.5 rounded-xl border border-red-200 hover:bg-red-50 text-red-600 transition-colors h-10 w-10 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                            >
+                              <XCircle className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Status 4: Selesai / Dibatalkan / Kedaluwarsa */}
+                      {["diambil", "dibatalkan", "kedaluwarsa"].includes(order.status) && (
+                        <div className="flex items-center justify-between gap-2 w-full pt-1">
+                          <span className="text-xs text-zinc-500 font-medium">
+                            {order.status === "diambil" ? "Pesanan telah diserahkan" : "Pesanan tidak aktif"}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setReceiptModalOrder(order)}
+                            title="Cetak struk nota"
+                            className="p-2 rounded-lg border border-zinc-300 hover:bg-white text-zinc-700 hover:text-[var(--forest)] transition-colors h-9 w-9 flex items-center justify-center shrink-0 cursor-pointer shadow-2xs"
+                          >
+                            <Printer className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}

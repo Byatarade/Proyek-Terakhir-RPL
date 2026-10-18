@@ -10,9 +10,9 @@ import { Button } from "@/components/atoms/Button";
 import { getEmployeesAction } from "@/lib/employees/actions";
 
 export const metadata: Metadata = {
-  title: "Kelola Pegawai & Staf Toko - PayBuy",
+  title: "Kelola Pegawai & Kasir - PayBuy",
   description:
-    "Kelola akun pegawai toko, tentukan peran kasir dan koki dapur, atur kata sandi, serta kontrol akses staf toko Anda.",
+    "Kelola akun kasir toko, atur kata sandi, serta kontrol akses operasional kasir Anda.",
 };
 
 export default async function DashboardPegawaiPage() {

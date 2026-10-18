@@ -21,7 +21,7 @@ export interface CreateEmployeeInput {
   fullName: string;
   email: string;
   password: string;
-  role: "kasir" | "koki" | "admin_gudang";
+  role?: "kasir" | "koki" | "admin_gudang";
 }
 
 export interface ActionResponse<T = unknown> {
@@ -167,8 +167,9 @@ export async function createEmployeeAction(
       return { success: false, error: "Kata sandi awal minimal 6 karakter." };
     }
 
+    const effectiveRole = input.role || "kasir";
     const allowedRoles: UserRole[] = ["kasir", "koki", "admin_gudang"];
-    if (!allowedRoles.includes(input.role)) {
+    if (!allowedRoles.includes(effectiveRole)) {
       return { success: false, error: "Peran pegawai yang dipilih tidak sah." };
     }
 
@@ -183,7 +184,7 @@ export async function createEmployeeAction(
         user_metadata: {
           full_name: trimmedName,
           store_id: ownerProfile.store_id,
-          role: input.role,
+          role: effectiveRole,
         },
       });
 
@@ -213,7 +214,7 @@ export async function createEmployeeAction(
         id: newUserId,
         store_id: ownerProfile.store_id,
         full_name: trimmedName,
-        role: input.role,
+        role: effectiveRole,
         is_active: true,
         updated_at: nowIso,
       })

@@ -40,7 +40,7 @@ const NAV_GROUPS: NavGroup[] = [
         label: "Beranda",
         href: "/dashboard",
         icon: <LayoutDashboard className="w-4 h-4" />,
-        roles: ["owner", "admin_gudang", "kasir", "koki"],
+        roles: ["owner", "kasir"],
       },
       {
         label: "Kasir POS (Input Menu)",
@@ -54,12 +54,6 @@ const NAV_GROUPS: NavGroup[] = [
         icon: <Receipt className="w-4 h-4" />,
         roles: ["owner", "kasir"],
       },
-      {
-        label: "Layar Dapur",
-        href: "/dashboard/dapur",
-        icon: <UtensilsCrossed className="w-4 h-4" />,
-        roles: ["owner", "koki"],
-      },
     ],
   },
   {
@@ -69,7 +63,7 @@ const NAV_GROUPS: NavGroup[] = [
         label: "Menu & Produk",
         href: "/dashboard/menu",
         icon: <Coffee className="w-4 h-4" />,
-        roles: ["owner", "admin_gudang"],
+        roles: ["owner"],
       },
       {
         label: "Riwayat Transaksi",

@@ -45,11 +45,11 @@ interface RoleOption {
 const ROLE_OPTIONS: RoleOption[] = [
   {
     key: "kasir",
-    label: "Kasir (Front Office)",
+    label: "Kasir (Operasional)",
     badgeVariant: "mint",
     icon: <ShoppingBag className="w-4 h-4 text-[var(--leaf)]" />,
-    desc: "Melayani transaksi pelanggan di meja kasir.",
-    features: ["Kasir POS (Input Menu)", "Layar Antrian & Konfirmasi Bayar", "Panggil Nomor Antrian", "Riwayat Transaksi Hari Ini"],
+    desc: "Melayani transaksi kasir POS, mengubah status masak, dan memanggil antrean pelanggan.",
+    features: ["Kasir POS (Input Menu)", "Layar Kasir & Antrian", "Mulai Masak & Panggil Antrian", "Riwayat Transaksi"],
   },
   {
     key: "koki",
@@ -236,7 +236,7 @@ export function StaffManagement({ initialEmployees = [] }: StaffManagementProps)
             <span>Manajemen Pegawai & Staf Toko</span>
           </h1>
           <p className="text-xs sm:text-sm text-[var(--muted)] mt-1">
-            Buat akun kasir dan dapur, atur hak akses per peran, serta kelola status aktif pegawai toko Anda.
+            Buat dan kelola akun kasir untuk transaksi POS, status proses masak, dan pemanggilan antrian pelanggan.
           </p>
         </div>
 
@@ -251,7 +251,7 @@ export function StaffManagement({ initialEmployees = [] }: StaffManagementProps)
           className="gap-2 font-bold text-xs sm:text-sm border-2 border-[var(--forest)] shadow-[3px_3px_0px_var(--forest)] shrink-0 self-start sm:self-auto"
         >
           <UserPlus className="w-4 h-4" />
-          <span>Tambah Pegawai Baru</span>
+          <span>Tambah Kasir Baru</span>
         </Button>
       </div>
 
@@ -271,7 +271,7 @@ export function StaffManagement({ initialEmployees = [] }: StaffManagementProps)
       )}
 
       {/* 2. Stat Counter Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="p-3.5 rounded-[8px] bg-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] space-y-1">
           <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">
             Total Pengguna
@@ -279,40 +279,29 @@ export function StaffManagement({ initialEmployees = [] }: StaffManagementProps)
           <div className="font-heading font-extrabold text-2xl text-[var(--forest)]">
             {totalStaff}
           </div>
-          <span className="text-[11px] text-[var(--muted)] block">Termasuk Pemilik</span>
+          <span className="text-[11px] text-[var(--muted)] block">Owner & Kasir</span>
         </div>
 
         <div className="p-3.5 rounded-[8px] bg-[var(--surface-2)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] space-y-1">
           <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--leaf)] flex items-center gap-1">
-            <ShoppingBag className="w-3 h-3" />
+            <ShoppingBag className="w-3.5 h-3.5" />
             <span>Kasir Aktif</span>
           </span>
           <div className="font-heading font-extrabold text-2xl text-[var(--forest)]">
             {totalKasir}
           </div>
-          <span className="text-[11px] text-[var(--muted)] block">Front Office</span>
+          <span className="text-[11px] text-[var(--muted)] block">Operasional & Antrian</span>
         </div>
 
-        <div className="p-3.5 rounded-[8px] bg-amber-50 border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] space-y-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8c3e16] flex items-center gap-1">
-            <UtensilsCrossed className="w-3 h-3" />
-            <span>Koki Aktif</span>
+        <div className="p-3.5 rounded-[8px] bg-emerald-50 border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] space-y-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--leaf)] flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Hak Akses</span>
           </span>
-          <div className="font-heading font-extrabold text-2xl text-[#8c3e16]">
-            {totalKoki}
+          <div className="font-heading font-extrabold text-lg text-[var(--forest)] mt-1">
+            Kasir Terpadu
           </div>
-          <span className="text-[11px] text-[var(--muted)] block">Layar Dapur</span>
-        </div>
-
-        <div className="p-3.5 rounded-[8px] bg-zinc-50 border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] space-y-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-600 flex items-center gap-1">
-            <Package className="w-3 h-3" />
-            <span>Admin Gudang</span>
-          </span>
-          <div className="font-heading font-extrabold text-2xl text-zinc-800">
-            {totalGudang}
-          </div>
-          <span className="text-[11px] text-[var(--muted)] block">Katalog & Stok</span>
+          <span className="text-[11px] text-[var(--muted)] block">POS, Masak & Panggil</span>
         </div>
       </div>
 
@@ -338,8 +327,6 @@ export function StaffManagement({ initialEmployees = [] }: StaffManagementProps)
               { key: "all", label: "Semua" },
               { key: "owner", label: "Owner" },
               { key: "kasir", label: "Kasir" },
-              { key: "koki", label: "Koki" },
-              { key: "admin_gudang", label: "Gudang" },
             ].map((r) => (
               <button
                 key={r.key}
@@ -656,44 +643,23 @@ export function StaffManagement({ initialEmployees = [] }: StaffManagementProps)
                 </div>
               </div>
 
-              {/* Peran / Role Options */}
-              <div className="space-y-2 pt-1">
+              {/* Info Peran Pegawai Kasir */}
+              <div className="space-y-1.5 pt-1">
                 <label className="text-xs font-bold text-[var(--forest)] uppercase tracking-wider block">
-                  Pilih Peran Staf <span className="text-[var(--danger)]">*</span>
+                  Peran Akun
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  {ROLE_OPTIONS.map((opt) => {
-                    const isSelected = selectedRole === opt.key;
-                    return (
-                      <label
-                        key={opt.key}
-                        className={cn(
-                          "p-3 rounded-[6px] border-2 cursor-pointer transition-all flex flex-col justify-between space-y-2",
-                          isSelected
-                            ? "bg-[var(--surface-2)] border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
-                            : "bg-white border-[var(--line)] hover:border-[var(--forest)]"
-                        )}
-                      >
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="font-heading font-extrabold text-xs text-[var(--forest)]">
-                              {opt.label.split(" ")[0]}
-                            </span>
-                            <input
-                              type="radio"
-                              name="role_radio"
-                              checked={isSelected}
-                              onChange={() => setSelectedRole(opt.key)}
-                              className="w-3.5 h-3.5 text-[var(--leaf)] focus:ring-[var(--leaf)]"
-                            />
-                          </div>
-                          <p className="text-[10px] text-[var(--muted)] leading-tight">
-                            {opt.desc}
-                          </p>
-                        </div>
-                      </label>
-                    );
-                  })}
+                <div className="p-3.5 rounded-[6px] bg-[var(--surface-2)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] flex items-start gap-3">
+                  <div className="p-2 rounded-[6px] bg-[var(--mint)] border-2 border-[var(--forest)] shrink-0">
+                    <ShoppingBag className="w-5 h-5 text-[var(--forest)]" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="font-heading font-extrabold text-xs text-[var(--forest)]">
+                      Kasir Toko (Operasional & Antrian)
+                    </div>
+                    <p className="text-[11px] text-[var(--muted)] leading-relaxed">
+                      Akun ini bertugas melayani transaksi di kasir POS, memantau & mengubah status pesanan (sedang dimasak), serta memanggil antrean pelanggan.
+                    </p>
+                  </div>
                 </div>
               </div>
 
