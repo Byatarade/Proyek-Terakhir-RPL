@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/atoms/Badge";
 import { logoutUserAction } from "@/lib/auth";
 import { UserRole } from "@/lib/types/database";
+import { cn } from "@/lib/utils";
 
 export interface TopBarProps {
   storeName?: string;
@@ -68,9 +69,15 @@ export function TopBar({
               <Badge
                 variant={isOpen ? "mint" : "neutral"}
                 size="sm"
-                className="hidden sm:inline-flex"
+                className="hidden sm:inline-flex items-center gap-1.5"
               >
-                {isOpen ? "Toko Buka" : "Toko Tutup"}
+                <span
+                  className={cn(
+                    "w-1.5 h-1.5 rounded-full shrink-0",
+                    isOpen ? "bg-emerald-600 animate-pulse" : "bg-rose-500"
+                  )}
+                />
+                <span>{isOpen ? "Toko Buka" : "Toko Tutup"}</span>
               </Badge>
             </div>
 

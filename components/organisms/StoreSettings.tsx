@@ -331,7 +331,14 @@ export function StoreSettings() {
           {isTogglingOpen ? (
             <Loader2 className="w-4 h-4 animate-spin text-[var(--forest)]" />
           ) : (
-            <Power className={cn("w-4 h-4", isOpen ? "text-emerald-700" : "text-zinc-500")} />
+            <span
+              className={cn(
+                "w-2.5 h-2.5 rounded-full ring-2 shrink-0 inline-block",
+                isOpen
+                  ? "bg-emerald-600 ring-emerald-300 animate-pulse"
+                  : "bg-rose-500 ring-rose-200"
+              )}
+            />
           )}
           <span>Status: {isOpen ? "Toko Buka (Menerima Pesanan)" : "Toko Tutup (Pemesanan Nonaktif)"}</span>
         </button>
@@ -431,10 +438,16 @@ export function StoreSettings() {
                   onChange={() => setIsOpen(true)}
                   className="mt-1 w-4 h-4 text-[var(--leaf)] focus:ring-[var(--leaf)]"
                 />
-                <div className="space-y-1">
-                  <span className="font-heading font-bold text-sm text-[var(--forest)] block">
-                    🟢 Toko Buka (Menerima Pesanan)
-                  </span>
+                <div className="space-y-1 w-full">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-200 shrink-0 inline-block" />
+                    <span className="font-heading font-bold text-sm text-[var(--forest)]">
+                      Toko Buka (Menerima Pesanan)
+                    </span>
+                    <span className="ml-auto text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+                      Aktif
+                    </span>
+                  </div>
                   <p className="text-xs text-[var(--muted)] leading-relaxed">
                     Menu publik aktif sepenuhnya. Pelanggan dapat membuat pesanan mandiri via scan QR meja atau tautan menu.
                   </p>
@@ -456,10 +469,16 @@ export function StoreSettings() {
                   onChange={() => setIsOpen(false)}
                   className="mt-1 w-4 h-4 text-amber-700 focus:ring-amber-600"
                 />
-                <div className="space-y-1">
-                  <span className="font-heading font-bold text-sm text-amber-900 block">
-                    🔴 Toko Tutup Sementara
-                  </span>
+                <div className="space-y-1 w-full">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-rose-200 shrink-0 inline-block" />
+                    <span className="font-heading font-bold text-sm text-amber-900">
+                      Toko Tutup Sementara
+                    </span>
+                    <span className="ml-auto text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-rose-100 text-rose-800 border border-rose-300">
+                      Nonaktif
+                    </span>
+                  </div>
                   <p className="text-xs text-amber-800 leading-relaxed">
                     Menu tetap dapat dilihat untuk informasi harga, namun tombol checkout pesanan dinonaktifkan sementara.
                   </p>
