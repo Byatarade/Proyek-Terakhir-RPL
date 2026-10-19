@@ -113,6 +113,15 @@ body {
   box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.08);
 }
 
+/* Hide scrollbar utility */
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 /* Refined Dot Leader (design.md 6.2) */
 .dot-leader {
   flex-grow: 1;

@@ -354,7 +354,7 @@ export function StoreSettings({ className }: StoreSettingsProps) {
       )}
 
       {/* Tab Navigation */}
-      <div className="flex border-b-2 border-[var(--forest)] gap-2 select-none overflow-x-auto">
+      <div className="flex border-b-2 border-[var(--forest)] gap-2 select-none overflow-x-auto overflow-y-hidden pt-1 scrollbar-none">
         <button
           type="button"
           onClick={() => setActiveTab("general")}
