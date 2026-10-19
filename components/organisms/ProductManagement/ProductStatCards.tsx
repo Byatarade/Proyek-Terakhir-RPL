@@ -1,0 +1,49 @@
+import React from "react";
+import { ProductStatCardsProps } from "./types";
+
+export function ProductStatCards({
+  totalProducts,
+  totalAvailable,
+  totalUnavailable,
+  totalHidden,
+}: ProductStatCardsProps) {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+      <div className="p-4 rounded-2xl bg-zinc-50/80 border border-zinc-200/70 space-y-1">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
+          Total Produk
+        </span>
+        <div className="font-heading font-bold text-2xl text-zinc-950 tabular-nums">
+          {totalProducts}
+        </div>
+      </div>
+
+      <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200/60 space-y-1">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">
+          Tersedia (Ready)
+        </span>
+        <div className="font-heading font-bold text-2xl text-emerald-600 tabular-nums">
+          {totalAvailable}
+        </div>
+      </div>
+
+      <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/60 space-y-1">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-700">
+          Sementara Habis
+        </span>
+        <div className="font-heading font-bold text-2xl text-amber-600 tabular-nums">
+          {totalUnavailable}
+        </div>
+      </div>
+
+      <div className="p-4 rounded-2xl bg-zinc-100/60 border border-zinc-200/70 space-y-1">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+          Disembunyikan
+        </span>
+        <div className="font-heading font-bold text-2xl text-zinc-700 tabular-nums">
+          {totalHidden}
+        </div>
+      </div>
+    </div>
+  );
+}
