@@ -8,11 +8,12 @@ import {
   LogOut,
   User,
   Loader2,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { logoutUserAction } from "@/lib/auth";
 import { UserRole } from "@/lib/types/database";
-import { cn } from "@/lib/utils";
 
 export interface TopBarProps {
   storeName?: string;
@@ -67,16 +68,15 @@ export function TopBar({
                 {storeName}
               </h1>
               <Badge
-                variant={isOpen ? "mint" : "neutral"}
+                variant={isOpen ? "mint" : "amber"}
                 size="sm"
                 className="hidden sm:inline-flex items-center gap-1.5"
               >
-                <span
-                  className={cn(
-                    "w-1.5 h-1.5 rounded-full shrink-0",
-                    isOpen ? "bg-emerald-600 animate-pulse" : "bg-rose-500"
-                  )}
-                />
+                {isOpen ? (
+                  <CheckCircle2 className="w-3 h-3 text-[var(--forest)] shrink-0" />
+                ) : (
+                  <XCircle className="w-3 h-3 text-[var(--forest)] shrink-0" />
+                )}
                 <span>{isOpen ? "Toko Buka" : "Toko Tutup"}</span>
               </Badge>
             </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   Loader2,
   CheckCircle2,
+  XCircle,
   AlertCircle,
   Store,
   CreditCard,
@@ -315,15 +316,10 @@ export function StoreSettings({ className }: StoreSettingsProps) {
         >
           {isTogglingOpen ? (
             <Loader2 className="w-4 h-4 animate-spin text-[var(--forest)]" />
+          ) : isOpen ? (
+            <CheckCircle2 className="w-4 h-4 text-[var(--forest)] shrink-0" />
           ) : (
-            <span
-              className={cn(
-                "w-2.5 h-2.5 rounded-full ring-2 shrink-0 inline-block",
-                isOpen
-                  ? "bg-emerald-600 ring-emerald-300 animate-pulse"
-                  : "bg-rose-500 ring-rose-200"
-              )}
-            />
+            <XCircle className="w-4 h-4 text-zinc-600 shrink-0" />
           )}
           <span>
             Status:{" "}

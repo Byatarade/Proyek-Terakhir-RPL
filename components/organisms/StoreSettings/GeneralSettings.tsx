@@ -10,8 +10,11 @@ import {
   Clock,
   Info,
   Globe,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
+import { Badge } from "@/components/atoms/Badge";
 import { cn } from "@/lib/utils";
 import { StoreDetailData } from "@/lib/stores/actions";
 import { EXPIRY_PRESETS, TIMEZONE_OPTIONS } from "./types";
@@ -72,17 +75,17 @@ export function GeneralSettings({
               name="store_open_radio"
               checked={isOpen}
               onChange={() => onIsOpenChange(true)}
-              className="mt-1 w-4 h-4 text-[var(--leaf)] focus:ring-[var(--leaf)]"
+              className="mt-1 w-4 h-4 text-[var(--leaf)] focus:ring-[var(--leaf)] cursor-pointer accent-[var(--leaf)]"
             />
             <div className="space-y-1 w-full">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-200 shrink-0 inline-block" />
+                <CheckCircle2 className="w-4 h-4 text-[var(--leaf)] shrink-0" />
                 <span className="font-heading font-bold text-sm text-[var(--forest)]">
                   Toko Buka (Menerima Pesanan)
                 </span>
-                <span className="ml-auto text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+                <Badge variant="mint" size="sm" className="ml-auto text-[10px] font-bold">
                   Aktif
-                </span>
+                </Badge>
               </div>
               <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Menu publik aktif sepenuhnya. Pelanggan dapat membuat pesanan
@@ -95,7 +98,7 @@ export function GeneralSettings({
             className={cn(
               "flex items-start gap-3 p-4 rounded-[8px] border-2 cursor-pointer transition-all select-none",
               !isOpen
-                ? "bg-amber-50 border-amber-600 shadow-[2px_2px_0px_#b45309]"
+                ? "bg-amber-50/70 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
                 : "bg-white border-[var(--line)] opacity-70 hover:border-[var(--forest)]"
             )}
           >
@@ -104,17 +107,17 @@ export function GeneralSettings({
               name="store_open_radio"
               checked={!isOpen}
               onChange={() => onIsOpenChange(false)}
-              className="mt-1 w-4 h-4 text-amber-700 focus:ring-amber-600"
+              className="mt-1 w-4 h-4 text-amber-700 focus:ring-amber-600 cursor-pointer accent-amber-700"
             />
             <div className="space-y-1 w-full">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-rose-200 shrink-0 inline-block" />
+                <XCircle className="w-4 h-4 text-amber-700 shrink-0" />
                 <span className="font-heading font-bold text-sm text-amber-900">
                   Toko Tutup Sementara
                 </span>
-                <span className="ml-auto text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-rose-100 text-rose-800 border border-rose-300">
+                <Badge variant="amber" size="sm" className="ml-auto text-[10px] font-bold">
                   Nonaktif
-                </span>
+                </Badge>
               </div>
               <p className="text-xs text-amber-800 leading-relaxed">
                 Menu tetap dapat dilihat untuk informasi harga, namun tombol

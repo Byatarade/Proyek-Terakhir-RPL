@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Store, CreditCard, Banknote, AlertCircle, Receipt } from "lucide-react";
+import { Store, CreditCard, Banknote, AlertCircle, Receipt, CheckCircle2, XCircle } from "lucide-react";
 
 export interface PublicStoreShellProps {
   children: React.ReactNode;
@@ -50,13 +50,11 @@ export function PublicStoreShell({
                 : "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-[var(--amber)] text-[var(--ink)] border-2 border-[var(--forest)] font-semibold text-xs shadow-[2px_2px_0px_var(--forest)] select-none"
             }
           >
-            <span
-              className={
-                isOpen
-                  ? "w-2 h-2 rounded-full bg-[var(--leaf)]"
-                  : "w-2 h-2 rounded-full bg-[var(--danger)]"
-              }
-            />
+            {isOpen ? (
+              <CheckCircle2 className="w-3.5 h-3.5 text-[var(--forest)] shrink-0" />
+            ) : (
+              <XCircle className="w-3.5 h-3.5 text-[var(--danger)] shrink-0" />
+            )}
             <span>{isOpen ? "Toko Buka" : "Toko Tutup"}</span>
           </div>
         </header>
