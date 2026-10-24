@@ -385,6 +385,8 @@ export interface CashierProductItem {
   priceSell: number;
   isAvailable: boolean;
   imagePath: string | null;
+  totalSold?: number;
+  isBestSeller?: boolean;
 }
 
 export interface CashierCategoryItem {
@@ -467,19 +469,61 @@ export async function getCashierCatalogAction(
         .maybeSingle(),
     ]);
 
+    // Hitung penjualan riil per produk untuk menentukan menu terlaris di POS
+    const salesMap = new Map<string, number>();
+    try {
+      const { data: paidOrders } = await admin
+        .from("orders")
+        .select("id")
+        .eq("store_id", effectiveStoreId)
+        .in("status", ["dibayar", "diproses", "siap", "diambil"]);
+
+      const paidOrderIds = (paidOrders || []).map((o: any) => o.id);
+
+      if (paidOrderIds.length > 0) {
+        const { data: itemsData } = await admin
+          .from("order_items")
+          .select("product_id, qty")
+          .eq("store_id", effectiveStoreId)
+          .in("order_id", paidOrderIds);
+
+        (itemsData || []).forEach((item: any) => {
+          if (item.product_id) {
+            salesMap.set(
+              item.product_id,
+              (salesMap.get(item.product_id) || 0) + (Number(item.qty) || 0)
+            );
+          }
+        });
+      }
+    } catch (salesErr) {
+      console.warn("Gagal menghitung penjualan produk kasir:", salesErr);
+    }
+
+    const salesArray = Array.from(salesMap.entries())
+      .filter(([, qty]) => qty > 0)
+      .sort((a, b) => b[1] - a[1]);
+
+    const bestSellerIds = new Set(salesArray.slice(0, 5).map(([id]) => id));
+
     const categories: CashierCategoryItem[] = (categoriesRes.data || []).map((c: any) => ({
       id: c.id,
       name: c.name,
     }));
 
-    const products: CashierProductItem[] = (productsRes.data || []).map((p: any) => ({
-      id: p.id,
-      categoryId: p.category_id,
-      name: p.name,
-      priceSell: p.price_sell,
-      isAvailable: p.is_available,
-      imagePath: p.image_path,
-    }));
+    const products: CashierProductItem[] = (productsRes.data || []).map((p: any) => {
+      const totalSold = salesMap.get(p.id) || 0;
+      return {
+        id: p.id,
+        categoryId: p.category_id,
+        name: p.name,
+        priceSell: p.price_sell,
+        isAvailable: p.is_available,
+        imagePath: p.image_path,
+        totalSold,
+        isBestSeller: bestSellerIds.has(p.id) && totalSold > 0,
+      };
+    });
 
     const storeQris = storeRes.data
       ? {
@@ -596,14 +640,14 @@ export async function createCashierWalkinOrderAction(
       last_number: nextQueueNumber,
     });
 
-    // Buat pesanan dengan status langsung "dibayar"
+    // Buat pesanan dengan status langsung "diambil" (langsung selesai ketika sudah bayar)
     const { data: newOrder, error: orderError } = await admin
       .from("orders")
       .insert({
         store_id: profile.store_id,
         queue_date: queueDate,
         queue_number: nextQueueNumber,
-        status: "dibayar",
+        status: "diambil",
         total: orderTotal,
         payment_method: paymentMethod,
         paid_confirmed_by: "cashier",
@@ -639,10 +683,10 @@ export async function createCashierWalkinOrderAction(
       order_id: newOrder.id,
       store_id: profile.store_id,
       from_status: null,
-      to_status: "dibayar",
+      to_status: "diambil",
       actor_type: "user",
       actor_id: user.id,
-      note: "Pesanan dibuat langsung di meja kasir (Walk-in POS)",
+      note: "Pesanan selesai langsung di kasir (Walk-in POS)",
     });
 
     revalidatePath("/dashboard/kasir");

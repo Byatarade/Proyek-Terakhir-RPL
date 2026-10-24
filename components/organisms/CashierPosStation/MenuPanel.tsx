@@ -10,6 +10,7 @@ import {
   Coffee,
   IceCream,
   Cookie,
+  Flame,
 } from "lucide-react";
 import { CashierCatalog, CashierProductItem } from "@/lib/cashier/actions";
 import { formatRupiah, cn } from "@/lib/utils";
@@ -63,18 +64,35 @@ export function MenuPanel({
   cart,
   onAddToCart,
 }: MenuPanelProps) {
+  // Hitung produk terlaris di katalog POS
+  const bestSellersCount = useMemo(() => {
+    return catalog.products.filter(
+      (p) => p.isBestSeller || (p.totalSold && p.totalSold > 0)
+    ).length;
+  }, [catalog.products]);
+
   // Filtered Products
   const filteredProducts = useMemo(() => {
-    return catalog.products.filter((p) => {
-      if (selectedCategory !== "all" && p.categoryId !== selectedCategory) {
-        return false;
-      }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        return p.name.toLowerCase().includes(q);
-      }
-      return true;
-    });
+    return catalog.products
+      .filter((p) => {
+        if (selectedCategory === "best_seller") {
+          return p.isBestSeller || (p.totalSold && p.totalSold > 0);
+        }
+        if (selectedCategory !== "all" && p.categoryId !== selectedCategory) {
+          return false;
+        }
+        if (searchQuery.trim()) {
+          const q = searchQuery.toLowerCase().trim();
+          return p.name.toLowerCase().includes(q);
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        if (selectedCategory === "best_seller") {
+          return (b.totalSold || 0) - (a.totalSold || 0);
+        }
+        return 0;
+      });
   }, [catalog.products, selectedCategory, searchQuery]);
 
   return (
@@ -116,6 +134,24 @@ export function MenuPanel({
           >
             Semua ({catalog.products.length})
           </button>
+
+          {bestSellersCount > 0 && (
+            <button
+              type="button"
+              onClick={() => onSelectCategory("best_seller")}
+              className={cn(
+                "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer border-2 flex items-center gap-1.5",
+                selectedCategory === "best_seller"
+                  ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
+                  : "bg-white text-zinc-700 border-zinc-300 hover:border-zinc-400"
+              )}
+            >
+              <span>🔥 Terlaris</span>
+              <span className="text-[10px] bg-[var(--surface-2)] text-[var(--forest)] px-1.5 py-0.5 rounded-full font-mono font-bold leading-none">
+                {bestSellersCount}
+              </span>
+            </button>
+          )}
 
           {catalog.categories.map((cat) => {
             const count = catalog.products.filter(
@@ -195,6 +231,14 @@ export function MenuPanel({
                       </div>
                     )}
 
+                    {/* Best Seller Tag */}
+                    {product.isBestSeller && (
+                      <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-[5px] bg-[var(--amber)] text-[var(--forest)] border border-[var(--forest)] text-[9px] font-extrabold flex items-center gap-1 shadow-xs z-10">
+                        <Flame className="w-2.5 h-2.5 fill-current" />
+                        <span>Terlaris</span>
+                      </div>
+                    )}
+
                     {/* In Cart Badge */}
                     {inCartQty > 0 && (
                       <div className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-[var(--leaf)] text-white text-xs font-heading font-extrabold flex items-center justify-center shadow-md border border-white">
@@ -217,6 +261,11 @@ export function MenuPanel({
                     <h4 className="font-heading font-bold text-xs sm:text-sm text-zinc-950 line-clamp-2 leading-snug">
                       {product.name}
                     </h4>
+                    {Boolean(product.totalSold && product.totalSold > 0) && (
+                      <span className="text-[10px] text-zinc-500 font-medium block leading-none">
+                        Terjual {product.totalSold}x
+                      </span>
+                    )}
                     <div className="flex items-center justify-between pt-1">
                       <span className="font-mono text-xs font-bold text-[var(--leaf)]">
                         {formatRupiah(product.priceSell)}

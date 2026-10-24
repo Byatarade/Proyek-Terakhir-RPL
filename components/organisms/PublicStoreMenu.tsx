@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -294,28 +294,81 @@ export function PublicStoreMenu({
     }
   };
 
-  // Filter categories and products
-  const filteredCategories = categories
-    .map((cat) => {
-      const filteredProducts = cat.products.filter((prod) => {
-        if (!searchQuery.trim()) return true;
-        const q = searchQuery.toLowerCase();
-        return (
-          prod.name.toLowerCase().includes(q) ||
-          prod.description?.toLowerCase().includes(q)
-        );
+  // Kumpulkan semua produk unik untuk menentukan menu terlaris
+  const allProducts = useMemo(() => {
+    const list: PublicProduct[] = [];
+    const seen = new Set<string>();
+    categories.forEach((c) => {
+      c.products.forEach((p) => {
+        if (!seen.has(p.id)) {
+          seen.add(p.id);
+          list.push(p);
+        }
       });
-      return {
-        ...cat,
-        products: filteredProducts,
-      };
-    })
-    .filter((cat) => cat.products.length > 0);
+    });
+    return list;
+  }, [categories]);
 
-  const displayedCategories =
-    activeCategoryTab === "all"
-      ? filteredCategories
-      : filteredCategories.filter((c) => c.id === activeCategoryTab);
+  // Produk terlaris diurutkan dari yang paling laku (paling banyak dibeli)
+  const bestSellerProducts = useMemo(() => {
+    return allProducts
+      .filter((p) => p.is_best_seller || (p.total_sold && p.total_sold > 0))
+      .sort((a, b) => (b.total_sold || 0) - (a.total_sold || 0));
+  }, [allProducts]);
+
+  // Filter categories and products
+  const filteredCategories = useMemo(() => {
+    return categories
+      .map((cat) => {
+        const filteredProducts = cat.products.filter((prod) => {
+          if (!searchQuery.trim()) return true;
+          const q = searchQuery.toLowerCase();
+          return (
+            prod.name.toLowerCase().includes(q) ||
+            prod.description?.toLowerCase().includes(q)
+          );
+        });
+        return {
+          ...cat,
+          products: filteredProducts,
+        };
+      })
+      .filter((cat) => cat.products.length > 0);
+  }, [categories, searchQuery]);
+
+  const filteredBestSellers = useMemo(() => {
+    return bestSellerProducts.filter((prod) => {
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        prod.name.toLowerCase().includes(q) ||
+        prod.description?.toLowerCase().includes(q)
+      );
+    });
+  }, [bestSellerProducts, searchQuery]);
+
+  const bestSellerCategory: PublicCategory | null = useMemo(() => {
+    if (filteredBestSellers.length === 0) return null;
+    return {
+      id: "best_seller",
+      name: "🔥 Menu Terlaris",
+      sort_order: -1,
+      products: filteredBestSellers,
+    };
+  }, [filteredBestSellers]);
+
+  const displayedCategories = useMemo(() => {
+    if (activeCategoryTab === "best_seller") {
+      return bestSellerCategory ? [bestSellerCategory] : [];
+    }
+    if (activeCategoryTab === "all") {
+      if (bestSellerCategory && !searchQuery.trim()) {
+        return [bestSellerCategory, ...filteredCategories];
+      }
+      return filteredCategories;
+    }
+    return filteredCategories.filter((c) => c.id === activeCategoryTab);
+  }, [activeCategoryTab, bestSellerCategory, filteredCategories, searchQuery]);
 
   const cartItemsArray = Array.from(cart.values());
 
@@ -411,6 +464,24 @@ export function PublicStoreMenu({
           >
             Semua Menu
           </button>
+
+          {bestSellerProducts.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setActiveCategoryTab("best_seller")}
+              className={cn(
+                "px-3.5 py-1.5 rounded-[8px] text-xs font-semibold whitespace-nowrap transition-all select-none cursor-pointer border-2 flex items-center gap-1.5",
+                activeCategoryTab === "best_seller"
+                  ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
+                  : "bg-white text-[var(--forest)] border-[var(--forest)] hover:bg-[var(--surface-2)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+              )}
+            >
+              <span>🔥 Terlaris</span>
+              <span className="text-[10px] bg-[var(--surface-2)] text-[var(--forest)] px-1.5 py-0.5 rounded-[4px] font-mono border border-[var(--forest)] leading-none">
+                {bestSellerProducts.length}
+              </span>
+            </button>
+          )}
 
           {categories.map((cat) => (
             <button

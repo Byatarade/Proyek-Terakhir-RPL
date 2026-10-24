@@ -1,6 +1,5 @@
 import React from "react";
-import Link from "next/link";
-import { Printer, Volume2, Plus } from "lucide-react";
+import { Printer, Volume2, CheckCircle2, X } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { Button } from "@/components/atoms/Button";
 import { SuccessOrderState } from "./types";
@@ -21,8 +20,23 @@ export function ReceiptSuccessModal({
   if (!successOrder) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs no-print">
-      <div className="w-full max-w-md bg-white rounded-2xl border-2 border-[var(--forest)] shadow-[6px_6px_0px_var(--forest)] p-6 sm:p-8 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs no-print"
+      onClick={onNewOrder}
+    >
+      <div
+        className="w-full max-w-md bg-white rounded-2xl border-2 border-[var(--forest)] shadow-[6px_6px_0px_var(--forest)] p-6 sm:p-8 space-y-5 animate-in fade-in zoom-in-95 duration-200 relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Tombol Tutup X */}
+        <button
+          type="button"
+          onClick={onNewOrder}
+          className="absolute top-4 right-4 p-1 rounded-full text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors cursor-pointer"
+          title="Tutup & Tetap di Kasir"
+        >
+          <X className="w-5 h-5" />
+        </button>
         {/* Ticket Notches */}
         <div className="flex items-center justify-between border-b-2 border-dashed border-zinc-300 pb-4">
           <div>
@@ -47,7 +61,7 @@ export function ReceiptSuccessModal({
             #{String(successOrder.result.queueNumber).padStart(3, "0")}
           </span>
           <span className="text-xs text-[var(--leaf)] font-bold block mt-1">
-            Pesanan diteruskan ke dapur & layar antrian
+            Pesanan selesai & lunas di kasir
           </span>
         </div>
 
@@ -127,20 +141,11 @@ export function ReceiptSuccessModal({
             variant="primary"
             size="md"
             onClick={onNewOrder}
-            className="gap-2 text-xs sm:text-sm font-bold shadow-[2px_2px_0px_var(--forest)] bg-[var(--leaf)] hover:bg-[#156336] text-white"
+            className="gap-2 text-xs sm:text-sm font-bold shadow-[2px_2px_0px_var(--forest)] bg-[var(--leaf)] hover:bg-[#156336] text-white cursor-pointer"
           >
-            <Plus className="w-4 h-4" />
-            <span>+ Buat Pesanan Baru Lagi</span>
+            <CheckCircle2 className="w-4 h-4 text-[var(--mint)]" />
+            <span>Selesai & Transaksi Baru</span>
           </Button>
-
-          <Link href="/dashboard/kasir" className="w-full text-center">
-            <button
-              type="button"
-              className="text-xs text-zinc-500 hover:text-zinc-800 underline font-medium cursor-pointer py-1"
-            >
-              Lihat di Layar Antrian Kasir
-            </button>
-          </Link>
         </div>
       </div>
     </div>

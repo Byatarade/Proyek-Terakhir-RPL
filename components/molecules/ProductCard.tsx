@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Plus, Utensils, Cake, Coffee, IceCream, Cookie } from "lucide-react";
+import { Plus, Utensils, Cake, Coffee, IceCream, Cookie, Flame } from "lucide-react";
 import { cn, formatRupiah } from "@/lib/utils";
 import { QuantityStepper } from "@/components/molecules/QuantityStepper";
 
@@ -14,6 +14,8 @@ export interface ProductItem {
   is_available: boolean;
   image_path?: string | null;
   category_name?: string | null;
+  total_sold?: number;
+  is_best_seller?: boolean;
 }
 
 export interface ProductCardProps {
@@ -96,6 +98,14 @@ export function ProductCard({
               {product.category_name}
             </span>
           )}
+
+          {/* Best Seller Tag */}
+          {product.is_best_seller && (
+            <span className="absolute top-2 right-2 px-2 py-0.5 rounded-[6px] bg-[var(--amber)] text-[var(--ink)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] text-[10px] font-extrabold leading-none flex items-center gap-1 select-none z-10">
+              <Flame className="w-3 h-3 text-[var(--forest)] fill-[var(--forest)]" />
+              <span>Terlaris</span>
+            </span>
+          )}
         </div>
 
         {/* Content Details */}
@@ -108,6 +118,13 @@ export function ProductCard({
             <p className="text-xs text-[var(--muted)] line-clamp-2 leading-relaxed font-normal">
               {product.description}
             </p>
+          )}
+
+          {Boolean(product.total_sold && product.total_sold > 0) && (
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[var(--leaf)] pt-0.5 select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--leaf)] shrink-0" />
+              <span>Terjual {product.total_sold}x</span>
+            </div>
           )}
         </div>
       </div>

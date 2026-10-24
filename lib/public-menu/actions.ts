@@ -17,6 +17,8 @@ export interface PublicProduct {
   image_path?: string | null;
   category_id?: string | null;
   category_name?: string | null;
+  total_sold?: number;
+  is_best_seller?: boolean;
 }
 
 export interface PublicCategory {
@@ -61,6 +63,8 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
           price_sell: 28000,
           is_available: true,
           category_name: "Kue & Cake Spesial",
+          total_sold: 48,
+          is_best_seller: true,
         },
         {
           id: "prod-redvelvet",
@@ -69,6 +73,7 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
           price_sell: 32000,
           is_available: true,
           category_name: "Kue & Cake Spesial",
+          total_sold: 22,
         },
         {
           id: "prod-tiramisu",
@@ -77,6 +82,7 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
           price_sell: 35000,
           is_available: true,
           category_name: "Kue & Cake Spesial",
+          total_sold: 15,
         },
         {
           id: "prod-cheesecake",
@@ -85,6 +91,7 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
           price_sell: 30000,
           is_available: false, // Ditandai habis per simulasi PRD FR-PR-04
           category_name: "Kue & Cake Spesial",
+          total_sold: 8,
         },
       ],
     },
@@ -100,6 +107,8 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
           price_sell: 22000,
           is_available: true,
           category_name: "Pastry & Roti Panggang",
+          total_sold: 64,
+          is_best_seller: true,
         },
         {
           id: "prod-almond-croissant",
@@ -108,6 +117,7 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
           price_sell: 27000,
           is_available: true,
           category_name: "Pastry & Roti Panggang",
+          total_sold: 19,
         },
         {
           id: "prod-cinnamon",
@@ -116,6 +126,7 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
           price_sell: 20000,
           is_available: true,
           category_name: "Pastry & Roti Panggang",
+          total_sold: 26,
         },
       ],
     },
@@ -131,6 +142,8 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
           price_sell: 18000,
           is_available: true,
           category_name: "Minuman & Kopi",
+          total_sold: 85,
+          is_best_seller: true,
         },
         {
           id: "prod-matcha",
@@ -139,6 +152,8 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
           price_sell: 24000,
           is_available: true,
           category_name: "Minuman & Kopi",
+          total_sold: 37,
+          is_best_seller: true,
         },
         {
           id: "prod-earlgrey",
@@ -147,6 +162,7 @@ const SAMPLE_ABABIL_CAKE_DATA: PublicStoreData = {
           price_sell: 16000,
           is_available: true,
           category_name: "Minuman & Kopi",
+          total_sold: 12,
         },
       ],
     },
@@ -209,8 +225,57 @@ export async function getPublicStoreMenuAction(
     const categories = (categoriesData || []) as { id: string; name: string; sort_order: number }[];
     const products = (productsData || []) as PublicProduct[];
 
+    // 3b. Hitung penjualan riil per produk dari order_items yang berstatus dibayar/diambil
+    const salesMap = new Map<string, number>();
+    try {
+      const { data: paidOrders } = await supabase
+        .from("orders")
+        .select("id")
+        .eq("store_id", store.id)
+        .in("status", ["dibayar", "diproses", "siap", "diambil"]);
+
+      const paidOrderIds = (paidOrders || []).map((o: any) => o.id);
+
+      if (paidOrderIds.length > 0) {
+        const { data: itemsData } = await supabase
+          .from("order_items")
+          .select("product_id, qty")
+          .eq("store_id", store.id)
+          .in("order_id", paidOrderIds);
+
+        (itemsData || []).forEach((item: any) => {
+          if (item.product_id) {
+            salesMap.set(
+              item.product_id,
+              (salesMap.get(item.product_id) || 0) + (Number(item.qty) || 0)
+            );
+          }
+        });
+      }
+    } catch (salesErr) {
+      console.warn("Gagal menghitung agregasi menu terlaris:", salesErr);
+    }
+
+    // Tentukan produk terlaris: ambil produk dengan total_sold > 0, urutkan terbanyak
+    const salesArray = Array.from(salesMap.entries())
+      .filter(([, qty]) => qty > 0)
+      .sort((a, b) => b[1] - a[1]);
+
+    // Top 5 produk dengan penjualan terbanyak otomatis menjadi best seller
+    const bestSellerIds = new Set(salesArray.slice(0, 5).map(([id]) => id));
+
+    const enrichedProducts: PublicProduct[] = products.map((prod) => {
+      const totalSold = salesMap.get(prod.id) || 0;
+      const isBestSeller = bestSellerIds.has(prod.id) && totalSold > 0;
+      return {
+        ...prod,
+        total_sold: totalSold,
+        is_best_seller: isBestSeller,
+      };
+    });
+
     // Jika toko di DB belum memiliki produk aktif
-    if (products.length === 0) {
+    if (enrichedProducts.length === 0) {
       if (normalizedSlug === "ababilcake-menu" || normalizedSlug === "demo") {
         return {
           success: true,
@@ -263,7 +328,7 @@ export async function getPublicStoreMenuAction(
       products: [],
     };
 
-    products.forEach((prod) => {
+    enrichedProducts.forEach((prod) => {
       if (prod.category_id && categoryMap.has(prod.category_id)) {
         categoryMap.get(prod.category_id)!.products.push({
           ...prod,
