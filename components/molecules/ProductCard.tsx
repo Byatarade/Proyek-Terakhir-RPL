@@ -113,21 +113,21 @@ export function ProductCard({
       </div>
 
       {/* Card Footer (Price & Stepper/Add) */}
-      <div className="p-3.5 pt-1 flex items-center justify-between gap-2 border-t-2 border-dashed border-[var(--line)] mt-2 bg-white">
+      <div className="p-3 sm:p-3.5 pt-2 sm:pt-2.5 flex flex-col gap-2 border-t-2 border-dashed border-[var(--line)] mt-auto bg-white">
         <div className="flex flex-col">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)] leading-none mb-1">
             Harga
           </span>
-          <span className="font-heading font-bold text-sm sm:text-base text-[var(--forest)] tabular-nums">
+          <span className="font-heading font-bold text-sm sm:text-base text-[var(--forest)] tabular-nums whitespace-nowrap">
             {formatRupiah(product.price_sell)}
           </span>
         </div>
 
-        <div>
+        <div className="w-full">
           {isOutOfStock ? (
             <button
               disabled
-              className="h-8 px-2.5 rounded-[6px] bg-[var(--disabled-bg)] text-[var(--disabled-text)] border-2 border-[var(--control)] text-xs font-medium cursor-not-allowed select-none"
+              className="w-full h-8 sm:h-8.5 px-2.5 rounded-[6px] bg-[var(--disabled-bg)] text-[var(--disabled-text)] border-2 border-[var(--control)] text-xs font-medium cursor-not-allowed select-none flex items-center justify-center"
             >
               Habis
             </button>
@@ -136,12 +136,13 @@ export function ProductCard({
               value={cartQty}
               onChange={(newQty) => onUpdateQty && onUpdateQty(newQty)}
               size="sm"
+              className="w-full justify-between"
             />
           ) : (
             <button
               type="button"
               onClick={onAddToCart}
-              className="inline-flex items-center gap-1.5 h-8.5 px-3 rounded-[6px] bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none text-xs font-semibold cursor-pointer select-none transition-all"
+              className="w-full inline-flex items-center justify-center gap-1.5 h-8 sm:h-8.5 px-3 rounded-[6px] bg-[var(--leaf)] hover:bg-[var(--leaf-hover)] text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none text-xs font-semibold cursor-pointer select-none transition-all"
             >
               <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Tambah</span>

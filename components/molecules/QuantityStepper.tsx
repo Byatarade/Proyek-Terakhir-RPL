@@ -50,7 +50,7 @@ export function QuantityStepper({
         onClick={handleDecrement}
         disabled={disabled || value <= min}
         className={cn(
-          "flex items-center justify-center rounded-[6px] bg-white text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none hover:bg-[var(--surface-2)] transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none disabled:shadow-none",
+          "flex items-center justify-center rounded-[6px] bg-white text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none hover:bg-[var(--surface-2)] transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none disabled:shadow-none shrink-0",
           isSmall ? "w-7 h-7" : "w-8 h-8"
         )}
         aria-label="Kurangi jumlah"
@@ -60,7 +60,7 @@ export function QuantityStepper({
 
       <span
         className={cn(
-          "font-heading font-bold text-[var(--forest)] text-center tabular-nums leading-none",
+          "font-heading font-bold text-[var(--forest)] text-center tabular-nums leading-none select-none",
           isSmall ? "w-6 text-xs" : "w-8 text-sm"
         )}
       >
@@ -72,7 +72,7 @@ export function QuantityStepper({
         onClick={handleIncrement}
         disabled={disabled || value >= max}
         className={cn(
-          "flex items-center justify-center rounded-[6px] bg-[var(--leaf)] text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none hover:bg-[var(--leaf-hover)] transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none disabled:shadow-none",
+          "flex items-center justify-center rounded-[6px] bg-[var(--leaf)] text-white border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none hover:bg-[var(--leaf-hover)] transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none disabled:shadow-none shrink-0",
           isSmall ? "w-7 h-7" : "w-8 h-8"
         )}
         aria-label="Tambah jumlah"

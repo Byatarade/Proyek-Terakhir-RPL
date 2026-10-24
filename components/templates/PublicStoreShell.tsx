@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Store, CreditCard, Banknote, AlertCircle, Receipt, CheckCircle2, XCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export interface PublicStoreShellProps {
   children: React.ReactNode;
@@ -87,23 +88,37 @@ export function PublicStoreShell({
           </div>
 
           {/* Payment Badges Supported */}
-          <div className="pt-3 mt-3 border-t-2 border-dashed border-[var(--line)] flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-              Metode Bayar:
-            </span>
-            {acceptQris && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[6px] bg-[var(--surface-2)] text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] text-[11px] font-semibold">
-                <CreditCard className="w-3.5 h-3.5 text-[var(--leaf)]" />
-                <span>QRIS Instan</span>
+          {(acceptQris || acceptCash) && (
+            <div className="pt-3 mt-3 border-t-2 border-dashed border-[var(--line)] flex flex-col gap-2">
+              <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                Metode Bayar:
               </span>
-            )}
-            {acceptCash && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[6px] bg-white text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] text-[11px] font-semibold">
-                <Banknote className="w-3.5 h-3.5 text-[var(--forest)]" />
-                <span>Tunai di Kasir</span>
-              </span>
-            )}
-          </div>
+              <div className="flex items-center gap-2">
+                {acceptQris && (
+                  <span
+                    className={cn(
+                      "inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[var(--surface-2)] text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] text-[11px] font-semibold text-center select-none",
+                      acceptCash ? "flex-1" : "flex-initial"
+                    )}
+                  >
+                    <CreditCard className="w-3.5 h-3.5 text-[var(--leaf)] shrink-0" />
+                    <span className="whitespace-nowrap">QRIS Instan</span>
+                  </span>
+                )}
+                {acceptCash && (
+                  <span
+                    className={cn(
+                      "inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-white text-[var(--forest)] border-2 border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] text-[11px] font-semibold text-center select-none",
+                      acceptQris ? "flex-1" : "flex-initial"
+                    )}
+                  >
+                    <Banknote className="w-3.5 h-3.5 text-[var(--forest)] shrink-0" />
+                    <span className="whitespace-nowrap">Tunai di Kasir</span>
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Main Content (Category Tabs, Product List, Cart) */}
