@@ -67,6 +67,7 @@ export function ProductFilterBar({
             className="h-10 px-3 rounded-xl bg-zinc-50 border border-zinc-200 text-xs font-medium text-zinc-800 focus:outline-none focus:ring-2 focus:ring-[var(--leaf)]/40 w-full sm:w-auto cursor-pointer"
           >
             <option value="all">Semua Status</option>
+            <option value="best_seller">Hanya Terlaris 🔥</option>
             <option value="available">Hanya Tersedia</option>
             <option value="unavailable">Hanya Habis</option>
             <option value="hidden">Hanya Sembunyi</option>

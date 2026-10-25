@@ -7,13 +7,14 @@ export interface ProductManagementProps {
   storeName: string;
 }
 
-export type StatusFilterType = "all" | "available" | "unavailable" | "hidden";
+export type StatusFilterType = "all" | "available" | "unavailable" | "hidden" | "best_seller";
 
 export interface ProductStatCardsProps {
   totalProducts: number;
   totalAvailable: number;
   totalUnavailable: number;
   totalHidden: number;
+  totalBestSeller?: number;
 }
 
 export interface ProductFilterBarProps {
@@ -31,6 +32,7 @@ export interface ProductTableProps {
   products: ProductData[];
   onToggleAvailability: (product: ProductData) => void;
   onToggleActive: (product: ProductData) => void;
+  onToggleBestSeller: (product: ProductData) => void;
   onEditProduct: (product: ProductData) => void;
   onDeleteProduct: (id: string, name: string) => void;
 }

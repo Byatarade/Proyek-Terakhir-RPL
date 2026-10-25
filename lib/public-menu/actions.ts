@@ -217,62 +217,16 @@ export async function getPublicStoreMenuAction(
     // 3. Ambil produk aktif toko (price_cost TIDAK diambil untuk publik sesuai PRD FR-PR-07)
     const { data: productsData } = await supabase
       .from("products")
-      .select("id, category_id, name, description, image_path, price_sell, is_available")
+      .select("id, category_id, name, description, image_path, price_sell, is_available, is_featured")
       .eq("store_id", store.id)
       .eq("is_active", true)
       .order("name", { ascending: true });
 
     const categories = (categoriesData || []) as { id: string; name: string; sort_order: number }[];
-    const products = (productsData || []) as PublicProduct[];
-
-    // 3b. Hitung penjualan riil per produk dari order_items yang berstatus dibayar/diambil
-    const salesMap = new Map<string, number>();
-    try {
-      const { data: paidOrders } = await supabase
-        .from("orders")
-        .select("id")
-        .eq("store_id", store.id)
-        .in("status", ["dibayar", "diproses", "siap", "diambil"]);
-
-      const paidOrderIds = (paidOrders || []).map((o: any) => o.id);
-
-      if (paidOrderIds.length > 0) {
-        const { data: itemsData } = await supabase
-          .from("order_items")
-          .select("product_id, qty")
-          .eq("store_id", store.id)
-          .in("order_id", paidOrderIds);
-
-        (itemsData || []).forEach((item: any) => {
-          if (item.product_id) {
-            salesMap.set(
-              item.product_id,
-              (salesMap.get(item.product_id) || 0) + (Number(item.qty) || 0)
-            );
-          }
-        });
-      }
-    } catch (salesErr) {
-      console.warn("Gagal menghitung agregasi menu terlaris:", salesErr);
-    }
-
-    // Tentukan produk terlaris: ambil produk dengan total_sold > 0, urutkan terbanyak
-    const salesArray = Array.from(salesMap.entries())
-      .filter(([, qty]) => qty > 0)
-      .sort((a, b) => b[1] - a[1]);
-
-    // Top 5 produk dengan penjualan terbanyak otomatis menjadi best seller
-    const bestSellerIds = new Set(salesArray.slice(0, 5).map(([id]) => id));
-
-    const enrichedProducts: PublicProduct[] = products.map((prod) => {
-      const totalSold = salesMap.get(prod.id) || 0;
-      const isBestSeller = bestSellerIds.has(prod.id) && totalSold > 0;
-      return {
-        ...prod,
-        total_sold: totalSold,
-        is_best_seller: isBestSeller,
-      };
-    });
+    const enrichedProducts: PublicProduct[] = ((productsData || []) as (PublicProduct & { is_featured?: boolean })[]).map((prod) => ({
+      ...prod,
+      is_best_seller: Boolean(prod.is_featured),
+    }));
 
     // Jika toko di DB belum memiliki produk aktif
     if (enrichedProducts.length === 0) {

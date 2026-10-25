@@ -14,6 +14,7 @@ import {
   updateProductAction,
   toggleProductAvailabilityAction,
   toggleProductActiveAction,
+  toggleProductBestSellerAction,
   deleteProductAction,
   SaveProductInput,
 } from "@/lib/menu/actions";
@@ -58,6 +59,7 @@ export function ProductManagement({
     price_cost: 15000,
     is_available: true,
     is_active: true,
+    is_best_seller: false,
   });
 
   const [formError, setFormError] = useState<string | null>(null);
@@ -74,6 +76,7 @@ export function ProductManagement({
       price_cost: 15000,
       is_available: true,
       is_active: true,
+      is_best_seller: false,
     });
     setFormError(null);
     setProductModalOpen(true);
@@ -90,6 +93,7 @@ export function ProductManagement({
       price_cost: prod.price_cost,
       is_available: prod.is_available,
       is_active: prod.is_active,
+      is_best_seller: Boolean(prod.is_best_seller),
     });
     setFormError(null);
     setProductModalOpen(true);
@@ -176,6 +180,17 @@ export function ProductManagement({
     });
   };
 
+  // Quick toggle best seller (Terlaris)
+  const handleToggleBestSeller = (prod: ProductData) => {
+    const newStatus = !prod.is_best_seller;
+    setProducts((prev) =>
+      prev.map((p) => (p.id === prod.id ? { ...p, is_best_seller: newStatus } : p))
+    );
+    startTransition(async () => {
+      await toggleProductBestSellerAction(prod.id, newStatus);
+    });
+  };
+
   // Delete product
   const handleDeleteProduct = (id: string, name: string) => {
     if (!confirm(`Hapus produk "${name}"?`)) return;
@@ -237,6 +252,7 @@ export function ProductManagement({
     if (selectedCategory !== "all" && prod.category_id !== selectedCategory) {
       return false;
     }
+    if (statusFilter === "best_seller" && !prod.is_best_seller) return false;
     if (statusFilter === "available" && (!prod.is_available || !prod.is_active)) return false;
     if (statusFilter === "unavailable" && (prod.is_available || !prod.is_active)) return false;
     if (statusFilter === "hidden" && prod.is_active) return false;
@@ -251,6 +267,7 @@ export function ProductManagement({
     return true;
   });
 
+  const totalBestSeller = products.filter((p) => p.is_best_seller).length;
   const totalAvailable = products.filter((p) => p.is_available && p.is_active).length;
   const totalUnavailable = products.filter((p) => !p.is_available && p.is_active).length;
   const totalHidden = products.filter((p) => !p.is_active).length;
@@ -311,6 +328,7 @@ export function ProductManagement({
         totalAvailable={totalAvailable}
         totalUnavailable={totalUnavailable}
         totalHidden={totalHidden}
+        totalBestSeller={totalBestSeller}
       />
 
       {/* 3. Search and Category Filter Tabs */}
@@ -330,6 +348,7 @@ export function ProductManagement({
         products={filteredProducts}
         onToggleAvailability={handleToggleAvailability}
         onToggleActive={handleToggleActive}
+        onToggleBestSeller={handleToggleBestSeller}
         onEditProduct={handleOpenEditProduct}
         onDeleteProduct={handleDeleteProduct}
       />

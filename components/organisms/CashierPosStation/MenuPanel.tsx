@@ -64,11 +64,9 @@ export function MenuPanel({
   cart,
   onAddToCart,
 }: MenuPanelProps) {
-  // Hitung produk terlaris di katalog POS
+  // Hitung produk terlaris di katalog POS (diatur via dashboard)
   const bestSellersCount = useMemo(() => {
-    return catalog.products.filter(
-      (p) => p.isBestSeller || (p.totalSold && p.totalSold > 0)
-    ).length;
+    return catalog.products.filter((p) => p.isBestSeller).length;
   }, [catalog.products]);
 
   // Filtered Products
@@ -76,7 +74,7 @@ export function MenuPanel({
     return catalog.products
       .filter((p) => {
         if (selectedCategory === "best_seller") {
-          return p.isBestSeller || (p.totalSold && p.totalSold > 0);
+          return Boolean(p.isBestSeller);
         }
         if (selectedCategory !== "all" && p.categoryId !== selectedCategory) {
           return false;

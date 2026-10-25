@@ -22,6 +22,7 @@ export interface ProductData {
   price_cost: number;
   is_active: boolean;
   is_available: boolean;
+  is_best_seller?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -104,8 +105,9 @@ export async function getStoreMenuDataAction(
     const categories = (categoriesData || []) as CategoryData[];
     const categoryMap = new Map(categories.map((c) => [c.id, c.name]));
 
-    const products = ((productsData || []) as ProductData[]).map((p) => ({
+    const products = ((productsData || []) as (ProductData & { is_featured?: boolean })[]).map((p) => ({
       ...p,
+      is_best_seller: Boolean(p.is_featured),
       category_name: p.category_id ? categoryMap.get(p.category_id) || null : null,
     }));
 
@@ -270,6 +272,7 @@ export interface SaveProductInput {
   price_cost: number;
   is_available: boolean;
   is_active: boolean;
+  is_best_seller?: boolean;
   image_path?: string | null;
 }
 
@@ -305,6 +308,7 @@ export async function createProductAction(input: SaveProductInput): Promise<Acti
       price_cost: input.price_cost || 0,
       is_available: input.is_available ?? true,
       is_active: input.is_active ?? true,
+      is_featured: input.is_best_seller ?? false,
       image_path: input.image_path || null,
     });
 
@@ -352,6 +356,7 @@ export async function updateProductAction(id: string, input: SaveProductInput): 
         price_cost: input.price_cost || 0,
         is_available: input.is_available,
         is_active: input.is_active,
+        is_featured: input.is_best_seller ?? false,
         image_path: input.image_path || null,
         updated_at: new Date().toISOString(),
       })
@@ -443,6 +448,46 @@ export async function toggleProductActiveAction(
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Gagal mengubah visibilitas." };
+  }
+}
+
+/**
+ * Mengubah status menu terlaris produk (Best Seller) dari dashboard
+ */
+export async function toggleProductBestSellerAction(
+  id: string,
+  isBestSeller: boolean
+): Promise<ActionResponse> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Sesi tidak ditemukan." };
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("store_id")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
+
+    const { error } = await supabase
+      .from("products")
+      .update({ is_featured: isBestSeller, updated_at: new Date().toISOString() })
+      .eq("id", id)
+      .eq("store_id", profile.store_id);
+
+    if (error) return { success: false, error: error.message };
+
+    revalidatePath("/dashboard/menu");
+    revalidatePath("/dashboard/pos");
+    revalidatePath("/t/[slug]", "page");
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Gagal mengubah status terlaris." };
   }
 }
 

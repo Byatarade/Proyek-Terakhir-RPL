@@ -8,6 +8,7 @@ import {
   EyeOff,
   Edit2,
   Trash2,
+  Flame,
 } from "lucide-react";
 import { cn, formatRupiah } from "@/lib/utils";
 import { ProductTableProps } from "./types";
@@ -16,6 +17,7 @@ export function ProductTable({
   products,
   onToggleAvailability,
   onToggleActive,
+  onToggleBestSeller,
   onEditProduct,
   onDeleteProduct,
 }: ProductTableProps) {
@@ -46,6 +48,7 @@ export function ProductTable({
               <th className="py-3 px-4 text-right">Harga Jual</th>
               <th className="py-3 px-4 text-right">Harga Modal</th>
               <th className="py-3 px-4 text-right">Margin / Laba</th>
+              <th className="py-3 px-4 text-center">Terlaris</th>
               <th className="py-3 px-4 text-center">Ketersediaan</th>
               <th className="py-3 px-4 text-center">Tampil</th>
               <th className="py-3 px-4 sm:px-5 text-right">Aksi</th>
@@ -69,8 +72,16 @@ export function ProductTable({
                 >
                   {/* Product Name & Description */}
                   <td className="py-3.5 px-4 sm:px-5 max-w-[240px]">
-                    <div className="font-semibold text-zinc-950 leading-tight">
-                      {prod.name}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-semibold text-zinc-950 leading-tight">
+                        {prod.name}
+                      </span>
+                      {prod.is_best_seller && (
+                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-semibold border border-amber-200">
+                          <Flame className="w-2.5 h-2.5 fill-amber-500 text-amber-500" />
+                          Terlaris
+                        </span>
+                      )}
                     </div>
                     {prod.description && (
                       <div className="text-xs text-zinc-400 truncate mt-0.5 font-normal">
@@ -103,6 +114,33 @@ export function ProductTable({
                       <span>+{formatRupiah(margin)}</span>
                       <span className="text-[10px] text-zinc-400">({marginPercent}%)</span>
                     </span>
+                  </td>
+
+                  {/* Best Seller Toggle */}
+                  <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                    <button
+                      type="button"
+                      onClick={() => onToggleBestSeller(prod)}
+                      className={cn(
+                        "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer",
+                        prod.is_best_seller
+                          ? "bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-300 shadow-2xs"
+                          : "bg-zinc-100/80 text-zinc-400 hover:bg-zinc-200/80 hover:text-zinc-600 border border-transparent"
+                      )}
+                      title={
+                        prod.is_best_seller
+                          ? "Menu terlaris aktif (klik untuk batalkan)"
+                          : "Klik untuk jadikan menu terlaris"
+                      }
+                    >
+                      <Flame
+                        className={cn(
+                          "w-3 h-3",
+                          prod.is_best_seller ? "text-amber-500 fill-amber-500" : "text-zinc-400"
+                        )}
+                      />
+                      <span>{prod.is_best_seller ? "Terlaris" : "Biasa"}</span>
+                    </button>
                   </td>
 
                   {/* Availability Toggle */}

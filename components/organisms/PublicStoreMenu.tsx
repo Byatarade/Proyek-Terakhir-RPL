@@ -309,11 +309,9 @@ export function PublicStoreMenu({
     return list;
   }, [categories]);
 
-  // Produk terlaris diurutkan dari yang paling laku (paling banyak dibeli)
+  // Produk terlaris (ditetapkan langsung via dashboard merchant)
   const bestSellerProducts = useMemo(() => {
-    return allProducts
-      .filter((p) => p.is_best_seller || (p.total_sold && p.total_sold > 0))
-      .sort((a, b) => (b.total_sold || 0) - (a.total_sold || 0));
+    return allProducts.filter((p) => p.is_best_seller);
   }, [allProducts]);
 
   // Filter categories and products

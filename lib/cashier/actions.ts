@@ -458,7 +458,7 @@ export async function getCashierCatalogAction(
         .order("name", { ascending: true }),
       admin
         .from("products")
-        .select("id, category_id, name, price_sell, is_available, image_path")
+        .select("id, category_id, name, price_sell, is_available, image_path, is_featured")
         .eq("store_id", effectiveStoreId)
         .eq("is_active", true)
         .order("name", { ascending: true }),
@@ -469,50 +469,12 @@ export async function getCashierCatalogAction(
         .maybeSingle(),
     ]);
 
-    // Hitung penjualan riil per produk untuk menentukan menu terlaris di POS
-    const salesMap = new Map<string, number>();
-    try {
-      const { data: paidOrders } = await admin
-        .from("orders")
-        .select("id")
-        .eq("store_id", effectiveStoreId)
-        .in("status", ["dibayar", "diproses", "siap", "diambil"]);
-
-      const paidOrderIds = (paidOrders || []).map((o: any) => o.id);
-
-      if (paidOrderIds.length > 0) {
-        const { data: itemsData } = await admin
-          .from("order_items")
-          .select("product_id, qty")
-          .eq("store_id", effectiveStoreId)
-          .in("order_id", paidOrderIds);
-
-        (itemsData || []).forEach((item: any) => {
-          if (item.product_id) {
-            salesMap.set(
-              item.product_id,
-              (salesMap.get(item.product_id) || 0) + (Number(item.qty) || 0)
-            );
-          }
-        });
-      }
-    } catch (salesErr) {
-      console.warn("Gagal menghitung penjualan produk kasir:", salesErr);
-    }
-
-    const salesArray = Array.from(salesMap.entries())
-      .filter(([, qty]) => qty > 0)
-      .sort((a, b) => b[1] - a[1]);
-
-    const bestSellerIds = new Set(salesArray.slice(0, 5).map(([id]) => id));
-
     const categories: CashierCategoryItem[] = (categoriesRes.data || []).map((c: any) => ({
       id: c.id,
       name: c.name,
     }));
 
     const products: CashierProductItem[] = (productsRes.data || []).map((p: any) => {
-      const totalSold = salesMap.get(p.id) || 0;
       return {
         id: p.id,
         categoryId: p.category_id,
@@ -520,8 +482,7 @@ export async function getCashierCatalogAction(
         priceSell: p.price_sell,
         isAvailable: p.is_available,
         imagePath: p.image_path,
-        totalSold,
-        isBestSeller: bestSellerIds.has(p.id) && totalSold > 0,
+        isBestSeller: Boolean(p.is_featured),
       };
     });
 

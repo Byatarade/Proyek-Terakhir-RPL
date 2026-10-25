@@ -1,5 +1,5 @@
 import React from "react";
-import { X, Loader2 } from "lucide-react";
+import { X, Loader2, Flame } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { ProductFormModalProps } from "./types";
 
@@ -141,6 +141,26 @@ export function ProductFormModal({
 
           {/* Checkboxes */}
           <div className="pt-2 border-t border-zinc-100 space-y-3">
+            <label className="flex items-center gap-3 cursor-pointer select-none p-2.5 rounded-xl bg-amber-50/60 border border-amber-200/80 hover:bg-amber-50 transition-colors">
+              <input
+                type="checkbox"
+                checked={Boolean(productForm.is_best_seller)}
+                onChange={(e) =>
+                  setProductForm((prev) => ({ ...prev, is_best_seller: e.target.checked }))
+                }
+                className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 cursor-pointer"
+              />
+              <div className="flex flex-col">
+                <span className="text-xs font-semibold text-zinc-900 flex items-center gap-1.5">
+                  <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                  Menu Terlaris (Best Seller)
+                </span>
+                <span className="text-[11px] text-zinc-600">
+                  Tampilkan badge &quot;Terlaris&quot; dan prioritaskan di bagian atas menu.
+                </span>
+              </div>
+            </label>
+
             <label className="flex items-center gap-3 cursor-pointer select-none">
               <input
                 type="checkbox"

@@ -25,7 +25,7 @@
 - [📖 Pengertian Aplikasi](#-pengertian-aplikasi)
 - [🎯 Prinsip Produk & Solusi Masalah](#-prinsip-produk--solusi-masalah)
 - [🛠️ Tech Stack & Ekosistem](#️-tech-stack--ekosistem)
-- [✨ 10 Fitur Keunggulan](#-10-fitur-keunggulan)
+- [✨ Fitur-Fitur Keunggulan Utama](#-fitur-fitur-keunggulan-utama)
 - [🗄️ Database & Skema Tabel](#️-database--skema-tabel)
   - [Diagram Relasi Entitas (ERD)](#diagram-relasi-entitas-erd)
   - [Rincian Tabel Database](#rincian-tabel-database)
@@ -83,9 +83,9 @@ Aplikasi ini dibangun menggunakan arsitektur modern berbasis TypeScript dan Next
 
 ---
 
-## ✨ 10 Fitur Keunggulan
+## ✨ Fitur-Fitur Keunggulan Utama
 
-Berikut adalah 10 fitur utama yang menjadi keunggulan kompetitif **PayBuy**:
+Berikut adalah fitur-fitur unggulan yang menjadi kekuatan kompetitif **PayBuy**:
 
 ### 1. 📱 Satu QR Code Seumur Toko (*Static Link, Dynamic Menu*)
 Toko hanya perlu mencetak dan menempel stiker QR sekali saja. Pemilik toko dapat mengubah harga, menambah kategori, mengubah deskripsi, atau mematikan menu yang stoknya habis kapan saja dari dashboard. Pelanggan yang memindai QR akan selalu mendapatkan daftar menu teranyar tanpa toko perlu mencetak ulang stiker meja.
@@ -99,28 +99,37 @@ Mengatasi kerugian UMKM akibat pesanan palsu (*prank/ghost order*) atau pesanan 
 ### 4. 💳 QRIS Dinamis Otomatis Tanpa Ketik Nominal
 Toko cukup mengunggah kode QRIS standar miliknya. Sistem PayBuy mem-parse data TLV (*Tag-Length-Value*) dari QRIS toko dan secara otomatis menyisipkan nominal pesanan beserta kode verifikasi CRC16. Pelanggan cukup memindai dan menekan bayar tanpa takut salah memasukkan digit angka. **100% uang langsung masuk ke rekening toko** tanpa potongan biaya gateway pihak ketiga.
 
-### 5. 🍳 Kitchen Display System (KDS) Realtime Otomatis
+### 5. 🔥 Fitur Menu Terlaris di Dashboard (*Merchant-Managed Best-Seller*)
+Pemilik toko memiliki kendali penuh untuk menentukan menu andalan atau menu terlaris langsung dari dashboard manajemen menu (`/dashboard/menu`). Cukup dengan 1 klik tombol toggle **"Terlaris / Biasa"** di tabel produk atau mencentang opsi **"🔥 Menu Terlaris (Best Seller)"** saat tambah/edit menu. Produk yang ditandai terlaris otomatis:
+- Mendapatkan badge eksklusif **"🔥 Terlaris"** di menu publik pelanggan (`/t/[slug]`) dan mesin kasir POS (`/dashboard/pos`).
+- Muncul di seksi teratas **"🔥 Menu Terlaris"** dan tab filter cepat di toko pelanggan.
+- Dapat difilter secara instan di dashboard manajemen produk (*"Hanya Terlaris 🔥"*) dan dipantau melalui kartu statistik khusus.
+
+### 6. 🛒 Mesin Kasir POS Walk-in Langsung Selesai (*Quick Cashier Checkout*)
+Kasir memiliki mesin kasir POS mandiri (`/dashboard/pos`) untuk melayani pelanggan yang memesan langsung di meja kasir. Transaksi kasir langsung otomatis berstatus lunas dan tuntas (**langsung selesai / `diambil`**) tanpa mengotori antrian masak dapur. Antarmuka kasir didesain tetap berada di tempat (*tidak kemana-mana / tanpa redirect*) sehingga kasir dapat mencetak struk, memanggil suara antrian, dan melayani pembeli berikutnya secara instan.
+
+### 7. 🍳 Kitchen Display System (KDS) Realtime Otomatis
 Layar tablet atau ponsel di dapur diperbarui secara otomatis menggunakan Supabase Realtime WebSocket tanpa perlu *refresh* browser. Koki disajikan informasi urutan nomor antrian, rincian menu masakan, indikator waktu tunggu, serta tombol sentuh besar: *"Mulai Masak"* dan *"Siap Diambil"*.
 
-### 6. 🔢 Penomoran Antrian Atomik & Reset Harian Otomatis
+### 8. 🔢 Penomoran Antrian Atomik & Reset Harian Otomatis
 Penomoran antrian (`001`, `002`, `003`...) diatur secara atomik menggunakan transaksi penguncian baris PostgreSQL (`ON CONFLICT DO UPDATE`) untuk menjamin tidak akan pernah ada nomor antrian ganda walau dipesan bersamaan di detik yang sama. Nomor antrian otomatis tereset kembali ke `001` setiap hari berdasarkan zona waktu lokal toko (WIB/WITA/WIT).
 
-### 7. 🖥️ Layar Monitor Antrian Publik & Layar Kasir
+### 9. 🖥️ Layar Monitor Antrian Publik & Layar Kasir
 Tersedia layar monitor antrian publik (`/t/[slug]/antrian`) yang dapat ditampilkan di TV/monitor toko untuk memanggil nomor pesanan yang sudah *"Siap Diambil"*. Kasir juga memiliki dashboard khusus untuk memantau pelanggan yang membayar tunai, membatalkan pesanan kedaluwarsa, atau memanggil nomor antrian.
 
-### 8. 📊 Laporan Laba Rugi & Perhitungan HPP (*Harga Pokok Penjualan*) Riil
+### 10. 📊 Laporan Laba Rugi & Perhitungan HPP (*Harga Pokok Penjualan*) Riil
 Bukan sekadar mencatat omzet bruto! Saat transaksi dibuat, PayBuy membuat salinan (*snapshot*) harga modal (HPP) setiap produk. Dengan demikian, laporan keuangan pemilik toko dapat menghitung laba kotor riil (`Omzet - Total HPP`) serta laba bersih setelah dikurangi catatan beban pengeluaran operasional harian (sewa tempat, listrik, bahan baku tambahan, dll.).
 
-### 9. 👥 Multi-Tenant & Hak Akses Berbasis Peran (*RBAC 4 Tingkat*)
+### 11. 👥 Multi-Tenant & Hak Akses Berbasis Peran (*RBAC 4 Tingkat*)
 Sistem mendukung multi-toko dengan isolasi database yang ketat. Pemilik toko dapat mendaftarkan staf dengan 4 hak akses peran terpisah:
 - **Owner:** Kontrol penuh toko, pengaturan QRIS, staf, dan laporan keuangan laba rugi.
 - **Admin Gudang:** Mengelola katalog kategori, menambah menu baru, dan mengatur stok barang.
-- **Kasir:** Mengonfirmasi pembayaran tunai, membatalkan pesanan, dan memantau antrian.
+- **Kasir:** Mengonfirmasi pembayaran tunai, membuat pesanan walk-in POS, membatalkan pesanan, dan memantau antrian.
 - **Koki:** Melihat antrian masak di dapur dan mengubah status pesanan siap diambil.
 *(Data sensitif seperti harga modal produk dan laporan keuntungan dilindungi RLS sehingga tidak dapat diakses kasir maupun koki).*
 
-### 10. 🎨 Desain Visual "Hijau Nota" & Ringan di Ponsel Murah
-Mengadopsi identitas visual yang solid menyerupai nota kasir fisik, karcis antrian, dan stempel lunas. Tanpa efek blur, tanpa gradien mencolok, dan tanpa animasi berat yang boros baterai. Kontras warna tinggi dan target tombol sentuh yang besar memastikan aplikasi sangat nyaman digunakan di area dapur yang panas maupun di layar ponsel kasir yang sibuk.
+### 12. 🎨 Desain Visual "Hijau Nota" & Ergonomis Mobile 375px
+Mengadopsi identitas visual yang solid menyerupai nota kasir fisik, karcis antrian, dan stempel lunas tanpa efek blur atau gradien berat yang boros baterai. Seluruh antarmuka dioptimalkan secara presisi untuk layar ponsel ringkas (**mobile viewport 375px**): metode pembayaran seimbang 50:50 (*setara*), serta tata letak harga dan tombol tambah bertingkat rapi bebas tabrakan.
 
 ---
 
@@ -292,6 +301,7 @@ pay-buy/
 │   ├── dashboard/                    # Antarmuka staf & owner
 │   │   ├── dapur/                    # Kitchen Display System (KDS) Realtime
 │   │   ├── kasir/                    # Layar konfirmasi tunai & kasir konter
+│   │   ├── pos/                      # Mesin Kasir POS (Walk-in langsung selesai)
 │   │   ├── menu/                     # Manajemen katalog produk & kategori
 │   │   ├── transaksi/                # Riwayat pesanan & detail transaksi
 │   │   ├── laba-rugi/ & laporan/     # Laporan keuangan, HPP, & pengeluaran toko
@@ -426,7 +436,8 @@ PayBuy menerapkan pembatasan hak akses yang tegas untuk menjaga privasi data fin
 | **Kelola Kategori & Produk** | ✅ | ✅ | ❌ | ❌ | ❌ |
 | **Lihat Harga Modal (HPP)** | ✅ | ✅ | ❌ *(Tersembunyi)* | ❌ *(Tersembunyi)* | ❌ *(Tersembunyi)* |
 | **Layar Dapur Realtime (KDS)** | ✅ | ❌ | ❌ | ✅ | ❌ |
-| **Layar Kasir & Konfirmasi Tunai** | ✅ | ❌ | ✅ | ❌ | ❌ |
+| **Layar Kasir & Antrian** | ✅ | ❌ | ✅ | ❌ | ❌ |
+| **Mesin Kasir POS (Walk-in)** | ✅ | ❌ | ✅ | ❌ | ❌ |
 | **Manajemen Akun Pegawai** | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **Catat Biaya & Laporan Laba Rugi** | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **Unduh QR Stiker Toko** | ✅ | ✅ | ✅ | ❌ | ❌ |
