@@ -2,6 +2,7 @@ import React from "react";
 import {
   Users,
   Crown,
+  ShoppingBag,
   Shield,
   KeyRound,
   UserX,
@@ -9,10 +10,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
-import { Badge } from "@/components/atoms/Badge";
 import { cn } from "@/lib/utils";
 import { EmployeeData } from "@/lib/employees/actions";
-import { ROLE_OPTIONS } from "./types";
 
 interface StaffTableProps {
   employees: EmployeeData[];
@@ -60,7 +59,6 @@ export function StaffTable({
             <tbody className="divide-y-2 divide-[var(--line)]">
               {employees.map((emp) => {
                 const isOwner = emp.role === "owner";
-                const roleConfig = ROLE_OPTIONS.find((r) => r.key === emp.role);
 
                 return (
                   <tr
@@ -78,11 +76,7 @@ export function StaffTable({
                             "w-9 h-9 rounded-[6px] border-2 flex items-center justify-center font-heading font-extrabold text-xs shadow-[1px_1px_0px_var(--forest)] shrink-0",
                             isOwner
                               ? "bg-[var(--forest)] text-white border-[var(--forest)]"
-                              : emp.role === "kasir"
-                              ? "bg-[var(--mint)] text-[var(--forest)] border-[var(--forest)]"
-                              : emp.role === "koki"
-                              ? "bg-amber-100 text-[#8c3e16] border-[var(--forest)]"
-                              : "bg-zinc-100 text-zinc-800 border-[var(--forest)]"
+                              : "bg-[var(--mint)] text-[var(--forest)] border-[var(--forest)]"
                           )}
                         >
                           {emp.fullName.substring(0, 2).toUpperCase()}
@@ -118,25 +112,13 @@ export function StaffTable({
                       {isOwner ? (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] bg-[var(--forest)] text-white border-2 border-[var(--forest)] font-heading font-bold text-[11px] shadow-[1px_1px_0px_var(--mint)]">
                           <Crown className="w-3.5 h-3.5 text-amber-300" />
-                          <span>Pemilik Toko (Owner)</span>
-                        </span>
-                      ) : roleConfig ? (
-                        <span
-                          className={cn(
-                            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] border-2 font-heading font-bold text-[11px] shadow-[1px_1px_0px_var(--forest)]",
-                            roleConfig.key === "kasir" &&
-                              "bg-[var(--mint)] text-[var(--forest)] border-[var(--forest)]",
-                            roleConfig.key === "koki" &&
-                              "bg-amber-100 text-[#8c3e16] border-[var(--forest)]",
-                            roleConfig.key === "admin_gudang" &&
-                              "bg-zinc-100 text-zinc-800 border-[var(--forest)]"
-                          )}
-                        >
-                          {roleConfig.icon}
-                          <span>{roleConfig.label}</span>
+                          <span>Pemilik Toko (Superadmin)</span>
                         </span>
                       ) : (
-                        <Badge variant="neutral">{emp.role}</Badge>
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] border-2 font-heading font-bold text-[11px] shadow-[1px_1px_0px_var(--forest)] bg-[var(--mint)] text-[var(--forest)] border-[var(--forest)]">
+                          <ShoppingBag className="w-3.5 h-3.5 text-[var(--leaf)]" />
+                          <span>Kasir Toko</span>
+                        </span>
                       )}
                     </td>
 

@@ -120,16 +120,23 @@ Tersedia layar monitor antrian publik (`/t/[slug]/antrian`) yang dapat ditampilk
 ### 10. 📊 Laporan Laba Rugi & Perhitungan HPP (*Harga Pokok Penjualan*) Riil
 Bukan sekadar mencatat omzet bruto! Saat transaksi dibuat, PayBuy membuat salinan (*snapshot*) harga modal (HPP) setiap produk. Dengan demikian, laporan keuangan pemilik toko dapat menghitung laba kotor riil (`Omzet - Total HPP`) serta laba bersih setelah dikurangi catatan beban pengeluaran operasional harian (sewa tempat, listrik, bahan baku tambahan, dll.).
 
-### 11. 👥 Multi-Tenant & Hak Akses Berbasis Peran (*RBAC 4 Tingkat*)
-Sistem mendukung multi-toko dengan isolasi database yang ketat. Pemilik toko dapat mendaftarkan staf dengan 4 hak akses peran terpisah:
-- **Owner:** Kontrol penuh toko, pengaturan QRIS, staf, dan laporan keuangan laba rugi.
-- **Admin Gudang:** Mengelola katalog kategori, menambah menu baru, dan mengatur stok barang.
-- **Kasir:** Mengonfirmasi pembayaran tunai, membuat pesanan walk-in POS, membatalkan pesanan, dan memantau antrian.
-- **Koki:** Melihat antrian masak di dapur dan mengubah status pesanan siap diambil.
-*(Data sensitif seperti harga modal produk dan laporan keuntungan dilindungi RLS sehingga tidak dapat diakses kasir maupun koki).*
+### 11. 👥 Multi-Tenant & Hak Akses Berbasis Peran (*Owner Superadmin & Kasir*)
+Sistem mendukung multi-toko dengan isolasi database yang ketat. Pembagian peran dirancang ramping dan tepat guna untuk operasional toko:
+- **Owner (Superadmin):** Memiliki hak akses penuh (*Full Access*) ke seluruh ekosistem toko, mencakup Beranda ringkasan laba rugi, modul kasir POS, layar antrean kasir, kelola menu & produk, laporan keuangan & biaya operasional, cetak QR menu, pengaturan toko & QRIS, serta manajemen staf pegawai.
+- **Kasir:** Staf operasional yang secara eksklusif hanya dapat mengakses 3 modul kasir utama:
+  1. **Kasir POS (Manual / Input Menu Walk-in)**: Melayani transaksi langsung di meja kasir.
+  2. **Layar Kasir (Antrean)**: Memantau pesanan mandiri pelanggan, konfirmasi bayar tunai, kendali status masak, dan panggil nomor antrean bersuara otomatis.
+  3. **Riwayat Transaksi**: Memantau catatan transaksi nota pembayaran yang telah selesai.
+*(Seluruh modul sensitif seperti laporan laba rugi, HPP modal, katalog menu, dan pengaturan toko dilindungi secara ketat sehingga kasir otomatis dialihkan bila mencoba mengakses di luar wewenangnya).*
 
 ### 12. 🎨 Desain Visual "Hijau Nota" & Ergonomis Mobile 375px
 Mengadopsi identitas visual yang solid menyerupai nota kasir fisik, karcis antrian, dan stempel lunas tanpa efek blur atau gradien berat yang boros baterai. Seluruh antarmuka dioptimalkan secara presisi untuk layar ponsel ringkas (**mobile viewport 375px**): metode pembayaran seimbang 50:50 (*setara*), serta tata letak harga dan tombol tambah bertingkat rapi bebas tabrakan.
+
+### 13. 🔒 Fitur "Ingat Saya Selamanya" (*Persistent 10-Year Session & Email Memory*)
+Halaman masuk (`/masuk`) dilengkapi kotak centang (*checkbox*) **"Ingat saya selamanya"** yang memperpanjang masa berlaku cookie sesi login Supabase hingga 10 tahun serta menyimpan email toko secara aman di penyimpanan lokal peramban (*localStorage*). Pengguna tidak perlu berulang kali mengetik email atau login ulang setiap kali membuka dashboard toko.
+
+### 14. 🗑️ Modal Konfirmasi Hapus Produk (*Safe Permanent Deletion*)
+Tindakan penghapusan produk di dashboard menu dilengkapi modal pop-up konfirmasi yang elegan sesuai tema desain website. Modal menampilkan nama, kategori, harga jual, dan deskripsi produk sebelum penghapusan. Sistem melepaskan relasi produk dari baris transaksi secara aman (`product_id = null`) sehingga produk terhapus permanen dari database tanpa merusak data penjualan historis.
 
 ---
 
@@ -170,7 +177,7 @@ erDiagram
         uuid id PK "auth.users.id"
         uuid store_id FK
         text full_name
-        enum role "owner, admin_gudang, kasir, koki"
+        enum role "owner, kasir"
         boolean is_active
         timestamp created_at
     }
@@ -194,6 +201,7 @@ erDiagram
         int price_cost "harga modal (HPP)"
         boolean is_active
         boolean is_available
+        boolean is_featured "penanda menu terlaris"
         timestamp created_at
     }
 
@@ -386,17 +394,17 @@ Buka berkas `.env.local` dan lengkapi konfigurasi Supabase Anda:
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
 
 # Kunci Anonim Publik (Publishable / Anon Key)
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=xxxxxxxxx
 
 # Kunci Service Role (HANYA untuk lingkungan Server, rahasia!)
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_SERVICE_ROLE_KEY=xxxxxxxxxxxxxx
 
 # URL Dasar Aplikasi (Domain lokal atau produksi)
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 ### 5. Setup Database Supabase
-Pastikan database PostgreSQL Anda telah memiliki tabel, view, enum, fungsi RPC, dan trigger yang sesuai dengan definisi pada `architecture.md` dan `lib/types/database.ts`. Anda juga dapat mengaktifkan ekstensi `pg_cron` untuk kedaluwarsa pesanan otomatis:
+Pastikan database PostgreSQL Anda telah memiliki tabel, view, enum, fungsi RPC, dan trigger yang sesuai dengan definisi pada `lib/types/database.ts`. Anda juga dapat mengaktifkan ekstensi `pg_cron` untuk kedaluwarsa pesanan otomatis:
 ```sql
 -- Pembersihan pesanan kedaluwarsa berkala
 select cron.schedule('expire-orders-every-minute', '* * * * *', $$
@@ -429,18 +437,18 @@ npm run start
 
 PayBuy menerapkan pembatasan hak akses yang tegas untuk menjaga privasi data finansial UMKM:
 
-| Fitur / Halaman | Owner | Admin Gudang | Kasir | Koki | Pelanggan Anonim |
-|---|:---:|:---:|:---:|:---:|:---:|
-| **Lihat Menu & Pesan Mandiri** | ✅ | ✅ | ✅ | ✅ | ✅ (Lewat `/t/[slug]`) |
-| **Buka/Tutup Toko & Edit Profil Toko** | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Kelola Kategori & Produk** | ✅ | ✅ | ❌ | ❌ | ❌ |
-| **Lihat Harga Modal (HPP)** | ✅ | ✅ | ❌ *(Tersembunyi)* | ❌ *(Tersembunyi)* | ❌ *(Tersembunyi)* |
-| **Layar Dapur Realtime (KDS)** | ✅ | ❌ | ❌ | ✅ | ❌ |
-| **Layar Kasir & Antrian** | ✅ | ❌ | ✅ | ❌ | ❌ |
-| **Mesin Kasir POS (Walk-in)** | ✅ | ❌ | ✅ | ❌ | ❌ |
-| **Manajemen Akun Pegawai** | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Catat Biaya & Laporan Laba Rugi** | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Unduh QR Stiker Toko** | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Fitur / Halaman | Owner (Superadmin) 👑 | Kasir Toko 🛒 | Pelanggan Anonim |
+|---|:---:|:---:|:---:|
+| **Lihat Menu & Pesan Mandiri** | ✅ | ✅ | ✅ (Lewat `/t/[slug]`) |
+| **Buka/Tutup Toko & Edit Profil Toko** | ✅ | ❌ | ❌ |
+| **Kelola Kategori & Produk** | ✅ | ❌ | ❌ |
+| **Lihat Harga Modal (HPP)** | ✅ | ❌ *(Tersembunyi)* | ❌ *(Tersembunyi)* |
+| **Layar Kasir & Antrian** | ✅ | ✅ | ❌ |
+| **Mesin Kasir POS (Walk-in)** | ✅ | ✅ | ❌ |
+| **Riwayat Transaksi** | ✅ | ✅ | ❌ |
+| **Manajemen Akun Pegawai** | ✅ | ❌ | ❌ |
+| **Catat Biaya & Laporan Laba Rugi** | ✅ | ❌ | ❌ |
+| **Unduh QR Stiker Toko** | ✅ | ❌ | ❌ |
 
 ---
 

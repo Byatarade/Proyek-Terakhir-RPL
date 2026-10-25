@@ -40,7 +40,7 @@ const NAV_GROUPS: NavGroup[] = [
         label: "Beranda",
         href: "/dashboard",
         icon: <LayoutDashboard className="w-4 h-4" />,
-        roles: ["owner", "kasir"],
+        roles: ["owner"],
       },
       {
         label: "Kasir POS (Input Menu)",
@@ -122,10 +122,10 @@ export function Sidebar({
   const pathname = usePathname();
 
   const roleLabelMap: Record<UserRole, string> = {
-    owner: "Pemilik Toko",
-    kasir: "Kasir",
-    koki: "Koki Dapur",
-    admin_gudang: "Admin Gudang",
+    owner: "Pemilik Toko (Superadmin)",
+    kasir: "Kasir Toko",
+    koki: "Kasir Toko",
+    admin_gudang: "Kasir Toko",
   };
 
   return (

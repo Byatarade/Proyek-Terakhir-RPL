@@ -1,6 +1,6 @@
 "use server";
 
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -236,6 +236,30 @@ export async function loginUserAction(
       error:
         "Akun Anda telah dinonaktifkan oleh pemilik toko. Hubungi pengelola untuk mengaktifkan kembali.",
     };
+  }
+
+  // Tangani opsi "Ingat saya selamanya" (perpanjang durasi cookie hingga 10 tahun)
+  const rememberMe =
+    formData.get("remember_me") === "on" ||
+    formData.get("remember_me") === "true";
+
+  if (rememberMe) {
+    try {
+      const cookieStore = await cookies();
+      const allCookies = cookieStore.getAll();
+      const sbCookies = allCookies.filter((c) => c.name.startsWith("sb-"));
+      for (const c of sbCookies) {
+        cookieStore.set(c.name, c.value, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 365 * 10, // 10 tahun (selamanya)
+          sameSite: "lax",
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+        });
+      }
+    } catch {
+      // Abaikan jika konteks cookies tidak mengizinkan modifikasi langsung
+    }
   }
 
   return {

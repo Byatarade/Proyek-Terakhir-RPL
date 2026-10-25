@@ -41,10 +41,10 @@ export function TopBar({
   };
 
   const roleLabelMap: Record<UserRole, string> = {
-    owner: "Pemilik Toko",
-    kasir: "Kasir",
-    koki: "Koki Dapur",
-    admin_gudang: "Admin Gudang",
+    owner: "Pemilik Toko (Superadmin)",
+    kasir: "Kasir Toko",
+    koki: "Kasir Toko",
+    admin_gudang: "Kasir Toko",
   };
 
   return (

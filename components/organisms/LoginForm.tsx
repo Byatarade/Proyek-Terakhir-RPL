@@ -28,6 +28,21 @@ export function LoginForm() {
 
   const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const emailInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Muat email tersimpan jika sebelumnya memilih Ingat Saya
+  React.useEffect(() => {
+    try {
+      const savedEmail = localStorage.getItem("paybuy_remember_email");
+      if (savedEmail && emailInputRef.current) {
+        emailInputRef.current.value = savedEmail;
+      }
+    } catch {
+      // Abaikan error localStorage
+    }
+  }, []);
+
   const [formState, setFormState] = useState<AuthActionResult | null>(() => {
     if (errorParam === "inactive") {
       return {
@@ -43,6 +58,18 @@ export function LoginForm() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     formData.set("next", nextParam);
+    formData.set("remember_me", rememberMe ? "true" : "false");
+
+    const email = (formData.get("email") as string) || "";
+    try {
+      if (rememberMe && email) {
+        localStorage.setItem("paybuy_remember_email", email);
+      } else {
+        localStorage.removeItem("paybuy_remember_email");
+      }
+    } catch {
+      // Abaikan error localStorage
+    }
 
     startTransition(async () => {
       const result = await loginUserAction(null, formData);
@@ -105,6 +132,7 @@ export function LoginForm() {
         <FormField id="email" label="Alamat Email" required>
           <div className="relative">
             <Input
+              ref={emailInputRef}
               id="email"
               name="email"
               type="email"
@@ -153,11 +181,25 @@ export function LoginForm() {
           </div>
         </FormField>
 
-        {/* Forgot Password Link */}
-        <div className="flex items-center justify-end">
+        {/* Remember Me Checkbox & Forgot Password Link */}
+        <div className="flex items-center justify-between gap-3 pt-1">
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              name="remember_me"
+              id="remember_me"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="w-4 h-4 rounded text-[var(--leaf)] border-2 border-[var(--forest)] focus:ring-[var(--leaf)] cursor-pointer"
+            />
+            <span className="text-xs font-medium text-[var(--ink)]">
+              Ingat saya
+            </span>
+          </label>
+
           <Link
             href="/lupa-sandi"
-            className="text-xs font-semibold text-[var(--leaf)] hover:text-[var(--leaf-hover)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--leaf)] rounded"
+            className="text-xs font-semibold text-[var(--leaf)] hover:text-[var(--leaf-hover)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--leaf)] rounded shrink-0"
           >
             Lupa kata sandi?
           </Link>

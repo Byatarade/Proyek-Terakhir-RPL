@@ -21,6 +21,11 @@ export default async function DashboardMenuPage() {
     redirect("/onboarding");
   }
 
+  // Menu & Produk hanya dapat diakses oleh Owner
+  if (profile?.role !== "owner") {
+    redirect("/dashboard/pos");
+  }
+
   const result = await getStoreMenuDataAction(profile.store_id);
 
   if (!result.success || !result.data) {

@@ -1,11 +1,11 @@
 import React from "react";
-import { ShoppingBag, UtensilsCrossed, Package } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { EmployeeData } from "@/lib/employees/actions";
 
 export interface RoleOption {
-  key: "kasir" | "koki" | "admin_gudang";
+  key: "kasir";
   label: string;
-  badgeVariant: "mint" | "brick" | "neutral";
+  badgeVariant: "mint";
   icon: React.ReactNode;
   desc: string;
   features: string[];
@@ -14,39 +14,14 @@ export interface RoleOption {
 export const ROLE_OPTIONS: RoleOption[] = [
   {
     key: "kasir",
-    label: "Kasir (Operasional)",
+    label: "Kasir Toko (Operasional)",
     badgeVariant: "mint",
     icon: <ShoppingBag className="w-4 h-4 text-[var(--leaf)]" />,
-    desc: "Melayani transaksi kasir POS, mengubah status masak, dan memanggil antrean pelanggan.",
+    desc: "Melayani transaksi kasir manual (POS), memantau antrean kasir & panggil suara, serta melihat riwayat transaksi.",
     features: [
-      "Kasir POS (Input Menu)",
-      "Layar Kasir & Antrian",
-      "Mulai Masak & Panggil Antrian",
-      "Riwayat Transaksi",
-    ],
-  },
-  {
-    key: "koki",
-    label: "Koki (Dapur)",
-    badgeVariant: "brick",
-    icon: <UtensilsCrossed className="w-4 h-4 text-[var(--brick)]" />,
-    desc: "Memproses pesanan makanan & minuman di dapur.",
-    features: [
-      "Layar Dapur",
-      "Mulai Masak Pesanan",
-      "Tandai Pesanan Siap Diambil",
-    ],
-  },
-  {
-    key: "admin_gudang",
-    label: "Admin Gudang (Logistik)",
-    badgeVariant: "neutral",
-    icon: <Package className="w-4 h-4 text-zinc-600" />,
-    desc: "Mengelola ketersediaan menu dan harga modal.",
-    features: [
-      "Kelola Produk & Kategori",
-      "Atur Stok & Tanda Habis",
-      "Lihat & Atur Harga Pokok",
+      "Kasir POS (Input Menu Walk-in)",
+      "Layar Kasir (Antrian & Panggil Suara)",
+      "Riwayat Transaksi Pelanggan",
     ],
   },
 ];

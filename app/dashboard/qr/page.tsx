@@ -21,6 +21,11 @@ export default async function DashboardQrPage() {
     redirect("/onboarding");
   }
 
+  // Cetak QR hanya dapat diakses oleh Owner
+  if (profile?.role !== "owner") {
+    redirect("/dashboard/pos");
+  }
+
   // Dapatkan hostname aktif saat ini dari request headers atau env
   const headersList = await headers();
   const host = headersList.get("host") || "paybuy.web.id";

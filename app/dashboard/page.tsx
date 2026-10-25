@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DashboardOverview } from "@/components/organisms";
 import { ExpenseItem } from "@/lib/finance/actions";
@@ -21,6 +22,11 @@ export interface DashboardProductProfit {
 export default async function DashboardPage() {
   // Use cached auth & store — eliminates duplicate getUser() + profiles + stores queries
   const { profile, store } = await getAuthenticatedProfile();
+
+  // Kasir hanya memiliki hak akses ke kasir POS, antrian kasir, dan riwayat transaksi
+  if (profile?.role === "kasir") {
+    redirect("/dashboard/pos");
+  }
 
   // Today metrics
   let todaySales = 0;
