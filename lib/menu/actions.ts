@@ -492,7 +492,7 @@ export async function toggleProductBestSellerAction(
 }
 
 /**
- * Menghapus produk (Aturan BR-07: jika ada pesanan dinonaktifkan, jika belum ada dihapus)
+ * Menghapus produk dari katalog toko secara permanen
  */
 export async function deleteProductAction(id: string): Promise<ActionResponse> {
   try {
@@ -512,33 +512,25 @@ export async function deleteProductAction(id: string): Promise<ActionResponse> {
 
     if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
 
-    // Check if product was ever ordered (scoped to this store)
-    const { count } = await supabase
+    // Lepas relasi product_id pada order_items agar integritas FK aman
+    // (Data snapshot historis transaksi seperti product_name, price_sell, price_cost tetap tersimpan utuh)
+    await supabase
       .from("order_items")
-      .select("*", { count: "exact", head: true })
+      .update({ product_id: null })
       .eq("product_id", id)
       .eq("store_id", profile.store_id);
 
-    if (count && count > 0) {
-      // Soft-delete to preserve order history
-      const { error } = await supabase
-        .from("products")
-        .update({ is_active: false, is_available: false, updated_at: new Date().toISOString() })
-        .eq("id", id)
-        .eq("store_id", profile.store_id);
+    // Hapus baris produk secara permanen dari database
+    const { error } = await supabase
+      .from("products")
+      .delete()
+      .eq("id", id)
+      .eq("store_id", profile.store_id);
 
-      if (error) return { success: false, error: error.message };
-    } else {
-      // Hard delete if never ordered
-      const { error } = await supabase
-        .from("products")
-        .delete()
-        .eq("id", id)
-        .eq("store_id", profile.store_id);
-      if (error) return { success: false, error: error.message };
-    }
+    if (error) return { success: false, error: error.message };
 
     revalidatePath("/dashboard/menu");
+    revalidatePath("/dashboard/pos");
     revalidatePath("/t/[slug]", "page");
     return { success: true };
   } catch (err) {

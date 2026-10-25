@@ -28,6 +28,7 @@ import { ProductFilterBar } from "./ProductFilterBar";
 import { ProductTable } from "./ProductTable";
 import { ProductFormModal } from "./ProductFormModal";
 import { CategoryManagementModal } from "./CategoryManagementModal";
+import { DeleteProductModal } from "./DeleteProductModal";
 
 export type { ProductManagementProps } from "./types";
 
@@ -46,6 +47,7 @@ export function ProductManagement({
   // Modal states
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<ProductData | null>(null);
+  const [productToDelete, setProductToDelete] = useState<ProductData | null>(null);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [editingCategory, setEditingCategory] = useState<{ id: string; name: string } | null>(null);
@@ -191,12 +193,24 @@ export function ProductManagement({
     });
   };
 
-  // Delete product
-  const handleDeleteProduct = (id: string, name: string) => {
-    if (!confirm(`Hapus produk "${name}"?`)) return;
-    setProducts((prev) => prev.filter((p) => p.id !== id));
+  // Open modal for deleting product
+  const handleOpenDeleteProduct = (product: ProductData) => {
+    setProductToDelete(product);
+  };
+
+  // Confirm delete product action
+  const handleConfirmDeleteProduct = () => {
+    if (!productToDelete) return;
+    const targetId = productToDelete.id;
+
     startTransition(async () => {
-      await deleteProductAction(id);
+      const res = await deleteProductAction(targetId);
+      if (!res.success) {
+        alert(res.error || "Gagal menghapus produk.");
+        return;
+      }
+      setProducts((prev) => prev.filter((p) => p.id !== targetId));
+      setProductToDelete(null);
     });
   };
 
@@ -350,7 +364,7 @@ export function ProductManagement({
         onToggleActive={handleToggleActive}
         onToggleBestSeller={handleToggleBestSeller}
         onEditProduct={handleOpenEditProduct}
-        onDeleteProduct={handleDeleteProduct}
+        onDeleteProduct={handleOpenDeleteProduct}
       />
 
       {/* 5. Modal Tambah / Edit Produk */}
@@ -379,6 +393,15 @@ export function ProductManagement({
         onAddCategory={handleAddCategory}
         onUpdateCategory={handleUpdateCategory}
         onDeleteCategory={handleDeleteCategory}
+      />
+
+      {/* 7. Modal Konfirmasi Hapus Produk */}
+      <DeleteProductModal
+        isOpen={Boolean(productToDelete)}
+        onClose={() => !isPending && setProductToDelete(null)}
+        product={productToDelete}
+        isPending={isPending}
+        onConfirm={handleConfirmDeleteProduct}
       />
     </div>
   );

@@ -34,7 +34,15 @@ export interface ProductTableProps {
   onToggleActive: (product: ProductData) => void;
   onToggleBestSeller: (product: ProductData) => void;
   onEditProduct: (product: ProductData) => void;
-  onDeleteProduct: (id: string, name: string) => void;
+  onDeleteProduct: (product: ProductData) => void;
+}
+
+export interface DeleteProductModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  product: ProductData | null;
+  isPending: boolean;
+  onConfirm: () => void;
 }
 
 export interface ProductFormModalProps {
