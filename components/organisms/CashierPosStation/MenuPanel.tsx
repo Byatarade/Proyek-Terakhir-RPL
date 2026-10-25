@@ -119,15 +119,15 @@ export function MenuPanel({
         </div>
 
         {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-100 border border-zinc-200 overflow-x-auto scrollbar-none">
           <button
             type="button"
             onClick={() => onSelectCategory("all")}
             className={cn(
-              "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer border-2",
+              "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap",
               selectedCategory === "all"
-                ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
-                : "bg-white text-zinc-700 border-zinc-300 hover:border-zinc-400"
+                ? "bg-white text-[var(--forest)] shadow-2xs"
+                : "text-zinc-600 hover:text-zinc-900"
             )}
           >
             Semua ({catalog.products.length})
@@ -138,14 +138,21 @@ export function MenuPanel({
               type="button"
               onClick={() => onSelectCategory("best_seller")}
               className={cn(
-                "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer border-2 flex items-center gap-1.5",
+                "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap flex items-center gap-1.5",
                 selectedCategory === "best_seller"
-                  ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
-                  : "bg-white text-zinc-700 border-zinc-300 hover:border-zinc-400"
+                  ? "bg-white text-[var(--forest)] shadow-2xs"
+                  : "text-zinc-600 hover:text-zinc-900"
               )}
             >
               <span>🔥 Terlaris</span>
-              <span className="text-[10px] bg-[var(--surface-2)] text-[var(--forest)] px-1.5 py-0.5 rounded-full font-mono font-bold leading-none">
+              <span
+                className={cn(
+                  "text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold leading-none",
+                  selectedCategory === "best_seller"
+                    ? "bg-amber-100 text-amber-800"
+                    : "bg-zinc-200 text-zinc-700"
+                )}
+              >
                 {bestSellersCount}
               </span>
             </button>
@@ -161,10 +168,10 @@ export function MenuPanel({
                 type="button"
                 onClick={() => onSelectCategory(cat.id)}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer border-2",
+                  "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap",
                   selectedCategory === cat.id
-                    ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
-                    : "bg-white text-zinc-700 border-zinc-300 hover:border-zinc-400"
+                    ? "bg-white text-[var(--forest)] shadow-2xs"
+                    : "text-zinc-600 hover:text-zinc-900"
                 )}
               >
                 {cat.name} ({count})

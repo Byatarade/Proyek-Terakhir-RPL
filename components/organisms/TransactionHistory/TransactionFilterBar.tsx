@@ -17,7 +17,7 @@ export function TransactionFilterBar({
     <div className="bg-zinc-50/80 border border-[var(--line)] rounded-2xl p-4 space-y-3.5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         {/* Quick Date Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-100 border border-zinc-200 overflow-x-auto scrollbar-none">
           {[
             { id: "all", label: "Semua Waktu" },
             { id: "today", label: "Hari Ini" },
@@ -30,10 +30,10 @@ export function TransactionFilterBar({
                 key={p.id}
                 onClick={() => onFilterChange(p.id)}
                 className={cn(
-                  "px-3 py-1.5 rounded-[6px] text-xs font-medium transition-all cursor-pointer border-2",
+                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0",
                   isSelected
-                    ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] font-semibold"
-                    : "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300"
+                    ? "bg-white text-[var(--forest)] shadow-2xs"
+                    : "text-zinc-600 hover:text-zinc-900"
                 )}
               >
                 {p.label}

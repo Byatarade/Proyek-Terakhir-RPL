@@ -16,15 +16,15 @@ export function ProductFilterBar({
   return (
     <div className="space-y-3">
       {/* Category Pills */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-100 border border-zinc-200 overflow-x-auto scrollbar-none">
         <button
           type="button"
           onClick={() => onSelectCategory("all")}
           className={cn(
-            "px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all select-none cursor-pointer",
+            "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer shrink-0",
             selectedCategory === "all"
-              ? "bg-zinc-950 text-white shadow-2xs"
-              : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/70"
+              ? "bg-white text-[var(--forest)] shadow-2xs"
+              : "text-zinc-600 hover:text-zinc-900"
           )}
         >
           Semua Kategori ({products.length})
@@ -36,10 +36,10 @@ export function ProductFilterBar({
             type="button"
             onClick={() => onSelectCategory(cat.id)}
             className={cn(
-              "px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all select-none cursor-pointer",
+              "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer shrink-0",
               selectedCategory === cat.id
-                ? "bg-zinc-950 text-white shadow-2xs"
-                : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/70"
+                ? "bg-white text-[var(--forest)] shadow-2xs"
+                : "text-zinc-600 hover:text-zinc-900"
             )}
           >
             {cat.name} ({products.filter((p) => p.category_id === cat.id).length})

@@ -45,7 +45,7 @@ export function PeriodFilterBar({
         </div>
 
         {/* Quick Presets */}
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-100 border border-zinc-200 overflow-x-auto scrollbar-none">
           {PRESETS.map((p) => {
             const isSelected = activePreset === p.id && !showCustomDate;
             return (
@@ -54,10 +54,10 @@ export function PeriodFilterBar({
                 onClick={() => onApplyPreset(p.id)}
                 disabled={isPending}
                 className={cn(
-                  "px-3 py-1.5 rounded-[6px] text-xs font-medium transition-all cursor-pointer border-2",
+                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0",
                   isSelected
-                    ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] font-semibold"
-                    : "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300 hover:text-zinc-900"
+                    ? "bg-white text-[var(--forest)] shadow-2xs"
+                    : "text-zinc-600 hover:text-zinc-900 disabled:opacity-50"
                 )}
               >
                 {p.label}
@@ -68,10 +68,10 @@ export function PeriodFilterBar({
           <button
             onClick={onToggleCustomDate}
             className={cn(
-              "px-3 py-1.5 rounded-[6px] text-xs font-medium transition-all cursor-pointer border-2 inline-flex items-center gap-1.5",
+              "px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 inline-flex items-center gap-1.5",
               activePreset === "custom" || showCustomDate
-                ? "bg-[var(--leaf)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)] font-semibold"
-                : "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300"
+                ? "bg-white text-[var(--forest)] shadow-2xs"
+                : "text-zinc-600 hover:text-zinc-900"
             )}
           >
             <Filter className="w-3 h-3" />

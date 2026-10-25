@@ -142,6 +142,7 @@ export interface Database {
           price_cost: number;
           is_active: boolean;
           is_available: boolean;
+          is_featured: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -156,6 +157,7 @@ export interface Database {
           price_cost?: number;
           is_active?: boolean;
           is_available?: boolean;
+          is_featured?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -170,6 +172,7 @@ export interface Database {
           price_cost?: number;
           is_active?: boolean;
           is_available?: boolean;
+          is_featured?: boolean;
           created_at?: string;
           updated_at?: string;
         };

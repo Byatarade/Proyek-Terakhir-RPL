@@ -101,15 +101,15 @@ export function PosMenuSection({
         </div>
 
         {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-100 border border-zinc-200 overflow-x-auto scrollbar-none">
           <button
             type="button"
             onClick={() => onSelectCategory("all")}
             className={cn(
-              "px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer border-2",
+              "px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap",
               selectedCategory === "all"
-                ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
-                : "bg-white text-zinc-700 border-zinc-300 hover:border-zinc-400"
+                ? "bg-white text-[var(--forest)] shadow-2xs"
+                : "text-zinc-600 hover:text-zinc-900"
             )}
           >
             Semua ({catalog.products.length})
@@ -125,10 +125,10 @@ export function PosMenuSection({
                 type="button"
                 onClick={() => onSelectCategory(cat.id)}
                 className={cn(
-                  "px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer border-2",
+                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer whitespace-nowrap",
                   selectedCategory === cat.id
-                    ? "bg-[var(--forest)] text-white border-[var(--forest)] shadow-[2px_2px_0px_var(--forest)]"
-                    : "bg-white text-zinc-700 border-zinc-300 hover:border-zinc-400"
+                    ? "bg-white text-[var(--forest)] shadow-2xs"
+                    : "text-zinc-600 hover:text-zinc-900"
                 )}
               >
                 {cat.name} ({count})
