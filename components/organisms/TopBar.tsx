@@ -10,6 +10,8 @@ import {
   Loader2,
   CheckCircle2,
   XCircle,
+  ChevronsLeft,
+  ChevronsRight,
 } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { logoutUserAction } from "@/lib/auth";
@@ -22,6 +24,8 @@ export interface TopBarProps {
   fullName?: string;
   role?: UserRole;
   onOpenSidebar?: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export function TopBar({
@@ -31,6 +35,8 @@ export function TopBar({
   fullName = "Pengguna",
   role = "owner",
   onOpenSidebar,
+  isCollapsed = false,
+  onToggleCollapse,
 }: TopBarProps) {
   const [isPending, startTransition] = useTransition();
 
@@ -49,7 +55,7 @@ export function TopBar({
 
   return (
     <header className="h-16 bg-white border-b border-[var(--line)] px-4 sm:px-6 flex items-center justify-between gap-4 sticky top-0 z-30 select-none">
-      {/* Left: Mobile hamburger & Store info */}
+      {/* Left: Mobile hamburger, Desktop toggle & Store info */}
       <div className="flex items-center gap-3">
         {/* Mobile menu button */}
         <button
@@ -59,6 +65,33 @@ export function TopBar({
         >
           <Menu className="w-5 h-5" />
         </button>
+
+        {/* Desktop Collapse/Expand Toggle Button */}
+        {onToggleCollapse && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-700 hover:text-[var(--forest)] bg-zinc-50 hover:bg-[var(--surface-2)] border border-zinc-200/90 hover:border-[var(--forest)] shadow-2xs hover:shadow-[2px_2px_0px_var(--forest)] transition-all cursor-pointer group select-none"
+            title={isCollapsed ? "Perbesar Menu Navigasi" : "Susutkan Menu Navigasi"}
+            aria-label={isCollapsed ? "Perbesar Menu Navigasi" : "Susutkan Menu Navigasi"}
+          >
+            {isCollapsed ? (
+              <>
+                <ChevronsRight className="w-4 h-4 text-[var(--forest)] transition-transform group-hover:translate-x-0.5" />
+                <span className="text-[11px] font-heading font-bold text-[var(--forest)]">
+                  Perbesar Menu
+                </span>
+              </>
+            ) : (
+              <>
+                <ChevronsLeft className="w-4 h-4 text-zinc-500 transition-transform group-hover:-translate-x-0.5" />
+                <span className="text-[11px] font-heading text-zinc-600">
+                  Susutkan
+                </span>
+              </>
+            )}
+          </button>
+        )}
 
         {/* Store Title & Public Menu Link */}
         <div className="flex items-center gap-2.5">
