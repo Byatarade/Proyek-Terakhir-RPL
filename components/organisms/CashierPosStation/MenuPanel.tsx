@@ -227,6 +227,7 @@ export function MenuPanel({
                         src={product.imagePath}
                         alt={product.name}
                         fill
+                        unoptimized={product.imagePath.startsWith("data:")}
                         className="object-cover"
                         sizes="(max-width: 640px) 45vw, 240px"
                       />

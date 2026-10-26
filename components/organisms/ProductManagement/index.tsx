@@ -57,6 +57,7 @@ export function ProductManagement({
     name: "",
     category_id: "",
     description: "",
+    image_path: null,
     price_sell: 25000,
     price_cost: 15000,
     is_available: true,
@@ -74,6 +75,7 @@ export function ProductManagement({
       name: "",
       category_id: categories[0]?.id || "",
       description: "",
+      image_path: null,
       price_sell: 25000,
       price_cost: 15000,
       is_available: true,
@@ -91,6 +93,7 @@ export function ProductManagement({
       name: prod.name,
       category_id: prod.category_id || "",
       description: prod.description || "",
+      image_path: prod.image_path || null,
       price_sell: prod.price_sell,
       price_cost: prod.price_cost,
       is_available: prod.is_available,
@@ -128,6 +131,7 @@ export function ProductManagement({
                   ...productForm,
                   category_id: productForm.category_id ?? null,
                   description: productForm.description ?? null,
+                  image_path: productForm.image_path ?? null,
                   category_name:
                     categories.find((c) => c.id === productForm.category_id)?.name || null,
                 }
@@ -147,7 +151,7 @@ export function ProductManagement({
           ...productForm,
           category_id: productForm.category_id ?? null,
           description: productForm.description ?? null,
-          image_path: null,
+          image_path: productForm.image_path ?? null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           category_name:

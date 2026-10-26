@@ -69,6 +69,7 @@ export function ProductCard({
               src={product.image_path}
               alt={product.name}
               fill
+              unoptimized={product.image_path.startsWith("data:")}
               className={cn(
                 "object-cover transition-transform duration-300 group-hover:scale-105",
                 isOutOfStock && "grayscale"

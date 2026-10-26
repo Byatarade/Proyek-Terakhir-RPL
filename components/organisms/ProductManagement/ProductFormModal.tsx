@@ -2,6 +2,7 @@ import React from "react";
 import { X, Loader2, Flame } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { ProductFormModalProps } from "./types";
+import { ProductImageUpload } from "./ProductImageUpload";
 
 export function ProductFormModal({
   isOpen,
@@ -44,6 +45,15 @@ export function ProductFormModal({
               {formError}
             </div>
           )}
+
+          {/* Product Image Upload with Base64 & < 5MB compression */}
+          <ProductImageUpload
+            imagePath={productForm.image_path}
+            onChange={(base64) =>
+              setProductForm((prev) => ({ ...prev, image_path: base64 }))
+            }
+            disabled={isPending}
+          />
 
           {/* Name */}
           <div className="space-y-1.5">

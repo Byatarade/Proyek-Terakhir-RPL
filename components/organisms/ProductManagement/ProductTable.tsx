@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import {
   Cake,
   TrendingUp,
@@ -70,24 +71,41 @@ export function ProductTable({
                     !prod.is_active && "opacity-60 bg-zinc-50/40"
                   )}
                 >
-                  {/* Product Name & Description */}
-                  <td className="py-3.5 px-4 sm:px-5 max-w-[240px]">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="font-semibold text-zinc-950 leading-tight">
-                        {prod.name}
-                      </span>
-                      {prod.is_best_seller && (
-                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-semibold border border-amber-200">
-                          <Flame className="w-2.5 h-2.5 fill-amber-500 text-amber-500" />
-                          Terlaris
-                        </span>
-                      )}
-                    </div>
-                    {prod.description && (
-                      <div className="text-xs text-zinc-400 truncate mt-0.5 font-normal">
-                        {prod.description}
+                  {/* Product Image, Name & Description */}
+                  <td className="py-3.5 px-4 sm:px-5 max-w-[280px]">
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-11 h-11 shrink-0 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200/80 flex items-center justify-center">
+                        {prod.image_path ? (
+                          <Image
+                            src={prod.image_path}
+                            alt={prod.name}
+                            fill
+                            unoptimized={prod.image_path.startsWith("data:")}
+                            className="object-cover"
+                          />
+                        ) : (
+                          <Cake className="w-5 h-5 text-zinc-400" />
+                        )}
                       </div>
-                    )}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="font-semibold text-zinc-950 leading-tight">
+                            {prod.name}
+                          </span>
+                          {prod.is_best_seller && (
+                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-semibold border border-amber-200">
+                              <Flame className="w-2.5 h-2.5 fill-amber-500 text-amber-500" />
+                              Terlaris
+                            </span>
+                          )}
+                        </div>
+                        {prod.description && (
+                          <div className="text-xs text-zinc-400 truncate mt-0.5 font-normal">
+                            {prod.description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </td>
 
                   {/* Category */}
