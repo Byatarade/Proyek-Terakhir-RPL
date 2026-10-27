@@ -38,8 +38,7 @@ export interface CashierStationProps {
 export function CashierStation({
   initialOrders,
   storeName,
-}: // eslint-disable-next-line @typescript-eslint/no-unused-vars
-CashierStationProps) {
+}: CashierStationProps) {
   // ── Polling & Orders State ──
   const { orders, setOrders, isRefreshing, handleManualRefresh } =
     useOrderPolling(initialOrders);

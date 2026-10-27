@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition, useState } from "react";
+import React, { useTransition } from "react";
 import {
   CheckCircle2,
   Volume2,
@@ -20,7 +20,6 @@ import {
   CashierOrder,
   confirmOrderPaymentAction,
   updateOrderStatusAction,
-  cancelOrderAction,
 } from "@/lib/cashier/actions";
 import { callCustomerOrderAction } from "@/lib/kitchen/actions";
 import { formatRupiah, cn } from "@/lib/utils";

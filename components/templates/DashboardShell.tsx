@@ -31,7 +31,9 @@ export function DashboardShell({
     try {
       const saved = localStorage.getItem("paybuy_sidebar_collapsed");
       if (saved !== null) {
-        setIsCollapsed(saved === "true");
+        requestAnimationFrame(() => {
+          setIsCollapsed(saved === "true");
+        });
       }
     } catch {
       // Abaikan jika localStorage tidak tersedia

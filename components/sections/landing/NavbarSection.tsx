@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { landingContent } from "@/content/landing";
 import { Button } from "@/components/atoms/Button";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Menu, X, ArrowRight, Store, DollarSign, LayoutDashboard } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { UserRole } from "@/lib/types/database";
@@ -22,7 +21,7 @@ export function NavbarSection({
 }: NavbarSectionProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!initialUser);
-  const [userRole, setUserRole] = useState<UserRole | null>(initialRole);
+  const [userRole] = useState<UserRole | null>(initialRole);
   const { navbar, brand } = landingContent;
 
   useEffect(() => {
