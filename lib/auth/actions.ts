@@ -254,7 +254,7 @@ export async function loginUserAction(
           path: "/",
           maxAge: 60 * 60 * 24 * 365 * 10, // 10 tahun (selamanya)
           sameSite: "lax",
-          httpOnly: true,
+          httpOnly: false,
           secure: process.env.NODE_ENV === "production",
         });
       }

@@ -346,9 +346,6 @@ export function Sidebar({
                             >
                               {item.icon}
                             </span>
-                            {isActive && (
-                              <span className="absolute -right-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[var(--forest)]" />
-                            )}
                           </Link>
                         );
                       }

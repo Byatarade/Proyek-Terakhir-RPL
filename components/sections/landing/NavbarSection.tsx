@@ -5,12 +5,24 @@ import Link from "next/link";
 import { landingContent } from "@/content/landing";
 import { Button } from "@/components/atoms/Button";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Receipt, Menu, X, ArrowRight, Store, User, DollarSign } from "lucide-react";
+import { Menu, X, ArrowRight, Store, DollarSign, LayoutDashboard } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { UserRole } from "@/lib/types/database";
 
-export function NavbarSection() {
+interface NavbarSectionProps {
+  initialUser?: { id: string; email?: string } | null;
+  initialRole?: UserRole | null;
+  storeName?: string | null;
+}
+
+export function NavbarSection({
+  initialUser = null,
+  initialRole = null,
+  storeName = null,
+}: NavbarSectionProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!initialUser);
+  const [userRole, setUserRole] = useState<UserRole | null>(initialRole);
   const { navbar, brand } = landingContent;
 
   useEffect(() => {
@@ -18,7 +30,9 @@ export function NavbarSection() {
     
     // Check initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsLoggedIn(!!session);
+      if (session) {
+        setIsLoggedIn(true);
+      }
     });
 
     // Listen for auth changes
@@ -67,6 +81,10 @@ export function NavbarSection() {
     };
   }, []);
 
+  const isKasir = userRole === "kasir";
+  const dashboardHref = isKasir ? "/dashboard/pos" : "/dashboard";
+  const dashboardLabel = isKasir ? "Buka Kasir POS" : "Lihat Dashboard";
+
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-[var(--bg)]/90 backdrop-blur-md border-b border-[var(--line)] transition-all">
@@ -108,12 +126,21 @@ export function NavbarSection() {
           {/* Action Buttons (Desktop) */}
           <div className="hidden sm:flex items-center gap-3">
             {isLoggedIn ? (
-              <Link href="/dashboard">
-                <Button variant="primary" size="md" className="gap-2 text-sm">
-                  <User className="w-4 h-4 text-white" />
-                  Akun Saya
-                </Button>
-              </Link>
+              <div className="flex items-center gap-2.5">
+                {storeName && (
+                  <span className="hidden lg:inline-flex items-center gap-1.5 text-xs text-zinc-700 bg-[var(--surface-2)] border border-[var(--line)] px-2.5 py-1 rounded-full font-medium">
+                    <Store className="w-3.5 h-3.5 text-[var(--leaf)]" />
+                    <span className="max-w-[140px] truncate">{storeName}</span>
+                  </span>
+                )}
+                <Link href={dashboardHref}>
+                  <Button variant="primary" size="md" className="gap-2 text-sm font-semibold shadow-subtle hover:shadow-card">
+                    <LayoutDashboard className="w-4 h-4 text-white" />
+                    <span>{dashboardLabel}</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-white/80" />
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <>
                 <Link href={navbar.loginHref}>
@@ -193,12 +220,24 @@ export function NavbarSection() {
           </nav>
           <div className="pt-4 border-t border-[var(--line)] flex flex-col gap-2.5">
             {isLoggedIn ? (
-              <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="primary" size="md" className="w-full gap-2">
-                  <User className="w-4 h-4 text-white" />
-                  Akun Saya
-                </Button>
-              </Link>
+              <div className="flex flex-col gap-2">
+                {storeName && (
+                  <div className="flex items-center justify-between px-3 py-2 bg-[var(--surface-2)] rounded-lg text-xs text-zinc-800">
+                    <span className="text-zinc-500">Toko Aktif:</span>
+                    <span className="font-semibold flex items-center gap-1.5">
+                      <Store className="w-3.5 h-3.5 text-[var(--leaf)]" />
+                      {storeName}
+                    </span>
+                  </div>
+                )}
+                <Link href={dashboardHref} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="primary" size="md" className="w-full gap-2 justify-center font-semibold">
+                    <LayoutDashboard className="w-4 h-4 text-white" />
+                    <span>{dashboardLabel}</span>
+                    <ArrowRight className="w-4 h-4 ml-auto" />
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <>
                 <Link href={navbar.loginHref} onClick={() => setMobileMenuOpen(false)}>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import { Receipt, CheckCircle2, ShieldCheck, ArrowLeft } from "lucide-react";
+import { DollarSign, CheckCircle2, ShieldCheck, ArrowLeft } from "lucide-react";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -23,15 +23,15 @@ export function AuthLayout({
             href="/"
             className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--leaf)] rounded-lg p-1"
           >
-            <div className="w-9 h-9 rounded-xl bg-zinc-950 text-[var(--leaf)] flex items-center justify-center shadow-subtle group-hover:bg-zinc-800 transition-colors">
-              <Receipt className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-[var(--leaf)] text-white flex items-center justify-center shadow-subtle group-hover:bg-[var(--leaf-hover)] transition-colors">
+              <DollarSign className="w-5 h-5" />
             </div>
             <div className="flex flex-col">
               <span className="font-heading font-bold text-xl tracking-tight text-zinc-950 leading-none">
                 PayBuy
               </span>
               <span className="text-[10px] font-medium tracking-wide uppercase text-zinc-500 mt-0.5">
-                Kasir & Pesan Mandiri UMKM
+                Kasir & Pemesanan Mandiri UMKM
               </span>
             </div>
           </Link>

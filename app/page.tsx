@@ -9,12 +9,22 @@ import { FaqSection } from "@/components/sections/landing/FaqSection";
 import { CtaSection } from "@/components/sections/landing/CtaSection";
 import { FooterSection } from "@/components/sections/landing/FooterSection";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
+import { getAuthenticatedProfile } from "@/lib/supabase/auth-cache";
 
-export default function LandingPage() {
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+export default async function LandingPage() {
+  const { user, profile, store } = await getAuthenticatedProfile();
+
   return (
     <SmoothScrollProvider>
       <div className="flex flex-col min-h-screen">
-        <NavbarSection />
+        <NavbarSection
+          initialUser={user}
+          initialRole={profile?.role}
+          storeName={store?.name}
+        />
         <main className="flex-1">
           <HeroSection />
           <ProblemSection />
