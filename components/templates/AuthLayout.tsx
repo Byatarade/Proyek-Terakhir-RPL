@@ -6,7 +6,7 @@ interface AuthLayoutProps {
   children: React.ReactNode;
   title: string;
   subtitle: string;
-  type?: "login" | "register" | "forgot-password";
+  type?: "login" | "register" | "forgot-password" | "reset-password";
 }
 
 export function AuthLayout({

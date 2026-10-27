@@ -77,3 +77,21 @@ export const forgotPasswordSchema = z.object({
 });
 
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+
+export const updatePasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, { message: "Kata sandi baru minimal 8 karakter" })
+      .max(72, { message: "Kata sandi baru maksimal 72 karakter" }),
+    confirmPassword: z
+      .string()
+      .min(1, { message: "Konfirmasi kata sandi wajib diisi" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Konfirmasi kata sandi tidak cocok",
+    path: ["confirmPassword"],
+  });
+
+export type UpdatePasswordInput = z.infer<typeof updatePasswordSchema>;
+

@@ -25,6 +25,7 @@ export function LoginForm() {
   const errorParam = searchParams.get("error");
   const registeredParam = searchParams.get("registered");
   const verifiedParam = searchParams.get("verified");
+  const resetParam = searchParams.get("reset");
 
   const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
@@ -107,6 +108,19 @@ export function LoginForm() {
           <div>
             <strong className="font-semibold block">Email Terverifikasi!</strong>
             <span>Email Anda telah berhasil diverifikasi. Silakan masuk ke akun Anda.</span>
+          </div>
+        </div>
+      )}
+
+      {resetParam && (
+        <div
+          role="status"
+          className="p-4 rounded-lg bg-[var(--surface-2)] border border-[var(--leaf)]/40 text-[var(--forest)] flex items-start gap-3 text-xs sm:text-sm"
+        >
+          <CheckCircle2 className="w-5 h-5 text-[var(--leaf)] shrink-0 mt-0.5" />
+          <div>
+            <strong className="font-semibold block">Kata Sandi Berhasil Diperbarui!</strong>
+            <span>Kata sandi akun Anda telah berhasil diubah. Silakan masuk dengan kata sandi baru.</span>
           </div>
         </div>
       )}

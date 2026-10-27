@@ -8,6 +8,7 @@ import {
   registerSchema,
   loginSchema,
   forgotPasswordSchema,
+  updatePasswordSchema,
   slugify,
 } from "./schemas";
 import { AuthActionResult, SlugCheckResult } from "./types";
@@ -295,7 +296,7 @@ export async function forgotPasswordAction(
     "https://paybuy.web.id";
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/callback?next=/dashboard/pengaturan`,
+    redirectTo: `${origin}/auth/callback?next=/atur-ulang-sandi`,
   });
 
   if (error) {
@@ -308,6 +309,60 @@ export async function forgotPasswordAction(
   return {
     success: true,
     message: `Instruksi pemulihan kata sandi telah dikirim ke ${email} jika akun tersebut terdaftar. Silakan periksa kotak masuk atau spam.`,
+  };
+}
+
+/**
+ * Update password for authenticated recovery session (FR-AU-04)
+ */
+export async function updatePasswordAction(
+  prevState: AuthActionResult | null,
+  formData: FormData
+): Promise<AuthActionResult> {
+  const rawData = {
+    password: formData.get("password") as string,
+    confirmPassword: formData.get("confirmPassword") as string,
+  };
+
+  const validation = updatePasswordSchema.safeParse(rawData);
+  if (!validation.success) {
+    const firstError = validation.error.issues[0]?.message || "Data kata sandi tidak valid";
+    return { success: false, error: firstError };
+  }
+
+  const { password } = validation.data;
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return {
+      success: false,
+      error: "Sesi pemulihan tidak ditemukan atau telah kedaluwarsa. Silakan ajukan ulang tautan lupa sandi.",
+    };
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password,
+  });
+
+  if (error) {
+    return {
+      success: false,
+      error: error.message || "Gagal memperbarui kata sandi. Silakan coba lagi.",
+    };
+  }
+
+  // Bersihkan sesi pemulihan agar pengguna dapat login bersih dengan kata sandi baru
+  await supabase.auth.signOut();
+
+  return {
+    success: true,
+    message: "Kata sandi Anda berhasil diperbarui! Silakan masuk dengan kata sandi baru.",
+    redirectTo: "/masuk?reset=success",
   };
 }
 
