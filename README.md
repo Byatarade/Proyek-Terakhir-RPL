@@ -25,7 +25,7 @@
 - [📖 Pengertian Aplikasi](#-pengertian-aplikasi)
 - [🎯 Prinsip Produk & Solusi Masalah](#-prinsip-produk--solusi-masalah)
 - [🛠️ Tech Stack & Ekosistem](#️-tech-stack--ekosistem)
-- [✨ Fitur-Fitur Keunggulan Utama](#-fitur-fitur-keunggulan-utama)
+- [✨ 10 Keunggulan Utama](#-10-keunggulan-utama-paybuy)
 - [🗄️ Database & Skema Tabel](#️-database--skema-tabel)
   - [Diagram Relasi Entitas (ERD)](#diagram-relasi-entitas-erd)
   - [Rincian Tabel Database](#rincian-tabel-database)
@@ -44,6 +44,13 @@
 **PayBuy** adalah aplikasi *Software-as-a-Service* (SaaS) kasir (*Point of Sale*) dan pemesanan mandiri (*self-ordering*) berbasis web yang dirancang khusus untuk memodernisasi UMKM kuliner (warung makan, kedai kopi, kafe kecil, hingga booth makanan/minuman) tanpa membutuhkan perangkat keras kasir yang mahal.
 
 Dengan **PayBuy**, pemilik toko cukup mencetak **satu stiker QR Code** untuk ditempel di meja atau konter kasir. Pelanggan dapat memindai QR code tersebut menggunakan kamera ponsel tanpa perlu mengunduh aplikasi atau mendaftar akun. Pelanggan memilih menu, langsung melakukan pembayaran via QRIS dinamis atau tunai, dan menerima nomor antrian otomatis. Pesanan yang telah lunas seketika diteruskan ke layar dapur (*Kitchen Display System*) secara *real-time* sehingga koki dapat langsung memasak sesuai urutan tanpa risiko salah catat atau bon hilang.
+
+<br />
+
+<div align="center">
+  <img src="public/images/dashboard-preview.png" alt="Pratinjau Dashboard & Mesin Kasir POS PayBuy" width="100%" />
+  <p><em>Pratinjau Antarmuka Mesin Kasir POS PayBuy (Point of Sale) untuk Layanan Langsung di Meja Kasir</em></p>
+</div>
 
 ---
 
@@ -83,60 +90,41 @@ Aplikasi ini dibangun menggunakan arsitektur modern berbasis TypeScript dan Next
 
 ---
 
-## ✨ Fitur-Fitur Keunggulan Utama
+## ✨ 10 Keunggulan Utama PayBuy
 
-Berikut adalah fitur-fitur unggulan yang menjadi kekuatan kompetitif **PayBuy**:
+Berikut adalah 10 fitur keunggulan paling krusial yang menjadi kekuatan kompetitif utama sistem **PayBuy**:
 
 ### 1. 📱 Satu QR Code Seumur Toko (*Static Link, Dynamic Menu*)
-Toko hanya perlu mencetak dan menempel stiker QR sekali saja. Pemilik toko dapat mengubah harga, menambah kategori, mengubah deskripsi, atau mematikan menu yang stoknya habis kapan saja dari dashboard. Pelanggan yang memindai QR akan selalu mendapatkan daftar menu teranyar tanpa toko perlu mencetak ulang stiker meja.
+Toko hanya perlu mencetak dan menempel stiker QR sekali saja. Pemilik toko dapat mengubah harga, menambah kategori, mengubah deskripsi, mengganti foto, atau mematikan menu yang stoknya habis kapan saja dari dashboard. Pelanggan yang memindai QR akan selalu mendapatkan daftar menu teranyar secara instan tanpa toko perlu mencetak ulang stiker meja.
 
-### 2. ⚡ Pemesanan Mandiri Tanpa Akun & Tanpa Instalasi (*Zero Friction*)
-Pelanggan tidak perlu mengunduh aplikasi berukuran puluhan megabyte dari toko aplikasi, tidak perlu mengisi formulir pendaftaran, dan tidak perlu memverifikasi OTP/email. Kamera ponsel langsung membuka menu berbasis web yang ringan, cepat, dan intuitif.
+### 2. ⚡ Pemesanan Mandiri Tanpa Akun & Tanpa Download (*Zero Friction*)
+Pelanggan tidak perlu mengunduh aplikasi berukuran puluhan megabyte dari toko aplikasi, tidak perlu mengisi formulir pendaftaran, dan tidak perlu memverifikasi OTP/email. Kamera ponsel langsung membuka menu berbasis web yang ringan, responsif, dan intuitif.
 
 ### 3. 🛡️ Alur "Bayar Dulu, Masak Kemudian" (*Zero Waste & Anti-Ghost Order*)
-Mengatasi kerugian UMKM akibat pesanan palsu (*prank/ghost order*) atau pesanan yang ditinggal pergi pelanggan. Sistem mengunci antrian: pesanan baru akan masuk ke daftar masak dapur **hanya setelah** transaksi pembayaran dinyatakan lunas (terkonfirmasi via QRIS otomatis atau konfirmasi tunai oleh kasir).
+Mengatasi kerugian UMKM akibat pesanan palsu (*prank/ghost order*) atau pesanan yang ditinggal pergi pembeli. Sistem mengunci antrian: pesanan baru akan diteruskan ke antrean masak dapur **hanya setelah** transaksi pembayaran dinyatakan lunas (terkonfirmasi via QRIS otomatis atau konfirmasi tunai oleh kasir).
 
-### 4. 💳 QRIS Dinamis Otomatis Tanpa Ketik Nominal
-Toko cukup mengunggah kode QRIS standar miliknya. Sistem PayBuy mem-parse data TLV (*Tag-Length-Value*) dari QRIS toko dan secara otomatis menyisipkan nominal pesanan beserta kode verifikasi CRC16. Pelanggan cukup memindai dan menekan bayar tanpa takut salah memasukkan digit angka. **100% uang langsung masuk ke rekening toko** tanpa potongan biaya gateway pihak ketiga.
+### 4. 💳 QRIS Dinamis Otomatis Tanpa Potongan Gateway (*100% Direct to Store*)
+Toko cukup mengunggah kode QRIS standar miliknya. Sistem PayBuy mem-parse data TLV (*Tag-Length-Value*) dari QRIS toko dan secara otomatis menyisipkan nominal pesanan beserta kode verifikasi CRC16. Pelanggan cukup memindai dan menekan bayar tanpa repot mengetik nominal. **100% uang langsung masuk ke rekening toko** tanpa potongan biaya gateway pihak ketiga.
 
-### 5. 🔥 Fitur Menu Terlaris di Dashboard (*Merchant-Managed Best-Seller*)
-Pemilik toko memiliki kendali penuh untuk menentukan menu andalan atau menu terlaris langsung dari dashboard manajemen menu (`/dashboard/menu`). Cukup dengan 1 klik tombol toggle **"Terlaris / Biasa"** di tabel produk atau mencentang opsi **"🔥 Menu Terlaris (Best Seller)"** saat tambah/edit menu. Produk yang ditandai terlaris otomatis:
-- Mendapatkan badge eksklusif **"🔥 Terlaris"** di menu publik pelanggan (`/t/[slug]`) dan mesin kasir POS (`/dashboard/pos`).
-- Muncul di seksi teratas **"🔥 Menu Terlaris"** dan tab filter cepat di toko pelanggan.
-- Dapat difilter secara instan di dashboard manajemen produk (*"Hanya Terlaris 🔥"*) dan dipantau melalui kartu statistik khusus.
+### 5. 🛒 Mesin Kasir POS Walk-in Langsung Tuntas (*Instant POS Checkout*)
+Kasir dibekali mesin kasir POS mandiri (`/dashboard/pos`) untuk melayani pembeli yang datang langsung ke meja kasir. Transaksi kasir langsung otomatis berstatus lunas dan tuntas (**langsung selesai / `diambil`**) tanpa mengotori antrian masak dapur. Antarmuka kasir didesain tetap berada di tempat (*in-place / tanpa redirect*) lengkap dengan hitungan kembalian uang tunai, tombol cepat nominal, dan cetak nota.
 
-### 6. 🛒 Mesin Kasir POS Walk-in Langsung Selesai (*Quick Cashier Checkout*)
-Kasir memiliki mesin kasir POS mandiri (`/dashboard/pos`) untuk melayani pelanggan yang memesan langsung di meja kasir. Transaksi kasir langsung otomatis berstatus lunas dan tuntas (**langsung selesai / `diambil`**) tanpa mengotori antrian masak dapur. Antarmuka kasir didesain tetap berada di tempat (*tidak kemana-mana / tanpa redirect*) sehingga kasir dapat mencetak struk, memanggil suara antrian, dan melayani pembeli berikutnya secara instan.
+### 6. 🍳 Kitchen Display System (KDS) Realtime Otomatis (*Live Kitchen Queue*)
+Layar tablet atau ponsel di dapur diperbarui secara otomatis menggunakan Supabase Realtime WebSocket tanpa perlu merefresh browser. Koki disajikan informasi urutan nomor antrian, rincian item pesanan, catatan selera pembeli, indikator waktu tunggu, serta tombol kendali sentuh: *"Mulai Masak"* dan *"Siap Diambil"*.
 
-### 7. 🍳 Kitchen Display System (KDS) Realtime Otomatis
-Layar tablet atau ponsel di dapur diperbarui secara otomatis menggunakan Supabase Realtime WebSocket tanpa perlu *refresh* browser. Koki disajikan informasi urutan nomor antrian, rincian menu masakan, indikator waktu tunggu, serta tombol sentuh besar: *"Mulai Masak"* dan *"Siap Diambil"*.
-
-### 8. 🔢 Penomoran Antrian Atomik & Reset Harian Otomatis
+### 7. 🔢 Penomoran Antrian Atomik & Reset Harian Otomatis (*Zero Duplicate Queue*)
 Penomoran antrian (`001`, `002`, `003`...) diatur secara atomik menggunakan transaksi penguncian baris PostgreSQL (`ON CONFLICT DO UPDATE`) untuk menjamin tidak akan pernah ada nomor antrian ganda walau dipesan bersamaan di detik yang sama. Nomor antrian otomatis tereset kembali ke `001` setiap hari berdasarkan zona waktu lokal toko (WIB/WITA/WIT).
 
-### 9. 🖥️ Layar Monitor Antrian Publik & Layar Kasir
-Tersedia layar monitor antrian publik (`/t/[slug]/antrian`) yang dapat ditampilkan di TV/monitor toko untuk memanggil nomor pesanan yang sudah *"Siap Diambil"*. Kasir juga memiliki dashboard khusus untuk memantau pelanggan yang membayar tunai, membatalkan pesanan kedaluwarsa, atau memanggil nomor antrian.
+### 8. 🖥️ Layar Monitor Antrian Publik & Panggilan Suara (*Public Queue & Voice Call*)
+Tersedia layar monitor antrian publik (`/t/[slug]/antrian`) yang dapat ditampilkan di TV atau tablet konter toko untuk memanggil nomor pesanan yang berstatus *"Siap Diambil"*. Dilengkapi integrasi panggilan suara otomatis (*Text-to-Speech*) yang memanggil nomor antrian pelanggan saat pesanan selesai dimasak.
 
-### 10. 📊 Laporan Laba Rugi & Perhitungan HPP (*Harga Pokok Penjualan*) Riil
-Bukan sekadar mencatat omzet bruto! Saat transaksi dibuat, PayBuy membuat salinan (*snapshot*) harga modal (HPP) setiap produk. Dengan demikian, laporan keuangan pemilik toko dapat menghitung laba kotor riil (`Omzet - Total HPP`) serta laba bersih setelah dikurangi catatan beban pengeluaran operasional harian (sewa tempat, listrik, bahan baku tambahan, dll.).
+### 9. 📊 Laporan Laba Rugi Riil & Perhitungan HPP (*COGS Snapshot*)
+Bukan sekadar mencatat omzet kotor! Saat pesanan dibuat, sistem menyimpan salinan (*snapshot*) harga modal (HPP) setiap produk. Dengan demikian, laporan keuangan pemilik toko dapat menghitung laba kotor riil (`Omzet - Total HPP`) serta laba bersih setelah dikurangi catatan beban pengeluaran operasional harian (sewa tempat, listrik, bahan baku tambahan, dll.).
 
-### 11. 👥 Multi-Tenant & Hak Akses Berbasis Peran (*Owner Superadmin & Kasir*)
-Sistem mendukung multi-toko dengan isolasi database yang ketat. Pembagian peran dirancang ramping dan tepat guna untuk operasional toko:
-- **Owner (Superadmin):** Memiliki hak akses penuh (*Full Access*) ke seluruh ekosistem toko, mencakup Beranda ringkasan laba rugi, modul kasir POS, layar antrean kasir, kelola menu & produk, laporan keuangan & biaya operasional, cetak QR menu, pengaturan toko & QRIS, serta manajemen staf pegawai.
-- **Kasir:** Staf operasional yang secara eksklusif hanya dapat mengakses 3 modul kasir utama:
-  1. **Kasir POS (Manual / Input Menu Walk-in)**: Melayani transaksi langsung di meja kasir.
-  2. **Layar Kasir (Antrean)**: Memantau pesanan mandiri pelanggan, konfirmasi bayar tunai, kendali status masak, dan panggil nomor antrean bersuara otomatis.
-  3. **Riwayat Transaksi**: Memantau catatan transaksi nota pembayaran yang telah selesai.
-*(Seluruh modul sensitif seperti laporan laba rugi, HPP modal, katalog menu, dan pengaturan toko dilindungi secara ketat sehingga kasir otomatis dialihkan bila mencoba mengakses di luar wewenangnya).*
-
-### 12. 🎨 Desain Visual "Hijau Nota" & Ergonomis Mobile 375px
-Mengadopsi identitas visual yang solid menyerupai nota kasir fisik, karcis antrian, dan stempel lunas tanpa efek blur atau gradien berat yang boros baterai. Seluruh antarmuka dioptimalkan secara presisi untuk layar ponsel ringkas (**mobile viewport 375px**): metode pembayaran seimbang 50:50 (*setara*), serta tata letak harga dan tombol tambah bertingkat rapi bebas tabrakan.
-
-### 13. 🔒 Fitur "Ingat Saya Selamanya" (*Persistent 10-Year Session & Email Memory*)
-Halaman masuk (`/masuk`) dilengkapi kotak centang (*checkbox*) **"Ingat saya selamanya"** yang memperpanjang masa berlaku cookie sesi login Supabase hingga 10 tahun serta menyimpan email toko secara aman di penyimpanan lokal peramban (*localStorage*). Pengguna tidak perlu berulang kali mengetik email atau login ulang setiap kali membuka dashboard toko.
-
-### 14. 🗑️ Modal Konfirmasi Hapus Produk (*Safe Permanent Deletion*)
-Tindakan penghapusan produk di dashboard menu dilengkapi modal pop-up konfirmasi yang elegan sesuai tema desain website. Modal menampilkan nama, kategori, harga jual, dan deskripsi produk sebelum penghapusan. Sistem melepaskan relasi produk dari baris transaksi secara aman (`product_id = null`) sehingga produk terhapus permanen dari database tanpa merusak data penjualan historis.
+### 10. 👥 Multi-Tenant Terisolasi & Hak Akses Berbasis Peran (*Owner & Kasir*)
+Seluruh data operasional setiap toko terisolasi 100% menggunakan *Row Level Security* (RLS) PostgreSQL. Sistem membedakan peran secara tegas dan aman:
+- **Owner (Superadmin):** Akses penuh ke seluruh ekosistem (ringkasan finansial, kelola menu & HPP modal, laporan laba rugi, cetak QR menu, pengaturan toko & QRIS, dan manajemen staf).
+- **Kasir:** Staf operasional yang secara eksklusif hanya dapat mengakses 3 modul kasir (Mesin POS Walk-in, Layar Antrean Kasir, dan Riwayat Transaksi). Data sensitif keuangan toko terlindungi dari akses pegawai.
 
 ---
 
