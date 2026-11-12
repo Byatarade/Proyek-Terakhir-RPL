@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPegawaiPage() {
-  const { user, profile } = await getAuthenticatedProfile();
+  const { user, profile, store } = await getAuthenticatedProfile();
 
   if (!user) {
     redirect("/masuk?next=/dashboard/pegawai");
@@ -51,5 +51,5 @@ export default async function DashboardPegawaiPage() {
   const employeesRes = await getEmployeesAction(profile.store_id, user.id);
   const initialEmployees = employeesRes.success && employeesRes.data ? employeesRes.data : [];
 
-  return <StaffManagement initialEmployees={initialEmployees} />;
+  return <StaffManagement initialEmployees={initialEmployees} storeSlug={store?.slug || ""} />;
 }

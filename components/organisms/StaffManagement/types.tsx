@@ -28,4 +28,5 @@ export const ROLE_OPTIONS: RoleOption[] = [
 
 export interface StaffManagementProps {
   initialEmployees?: EmployeeData[];
+  storeSlug?: string;
 }

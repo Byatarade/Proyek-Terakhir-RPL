@@ -157,10 +157,32 @@ export async function createEmployeeAction(
       return { success: false, error: "Nama lengkap pegawai minimal 2 karakter." };
     }
 
-    const trimmedEmail = input.email.trim().toLowerCase();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(trimmedEmail)) {
-      return { success: false, error: "Format alamat email tidak sah." };
+    const admin = createAdminClient();
+
+    // Ambil data toko owner (slug) untuk namespace akun staf
+    const { data: storeData } = await admin
+      .from("stores")
+      .select("slug")
+      .eq("id", ownerProfile.store_id)
+      .maybeSingle();
+
+    const storeSlug = storeData?.slug || "toko";
+
+    const rawEmailOrUsername = input.email.trim().toLowerCase();
+    let effectiveEmail = rawEmailOrUsername;
+
+    // Jika pengguna hanya memasukkan username kasir (tanpa @), otomatis buatkan email internal toko
+    if (!rawEmailOrUsername.includes("@")) {
+      const cleanUsername = rawEmailOrUsername.replace(/[^a-z0-9_.-]/g, "");
+      if (!cleanUsername) {
+        return { success: false, error: "Username pegawai tidak valid." };
+      }
+      effectiveEmail = `${cleanUsername}@${storeSlug}.paybuy.id`;
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(effectiveEmail)) {
+        return { success: false, error: "Format alamat email tidak sah." };
+      }
     }
 
     if (!input.password || input.password.length < 6) {
@@ -173,12 +195,10 @@ export async function createEmployeeAction(
       return { success: false, error: "Peran pegawai yang dipilih tidak sah." };
     }
 
-    const admin = createAdminClient();
-
     // 1. Buat akun auth di Supabase Auth (email langsung terkonfirmasi)
     const { data: createdUser, error: createUserError } =
       await admin.auth.admin.createUser({
-        email: trimmedEmail,
+        email: effectiveEmail,
         password: input.password,
         email_confirm: true,
         user_metadata: {
@@ -195,7 +215,7 @@ export async function createEmployeeAction(
       ) {
         return {
           success: false,
-          error: "Alamat email ini sudah terdaftar di sistem. Gunakan email lain untuk staf ini.",
+          error: `Alamat email '${effectiveEmail}' sudah terdaftar di sistem. Anda dapat menggunakan username toko seperti '${rawEmailOrUsername.split("@")[0]}' agar dibuatkan email unik terisolasi untuk toko Anda.`,
         };
       }
       return {
@@ -239,7 +259,7 @@ export async function createEmployeeAction(
         id: newProfile.id,
         storeId: newProfile.store_id,
         fullName: newProfile.full_name,
-        email: trimmedEmail,
+        email: effectiveEmail,
         role: newProfile.role as UserRole,
         isActive: newProfile.is_active ?? true,
         createdAt: newProfile.created_at,

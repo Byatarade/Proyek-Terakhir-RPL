@@ -5,6 +5,7 @@ import { Button } from "@/components/atoms/Button";
 interface AddStaffModalProps {
   isOpen: boolean;
   onClose: () => void;
+  storeSlug?: string;
   fullNameInput: string;
   onFullNameChange: (val: string) => void;
   emailInput: string;
@@ -20,6 +21,7 @@ interface AddStaffModalProps {
 export function AddStaffModal({
   isOpen,
   onClose,
+  storeSlug = "toko",
   fullNameInput,
   onFullNameChange,
   emailInput,
@@ -72,29 +74,32 @@ export function AddStaffModal({
               required
               value={fullNameInput}
               onChange={(e) => onFullNameChange(e.target.value)}
-              placeholder="Contoh: Siti Rahmawati"
+              placeholder="Contoh: Alin"
               className="w-full px-3 py-2 rounded-[6px] border-2 border-[var(--forest)] text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[var(--mint)] shadow-[1px_1px_0px_var(--forest)]"
             />
+            <span className="text-[10px] text-[var(--muted)] block">
+              Nama pegawai bebas dan boleh sama dengan pegawai di toko lain.
+            </span>
           </div>
 
-          {/* Email Login */}
+          {/* Email / Username Login */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-[var(--forest)] uppercase tracking-wider block">
-              Alamat Email Login <span className="text-[var(--danger)]">*</span>
+              Email atau Username Login <span className="text-[var(--danger)]">*</span>
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-[var(--muted)] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
-                type="email"
+                type="text"
                 required
                 value={emailInput}
                 onChange={(e) => onEmailChange(e.target.value)}
-                placeholder="nama.kasir@gmail.com"
+                placeholder={`alin atau alin@${storeSlug}.paybuy.id`}
                 className="w-full pl-9 pr-3 py-2 rounded-[6px] border-2 border-[var(--forest)] text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[var(--mint)] shadow-[1px_1px_0px_var(--forest)]"
               />
             </div>
-            <span className="text-[10px] text-[var(--muted)] block">
-              Email ini digunakan staf untuk masuk di halaman <code>/masuk</code>.
+            <span className="text-[10px] text-[var(--muted)] block leading-relaxed">
+              Bisa masukkan email biasa (misal: <code>alin@gmail.com</code>) atau username kasir singkat (misal: <code>alin</code>). Jika hanya username, sistem otomatis mengaitkannya ke toko Anda (<code>@{storeSlug}.paybuy.id</code>) agar tidak bentrok dengan toko lain.
             </span>
           </div>
 

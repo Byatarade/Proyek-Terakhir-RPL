@@ -26,6 +26,7 @@ export * from "./types";
 
 export function StaffManagement({
   initialEmployees = [],
+  storeSlug = "toko",
 }: StaffManagementProps) {
   const [employees, setEmployees] = useState<EmployeeData[]>(initialEmployees);
   const [searchQuery, setSearchQuery] = useState("");
@@ -307,6 +308,7 @@ export function StaffManagement({
       <AddStaffModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
+        storeSlug={storeSlug}
         fullNameInput={fullNameInput}
         onFullNameChange={setFullNameInput}
         emailInput={emailInput}
