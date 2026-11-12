@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { X, Loader2, Flame } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { ProductFormModalProps } from "./types";
 import { ProductImageUpload } from "./ProductImageUpload";
+
+/** Format angka ke string dengan titik ribuan: 25000 → "25.000" */
+function formatRupiah(value: number | string): string {
+  const num = typeof value === "string" ? value.replace(/\D/g, "") : String(value === 0 ? "" : value);
+  if (!num) return "";
+  return Number(num).toLocaleString("id-ID");
+}
+
+/** Parse string dengan titik ribuan ke number: "25.000" → 25000 */
+function parseRupiah(value: string): number {
+  const clean = value.replace(/\./g, "").replace(/,/g, "").replace(/\D/g, "");
+  return clean ? Number(clean) : 0;
+}
 
 export function ProductFormModal({
   isOpen,
@@ -15,11 +28,27 @@ export function ProductFormModal({
   isPending,
   onSubmit,
 }: ProductFormModalProps) {
+  // Display value untuk input (string dengan titik ribuan)
+  const [priceDisplay, setPriceDisplay] = useState("");
+
+  // Sinkronkan priceDisplay saat modal dibuka / produk berubah
+  useEffect(() => {
+    if (isOpen) {
+      setPriceDisplay(productForm.price_sell > 0 ? formatRupiah(productForm.price_sell) : "");
+    }
+  }, [isOpen, editingProduct]);
+
   if (!isOpen) return null;
 
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\./g, "").replace(/,/g, "").replace(/\D/g, "");
+    const numeric = raw ? Number(raw) : 0;
+    setPriceDisplay(raw ? formatRupiah(raw) : "");
+    setProductForm((prev) => ({ ...prev, price_sell: numeric }));
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">      <div
         className="fixed inset-0 bg-black/60 backdrop-blur-xs"
         onClick={() => !isPending && onClose()}
         aria-hidden="true"
@@ -105,48 +134,27 @@ export function ProductFormModal({
             />
           </div>
 
-          {/* Selling Price & Cost Price */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-zinc-800">
-                Harga Jual (Rp) <span className="text-red-500">*</span>
-              </label>
+          {/* Harga Jual */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-zinc-800">
+              Harga Jual (Rp) <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-zinc-500 font-medium pointer-events-none select-none">
+                Rp
+              </span>
               <input
-                type="number"
-                min={0}
-                step={500}
-                value={productForm.price_sell}
-                onChange={(e) =>
-                  setProductForm((prev) => ({
-                    ...prev,
-                    price_sell: Number(e.target.value),
-                  }))
-                }
+                type="text"
+                inputMode="numeric"
+                placeholder="0"
+                value={priceDisplay}
+                onChange={handlePriceChange}
                 required
-                className="w-full h-11 px-3.5 rounded-xl bg-zinc-50 border border-zinc-200 text-sm text-zinc-900 font-mono focus:outline-none focus:ring-2 focus:ring-[var(--leaf)]/40"
+                disabled={isPending}
+                className="w-full h-11 pl-9 pr-3.5 rounded-xl bg-zinc-50 border border-zinc-200 text-sm text-zinc-900 font-mono focus:outline-none focus:ring-2 focus:ring-[var(--leaf)]/40 focus:border-[var(--leaf)]"
               />
-              <span className="text-[10px] text-zinc-400">Harga yang dilihat pelanggan</span>
             </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-zinc-800">
-                Harga Modal / HPP (Rp)
-              </label>
-              <input
-                type="number"
-                min={0}
-                step={500}
-                value={productForm.price_cost}
-                onChange={(e) =>
-                  setProductForm((prev) => ({
-                    ...prev,
-                    price_cost: Number(e.target.value),
-                  }))
-                }
-                className="w-full h-11 px-3.5 rounded-xl bg-zinc-50 border border-zinc-200 text-sm text-zinc-900 font-mono focus:outline-none focus:ring-2 focus:ring-[var(--leaf)]/40"
-              />
-              <span className="text-[10px] text-zinc-400">Dipakai untuk hitung laba bersih</span>
-            </div>
+            <span className="text-[10px] text-zinc-400">Harga yang dilihat pelanggan</span>
           </div>
 
           {/* Checkboxes */}

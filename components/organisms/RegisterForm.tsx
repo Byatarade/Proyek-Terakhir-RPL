@@ -40,7 +40,6 @@ export function RegisterForm() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(true);
 
@@ -270,72 +269,44 @@ export function RegisterForm() {
           </div>
         </FormField>
 
-        {/* Password & Confirm Password */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <FormField
-            id="password"
-            label="Kata Sandi"
-            required
-            helpText="Minimal 8 karakter."
-          >
-            <div className="relative">
-              <Input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="new-password"
-                placeholder="Minimal 8 karakter"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={isPending}
-                className="pl-10"
-              />
-              <Lock
-                className="w-4 h-4 text-[var(--muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                aria-hidden="true"
-              />
-            </div>
-          </FormField>
-
-          <FormField
-            id="confirmPassword"
-            label="Konfirmasi Kata Sandi"
-            required
-            helpText="Ketik ulang kata sandi."
-          >
-            <div className="relative">
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type={showPassword ? "text" : "password"}
-                autoComplete="new-password"
-                placeholder="Ketik ulang kata sandi"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                disabled={isPending}
-                className="pl-10 pr-10"
-              />
-              <Lock
-                className="w-4 h-4 text-[var(--muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                aria-hidden="true"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--ink)] focus:outline-none"
-              >
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-          </FormField>
-        </div>
+        {/* Password */}
+        <FormField
+          id="password"
+          label="Kata Sandi"
+          required
+          helpText="Minimal 8 karakter."
+        >
+          <div className="relative">
+            <Input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="new-password"
+              placeholder="Minimal 8 karakter"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={isPending}
+              className="pl-10 pr-10"
+            />
+            <Lock
+              className="w-4 h-4 text-[var(--muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              aria-hidden="true"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--ink)] focus:outline-none"
+            >
+              {showPassword ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </button>
+          </div>
+        </FormField>
 
         {/* Terms Checkbox */}
         <div className="pt-1">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Wallet, X, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { formatRupiah } from "@/lib/utils";
@@ -16,6 +16,18 @@ interface ExpenseModalProps {
   onSaveExpense: (e: React.FormEvent) => void;
 }
 
+/** Format angka ke string dengan titik ribuan: 50000 → "50.000" */
+function formatWithDots(value: number): string {
+  if (!value) return "";
+  return value.toLocaleString("id-ID");
+}
+
+/** Parse string dengan titik ribuan ke number: "50.000" → 50000 */
+function parseDots(str: string): number {
+  const clean = str.replace(/\./g, "").replace(/,/g, "").replace(/\D/g, "");
+  return clean ? Number(clean) : 0;
+}
+
 export function ExpenseModal({
   isOpen,
   onClose,
@@ -26,7 +38,23 @@ export function ExpenseModal({
   isPending,
   onSaveExpense,
 }: ExpenseModalProps) {
+  const [amountDisplay, setAmountDisplay] = useState("");
+
+  // Sinkronkan display saat modal dibuka / data berubah
+  useEffect(() => {
+    if (isOpen) {
+      setAmountDisplay(expenseForm.amount > 0 ? formatWithDots(expenseForm.amount) : "");
+    }
+  }, [isOpen, editingExpense]);
+
   if (!isOpen) return null;
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\./g, "").replace(/,/g, "").replace(/\D/g, "");
+    const numeric = raw ? Number(raw) : 0;
+    setAmountDisplay(raw ? formatWithDots(numeric) : "");
+    onExpenseFormChange({ ...expenseForm, amount: numeric });
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-in fade-in duration-150">
@@ -98,21 +126,15 @@ export function ExpenseModal({
               Nominal Pengeluaran (Rp) <span className="text-red-500">*</span>
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-zinc-500">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-zinc-500 pointer-events-none select-none">
                 Rp
               </span>
               <input
-                type="number"
-                min="1"
-                step="500"
-                placeholder="Contoh: 75000"
-                value={expenseForm.amount || ""}
-                onChange={(e) =>
-                  onExpenseFormChange({
-                    ...expenseForm,
-                    amount: Number(e.target.value) || 0,
-                  })
-                }
+                type="text"
+                inputMode="numeric"
+                placeholder="0"
+                value={amountDisplay}
+                onChange={handleAmountChange}
                 className="w-full h-11 pl-10 pr-3 rounded-[8px] border-2 border-[var(--control)] bg-white text-sm font-mono font-bold text-zinc-900 focus:outline-none focus:border-[var(--leaf)]"
                 required
               />

@@ -56,7 +56,6 @@ export async function registerOwnerAction(
     slug: formData.get("slug") as string,
     email: formData.get("email") as string,
     password: formData.get("password") as string,
-    confirmPassword: formData.get("confirmPassword") as string,
     terms: formData.get("terms") === "on" || formData.get("terms") === "true",
   };
 

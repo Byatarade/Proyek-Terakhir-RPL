@@ -43,14 +43,9 @@ export const registerSchema = z
       .string()
       .min(8, { message: "Kata sandi minimal 8 karakter" })
       .max(72, { message: "Kata sandi maksimal 72 karakter" }),
-    confirmPassword: z.string().min(1, { message: "Konfirmasi kata sandi wajib diisi" }),
     terms: z.literal(true, {
       message: "Anda harus menyetujui syarat & ketentuan layanan",
     }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Konfirmasi kata sandi tidak cocok",
-    path: ["confirmPassword"],
   });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
