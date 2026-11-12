@@ -84,10 +84,13 @@ export async function registerOwnerAction(
   }
 
   const headerList = await headers();
+  const requestOrigin = headerList.get("origin") || "";
+  // Prioritaskan domain publik resmi agar tautan email Supabase tidak mengarah ke localhost
   const origin =
-    headerList.get("origin") ||
     process.env.NEXT_PUBLIC_APP_URL ||
-    "https://paybuy.web.id";
+    (requestOrigin && !requestOrigin.includes("localhost")
+      ? requestOrigin
+      : "https://paybuy.web.id");
 
   // Call Supabase Auth signUp with metadata for handle_new_user trigger
   const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -289,10 +292,12 @@ export async function forgotPasswordAction(
   const supabase = await createClient();
 
   const headerList = await headers();
+  const requestOrigin = headerList.get("origin") || "";
   const origin =
-    headerList.get("origin") ||
     process.env.NEXT_PUBLIC_APP_URL ||
-    "https://paybuy.web.id";
+    (requestOrigin && !requestOrigin.includes("localhost")
+      ? requestOrigin
+      : "https://paybuy.web.id");
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}/auth/callback?next=/atur-ulang-sandi`,
@@ -374,10 +379,12 @@ export async function resendVerificationEmailAction(
   try {
     const supabase = await createClient();
     const headerList = await headers();
+    const requestOrigin = headerList.get("origin") || "";
     const origin =
-      headerList.get("origin") ||
       process.env.NEXT_PUBLIC_APP_URL ||
-      "https://paybuy.web.id";
+      (requestOrigin && !requestOrigin.includes("localhost")
+        ? requestOrigin
+        : "https://paybuy.web.id");
 
     const { error } = await supabase.auth.resend({
       type: "signup",
