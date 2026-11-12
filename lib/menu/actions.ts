@@ -279,7 +279,7 @@ export interface SaveProductInput {
 /**
  * Menambah produk baru
  */
-export async function createProductAction(input: SaveProductInput): Promise<ActionResponse> {
+export async function createProductAction(input: SaveProductInput): Promise<ActionResponse<ProductData>> {
   try {
     const supabase = await createClient();
     const {
@@ -299,24 +299,49 @@ export async function createProductAction(input: SaveProductInput): Promise<Acti
     if (!input.name.trim()) return { success: false, error: "Nama produk wajib diisi." };
     if (input.price_sell < 0) return { success: false, error: "Harga jual tidak valid." };
 
-    const { error } = await supabase.from("products").insert({
-      store_id: profile.store_id,
-      name: input.name.trim(),
-      category_id: input.category_id || null,
-      description: input.description?.trim() || null,
-      price_sell: input.price_sell,
-      price_cost: input.price_cost || 0,
-      is_available: input.is_available ?? true,
-      is_active: input.is_active ?? true,
-      is_featured: input.is_best_seller ?? false,
-      image_path: input.image_path || null,
-    });
+    const { data: newProd, error } = await supabase
+      .from("products")
+      .insert({
+        store_id: profile.store_id,
+        name: input.name.trim(),
+        category_id: input.category_id || null,
+        description: input.description?.trim() || null,
+        price_sell: input.price_sell,
+        price_cost: input.price_cost || 0,
+        is_available: input.is_available ?? true,
+        is_active: input.is_active ?? true,
+        is_featured: input.is_best_seller ?? false,
+        image_path: input.image_path || null,
+      })
+      .select("*")
+      .single();
 
     if (error) return { success: false, error: error.message };
 
     revalidatePath("/dashboard/menu");
     revalidatePath("/t/[slug]", "page");
-    return { success: true };
+
+    let categoryName: string | null = null;
+    if (newProd.category_id) {
+      const { data: cat } = await supabase
+        .from("categories")
+        .select("name")
+        .eq("id", newProd.category_id)
+        .single();
+      categoryName = cat?.name || null;
+    }
+
+    const createdProduct: ProductData = {
+      ...newProd,
+      price_sell: Number(newProd.price_sell),
+      price_cost: Number(newProd.price_cost || 0),
+      is_available: Boolean(newProd.is_available),
+      is_active: Boolean(newProd.is_active),
+      is_best_seller: Boolean(newProd.is_featured),
+      category_name: categoryName,
+    };
+
+    return { success: true, data: createdProduct };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Gagal menambah produk." };
   }
@@ -494,7 +519,7 @@ export async function toggleProductBestSellerAction(
 /**
  * Menghapus produk dari katalog toko secara permanen
  */
-export async function deleteProductAction(id: string): Promise<ActionResponse> {
+export async function deleteProductAction(id: string, fallbackName?: string): Promise<ActionResponse> {
   try {
     const supabase = await createClient();
 
@@ -512,19 +537,51 @@ export async function deleteProductAction(id: string): Promise<ActionResponse> {
 
     if (!profile?.store_id) return { success: false, error: "Toko tidak terhubung." };
 
+    let effectiveId = id;
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
+
+    if (!isUuid) {
+      // Jika id bukan format UUID (misal ID sementara temp-xxx dari state client yang belum refresh)
+      if (fallbackName?.trim()) {
+        const { data: found } = await supabase
+          .from("products")
+          .select("id")
+          .eq("store_id", profile.store_id)
+          .eq("name", fallbackName.trim())
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (found?.id) {
+          effectiveId = found.id;
+        } else {
+          // Produk tidak ditemukan di DB, anggap sudah terhapus
+          revalidatePath("/dashboard/menu");
+          revalidatePath("/dashboard/pos");
+          revalidatePath("/t/[slug]", "page");
+          return { success: true };
+        }
+      } else {
+        revalidatePath("/dashboard/menu");
+        revalidatePath("/dashboard/pos");
+        revalidatePath("/t/[slug]", "page");
+        return { success: true };
+      }
+    }
+
     // Lepas relasi product_id pada order_items agar integritas FK aman
     // (Data snapshot historis transaksi seperti product_name, price_sell, price_cost tetap tersimpan utuh)
     await supabase
       .from("order_items")
       .update({ product_id: null })
-      .eq("product_id", id)
+      .eq("product_id", effectiveId)
       .eq("store_id", profile.store_id);
 
     // Hapus baris produk secara permanen dari database
     const { error } = await supabase
       .from("products")
       .delete()
-      .eq("id", id)
+      .eq("id", effectiveId)
       .eq("store_id", profile.store_id);
 
     if (error) return { success: false, error: error.message };

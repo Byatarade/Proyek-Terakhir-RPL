@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { Plus, ExternalLink, Tag, Cake } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
@@ -40,6 +40,14 @@ export function ProductManagement({
 }: ProductManagementProps) {
   const [categories, setCategories] = useState<CategoryData[]>(initialCategories);
   const [products, setProducts] = useState<ProductData[]>(initialProducts);
+
+  useEffect(() => {
+    setProducts(initialProducts);
+  }, [initialProducts]);
+
+  useEffect(() => {
+    setCategories(initialCategories);
+  }, [initialCategories]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<StatusFilterType>("all");
@@ -144,20 +152,9 @@ export function ProductManagement({
           setFormError(res.error || "Gagal menambah produk.");
           return;
         }
-        // Optimistic insert
-        const newProd: ProductData = {
-          id: "temp-" + Date.now(),
-          store_id: "store",
-          ...productForm,
-          category_id: productForm.category_id ?? null,
-          description: productForm.description ?? null,
-          image_path: productForm.image_path ?? null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          category_name:
-            categories.find((c) => c.id === productForm.category_id)?.name || null,
-        };
-        setProducts((prev) => [newProd, ...prev]);
+        if (res.data) {
+          setProducts((prev) => [res.data!, ...prev]);
+        }
       }
 
       setProductModalOpen(false);
@@ -206,9 +203,10 @@ export function ProductManagement({
   const handleConfirmDeleteProduct = () => {
     if (!productToDelete) return;
     const targetId = productToDelete.id;
+    const targetName = productToDelete.name;
 
     startTransition(async () => {
-      const res = await deleteProductAction(targetId);
+      const res = await deleteProductAction(targetId, targetName);
       if (!res.success) {
         alert(res.error || "Gagal menghapus produk.");
         return;
