@@ -127,6 +127,20 @@ export function Sidebar({
   onToggleCollapse,
 }: SidebarProps) {
   const pathname = usePathname();
+  const [isDesktop, setIsDesktop] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkIsDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    checkIsDesktop();
+    window.addEventListener("resize", checkIsDesktop);
+    return () => window.removeEventListener("resize", checkIsDesktop);
+  }, []);
+
+  // Fitur susutkan (isCollapsed) khusus untuk desktop (>= 1024px).
+  // Pada mobile dan tablet, menu sidebar selalu tampil penuh (expanded).
+  const effectiveCollapsed = isDesktop && isCollapsed;
 
   const roleLabelMap: Record<UserRole, string> = {
     owner: "Pemilik Toko (Superadmin)",
@@ -151,7 +165,7 @@ export function Sidebar({
         className={cn(
           "fixed top-0 bottom-0 left-0 z-50 bg-white border-r border-[var(--line)] flex flex-col justify-between transition-all duration-300 ease-in-out select-none",
           "lg:sticky lg:top-0 lg:h-screen shrink-0",
-          isCollapsed ? "lg:w-[72px]" : "lg:w-64",
+          effectiveCollapsed ? "lg:w-[72px]" : "lg:w-64",
           isOpen ? "w-64 translate-x-0 shadow-lg" : "-translate-x-full lg:translate-x-0"
         )}
       >
@@ -160,10 +174,10 @@ export function Sidebar({
           <div
             className={cn(
               "h-16 border-b border-[var(--line)] flex items-center shrink-0 transition-all",
-              isCollapsed ? "px-3 justify-center" : "px-5 justify-between"
+              effectiveCollapsed ? "px-3 justify-center" : "px-5 justify-between"
             )}
           >
-            {isCollapsed ? (
+            {effectiveCollapsed ? (
               /* Logo ringkas saat menyusut */
               <Link
                 href="/dashboard"
@@ -220,7 +234,7 @@ export function Sidebar({
           </div>
 
           {/* Tombol Membesar Khusus Saat Sidebar Menyusut (Desktop) */}
-          {isCollapsed && onToggleCollapse && (
+          {effectiveCollapsed && onToggleCollapse && (
             <div className="px-3 pt-3 pb-1 shrink-0 hidden lg:block">
               <button
                 type="button"
@@ -236,7 +250,7 @@ export function Sidebar({
 
           {/* Store Info Card */}
           {storeName && (
-            isCollapsed ? (
+            effectiveCollapsed ? (
               /* Mini Store Pill */
               <div className="px-2.5 py-2 flex justify-center shrink-0 hidden lg:flex">
                 <Link
@@ -287,7 +301,7 @@ export function Sidebar({
           <nav
             className={cn(
               "flex-1 overflow-y-auto space-y-4",
-              isCollapsed ? "px-2 py-3" : "px-3 py-4"
+              effectiveCollapsed ? "px-2 py-3" : "px-3 py-4"
             )}
           >
             {NAV_GROUPS.map((group, groupIdx) => {
@@ -300,7 +314,7 @@ export function Sidebar({
               return (
                 <div key={group.title} className="space-y-1">
                   {/* Judul grup navigasi atau garis pemisah */}
-                  {isCollapsed ? (
+                  {effectiveCollapsed ? (
                     groupIdx > 0 && (
                       <div className="w-7 h-[1px] bg-zinc-200 mx-auto my-2.5" />
                     )
@@ -320,7 +334,7 @@ export function Sidebar({
                             pathname.startsWith("/dashboard/laba-rugi")
                           : pathname.startsWith(item.href);
 
-                      if (isCollapsed) {
+                      if (effectiveCollapsed) {
                         /* Tampilan saat menyusut: tombol icon dengan tooltip nama menu */
                         return (
                           <Link
@@ -391,10 +405,10 @@ export function Sidebar({
           <div
             className={cn(
               "p-3 border-t border-[var(--line)] bg-zinc-50/50 flex items-center shrink-0",
-              isCollapsed ? "justify-center" : "justify-between text-xs text-zinc-500"
+              effectiveCollapsed ? "justify-center" : "justify-between text-xs text-zinc-500"
             )}
           >
-            {isCollapsed ? (
+            {effectiveCollapsed ? (
               <span
                 className="w-2.5 h-2.5 rounded-full bg-emerald-500 cursor-help"
                 title={`${fullName} • ${roleLabelMap[role] || role} (v0.1)`}

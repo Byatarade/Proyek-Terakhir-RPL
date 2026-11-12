@@ -23,8 +23,20 @@ export function DashboardShell({
   role,
 }: DashboardShellProps) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  // Default menyusut (collapsed) pada desktop saat membuka dashboard
+  // Default menyusut (collapsed) khusus pada desktop saat membuka dashboard
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // Deteksi ukuran layar desktop (lg: >= 1024px)
+  useEffect(() => {
+    const checkIsDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+
+    checkIsDesktop();
+    window.addEventListener("resize", checkIsDesktop);
+    return () => window.removeEventListener("resize", checkIsDesktop);
+  }, []);
 
   // Muat preferensi pengguna dari localStorage jika sebelumnya pernah diubah
   useEffect(() => {
@@ -41,6 +53,9 @@ export function DashboardShell({
   }, []);
 
   const handleToggleCollapse = () => {
+    // Fitur susutkan/perbesar hanya berlaku pada layar desktop
+    if (typeof window !== "undefined" && window.innerWidth < 1024) return;
+
     setIsCollapsed((prev) => {
       const next = !prev;
       try {
@@ -52,6 +67,9 @@ export function DashboardShell({
     });
   };
 
+  // Efek susutkan hanya aktif di desktop (lebar layar >= 1024px)
+  const effectiveCollapsed = isDesktop && isCollapsed;
+
   return (
     <div className="min-h-screen bg-white flex">
       {/* Sidebar Navigation */}
@@ -62,7 +80,7 @@ export function DashboardShell({
         fullName={fullName}
         isOpen={mobileSidebarOpen}
         onClose={() => setMobileSidebarOpen(false)}
-        isCollapsed={isCollapsed}
+        isCollapsed={effectiveCollapsed}
         onToggleCollapse={handleToggleCollapse}
       />
 
@@ -76,14 +94,14 @@ export function DashboardShell({
           fullName={fullName}
           role={role}
           onOpenSidebar={() => setMobileSidebarOpen(true)}
-          isCollapsed={isCollapsed}
+          isCollapsed={effectiveCollapsed}
           onToggleCollapse={handleToggleCollapse}
         />
 
         {/* Page Content */}
         <main
           className={
-            isCollapsed
+            effectiveCollapsed
               ? "flex-1 p-4 sm:p-6 lg:p-8 max-w-[1440px] w-full mx-auto bg-white transition-all duration-300"
               : "flex-1 p-4 sm:p-6 lg:p-8 max-w-[1280px] w-full mx-auto bg-white transition-all duration-300"
           }
