@@ -403,12 +403,27 @@ export async function createCustomerOrderAction(
 
     const productMap = new Map((dbProducts || []).map((p) => [p.id, p]));
 
+    // Validasi ketersediaan produk (PRD FR-PR-04)
+    for (const item of items) {
+      const prod = productMap.get(item.productId);
+      if (prod && !prod.is_available) {
+        return {
+          success: false,
+          error: `Menu "${prod.name}" sedang habis. Silakan sesuaikan pesanan Anda.`,
+        };
+      }
+    }
+
     // Hitung total
     items.forEach((item) => {
       const prod = productMap.get(item.productId);
-      const price = prod?.price_sell || 25000;
+      const price = prod?.price_sell || 0;
       orderTotal += price * item.qty;
     });
+
+    if (orderTotal <= 0) {
+      return { success: false, error: "Total nominal pesanan tidak valid." };
+    }
 
     if (store?.id) {
       // Ambil counter nomor antrian harian
@@ -444,34 +459,49 @@ export async function createCustomerOrderAction(
         .select("id")
         .single();
 
-      if (!orderError && newOrder) {
-        // Insert order items
-        const orderItemsToInsert = items.map((item) => {
-          const prod = productMap.get(item.productId);
-          return {
-            order_id: newOrder.id,
-            store_id: store.id,
-            product_id: item.productId,
-            product_name: prod?.name || "Item Pesanan",
-            qty: item.qty,
-            price_sell: prod?.price_sell || 25000,
-            price_cost: prod?.price_cost || 0,
-          };
-        });
-
-        await supabase.from("order_items").insert(orderItemsToInsert);
-
+      if (orderError || !newOrder) {
         return {
-          success: true,
-          data: {
-            orderId: newOrder.id,
-            publicToken,
-            queueNumber: nextQueueNumber,
-            total: orderTotal,
-            expiresAt,
-          },
+          success: false,
+          error: orderError?.message || "Gagal menyimpan pesanan ke database.",
         };
       }
+
+      // Insert order items
+      const orderItemsToInsert = items.map((item) => {
+        const prod = productMap.get(item.productId);
+        return {
+          order_id: newOrder.id,
+          store_id: store.id,
+          product_id: item.productId,
+          product_name: prod?.name || "Item Pesanan",
+          qty: item.qty,
+          price_sell: prod?.price_sell || 0,
+          price_cost: prod?.price_cost || 0,
+        };
+      });
+
+      await supabase.from("order_items").insert(orderItemsToInsert);
+
+      // Catat log awal pembuatan pesanan
+      await supabase.from("order_status_logs").insert({
+        order_id: newOrder.id,
+        store_id: store.id,
+        from_status: null,
+        to_status: "menunggu_bayar",
+        actor_type: "customer",
+        note: `Pesanan dibuat oleh pelanggan melalui menu publik (${paymentMethod.toUpperCase()})`,
+      });
+
+      return {
+        success: true,
+        data: {
+          orderId: newOrder.id,
+          publicToken,
+          queueNumber: nextQueueNumber,
+          total: orderTotal,
+          expiresAt,
+        },
+      };
     }
 
     // Fallback simulated order untuk demo slug

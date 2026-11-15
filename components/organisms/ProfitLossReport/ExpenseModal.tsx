@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo } from "react";
 import { Wallet, X, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { formatRupiah } from "@/lib/utils";
@@ -22,12 +22,6 @@ function formatWithDots(value: number): string {
   return value.toLocaleString("id-ID");
 }
 
-/** Parse string dengan titik ribuan ke number: "50.000" → 50000 */
-function parseDots(str: string): number {
-  const clean = str.replace(/\./g, "").replace(/,/g, "").replace(/\D/g, "");
-  return clean ? Number(clean) : 0;
-}
-
 export function ExpenseModal({
   isOpen,
   onClose,
@@ -38,21 +32,16 @@ export function ExpenseModal({
   isPending,
   onSaveExpense,
 }: ExpenseModalProps) {
-  const [amountDisplay, setAmountDisplay] = useState("");
-
-  // Sinkronkan display saat modal dibuka / data berubah
-  useEffect(() => {
-    if (isOpen) {
-      setAmountDisplay(expenseForm.amount > 0 ? formatWithDots(expenseForm.amount) : "");
-    }
-  }, [isOpen, editingExpense]);
+  const amountDisplay = useMemo(
+    () => (expenseForm.amount > 0 ? formatWithDots(expenseForm.amount) : ""),
+    [expenseForm.amount]
+  );
 
   if (!isOpen) return null;
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/\./g, "").replace(/,/g, "").replace(/\D/g, "");
     const numeric = raw ? Number(raw) : 0;
-    setAmountDisplay(raw ? formatWithDots(numeric) : "");
     onExpenseFormChange({ ...expenseForm, amount: numeric });
   };
 

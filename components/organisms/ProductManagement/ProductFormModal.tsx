@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo } from "react";
 import { X, Loader2, Flame } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { ProductFormModalProps } from "./types";
@@ -9,12 +9,6 @@ function formatRupiah(value: number | string): string {
   const num = typeof value === "string" ? value.replace(/\D/g, "") : String(value === 0 ? "" : value);
   if (!num) return "";
   return Number(num).toLocaleString("id-ID");
-}
-
-/** Parse string dengan titik ribuan ke number: "25.000" → 25000 */
-function parseRupiah(value: string): number {
-  const clean = value.replace(/\./g, "").replace(/,/g, "").replace(/\D/g, "");
-  return clean ? Number(clean) : 0;
 }
 
 export function ProductFormModal({
@@ -29,21 +23,16 @@ export function ProductFormModal({
   onSubmit,
 }: ProductFormModalProps) {
   // Display value untuk input (string dengan titik ribuan)
-  const [priceDisplay, setPriceDisplay] = useState("");
-
-  // Sinkronkan priceDisplay saat modal dibuka / produk berubah
-  useEffect(() => {
-    if (isOpen) {
-      setPriceDisplay(productForm.price_sell > 0 ? formatRupiah(productForm.price_sell) : "");
-    }
-  }, [isOpen, editingProduct]);
+  const priceDisplay = useMemo(
+    () => (productForm.price_sell > 0 ? formatRupiah(productForm.price_sell) : ""),
+    [productForm.price_sell]
+  );
 
   if (!isOpen) return null;
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/\./g, "").replace(/,/g, "").replace(/\D/g, "");
     const numeric = raw ? Number(raw) : 0;
-    setPriceDisplay(raw ? formatRupiah(raw) : "");
     setProductForm((prev) => ({ ...prev, price_sell: numeric }));
   };
 

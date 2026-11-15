@@ -151,7 +151,7 @@ export function LoginForm() {
               name="email"
               type="email"
               autoComplete="email"
-              placeholder="nama@tokomu.com"
+              placeholder="nama@mail.com"
               required
               disabled={isPending}
               className="pl-10"

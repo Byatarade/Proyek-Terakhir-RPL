@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import { Plus, ExternalLink, Tag, Cake } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
@@ -41,13 +41,6 @@ export function ProductManagement({
   const [categories, setCategories] = useState<CategoryData[]>(initialCategories);
   const [products, setProducts] = useState<ProductData[]>(initialProducts);
 
-  useEffect(() => {
-    setProducts(initialProducts);
-  }, [initialProducts]);
-
-  useEffect(() => {
-    setCategories(initialCategories);
-  }, [initialCategories]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<StatusFilterType>("all");
