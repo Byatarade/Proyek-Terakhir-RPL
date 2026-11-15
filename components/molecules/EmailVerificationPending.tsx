@@ -161,13 +161,13 @@ export function EmailVerificationPending({
       </div>
 
       {/* Karcis Rincian Pendaftaran Toko (Nota Style) */}
-      <div className="bg-white border-2 border-[var(--line-strong)]/80 rounded-2xl p-5 shadow-card relative overflow-hidden">
-        <div className="flex items-center justify-between gap-2 pb-3 border-b border-[var(--line)]">
-          <span className="font-mono text-xs text-[var(--muted)] uppercase tracking-wider font-medium">
+      <div className="bg-white border-2 border-[var(--line-strong)]/80 rounded-2xl p-4 sm:p-5 shadow-card relative overflow-hidden">
+        <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 pb-3 border-b border-[var(--line)]">
+          <span className="font-mono text-xs text-[var(--muted)] uppercase tracking-wider font-semibold">
             Tujuan Aktivasi
           </span>
-          <Badge variant="amber" size="sm">
-            <Clock className="w-3 h-3" />
+          <Badge variant="amber" size="sm" className="whitespace-nowrap shrink-0">
+            <Clock className="w-3.5 h-3.5 shrink-0" />
             <span>Menunggu Konfirmasi</span>
           </Badge>
         </div>

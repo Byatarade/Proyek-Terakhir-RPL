@@ -15,11 +15,11 @@ export function Badge({
 }: BadgeProps) {
   // Hijau Nota Style (design.md 7.4): Radius 6px, border tegas, kontras tinggi
   const baseStyles =
-    "inline-flex items-center gap-1.5 font-medium rounded-[6px] transition-colors select-none";
+    "inline-flex items-center gap-1.5 font-medium rounded-[6px] transition-colors select-none whitespace-nowrap shrink-0";
 
   const sizeStyles = {
-    sm: "h-6 px-2 text-[11px]",
-    md: "h-7 px-2.5 text-[12px]",
+    sm: "h-6 px-2 text-[11px] leading-none",
+    md: "h-7 px-2.5 text-[12px] leading-none",
   };
 
   const variantStyles = {
