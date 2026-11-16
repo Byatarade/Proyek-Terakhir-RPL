@@ -162,6 +162,8 @@ export function ProfitLossReport({ initialData }: ProfitLossReportProps) {
       }
 
       setExpenseModalOpen(false);
+      setActiveTab("expenses");
+
       // Reload report
       const updated = await getProfitLossReportAction({
         preset: activePreset,

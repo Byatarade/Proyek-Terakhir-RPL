@@ -131,8 +131,10 @@ export async function getProfitLossReportAction(params?: {
       };
     }
 
-    // Store info
-    const { data: store } = await supabase
+    const admin = createAdminClient();
+
+    // Store info (Gunakan admin client agar tidak terblokir RLS saat toko mode tutup / is_open = false)
+    const { data: store } = await admin
       .from("stores")
       .select("id, name, slug")
       .eq("id", profileData.store_id)
@@ -183,8 +185,6 @@ export async function getProfitLossReportAction(params?: {
       endIsoDate = now.toISOString().split("T")[0];
       periodLabel = "Bulan Ini (" + new Intl.DateTimeFormat("id-ID", { month: "long", year: "numeric" }).format(now) + ")";
     }
-
-    const admin = createAdminClient();
 
     // Query 1: Orders in date range with valid paid status (PRD FR-LR-03: dibayar, diproses, siap, diambil)
     const { data: ordersData, error: ordersError } = await admin
@@ -510,7 +510,9 @@ export async function createExpenseAction(
       return { success: false, error: "Nominal pengeluaran harus lebih dari Rp 0." };
     }
 
-    const { data, error } = await supabase
+    const admin = createAdminClient();
+
+    const { data, error } = await admin
       .from("expenses")
       .insert({
         store_id: profile.store_id,
@@ -568,7 +570,9 @@ export async function updateExpenseAction(
     if (!input.category || !input.category.trim()) return { success: false, error: "Kategori wajib diisi." };
     if (!input.amount || input.amount <= 0) return { success: false, error: "Nominal harus lebih dari Rp 0." };
 
-    const { error } = await supabase
+    const admin = createAdminClient();
+
+    const { error } = await admin
       .from("expenses")
       .update({
         spent_on: input.spent_on,
@@ -615,7 +619,9 @@ export async function deleteExpenseAction(id: string): Promise<ActionResponse> {
       return { success: false, error: "Hanya Owner yang berhak menghapus pengeluaran." };
     }
 
-    const { error } = await supabase
+    const admin = createAdminClient();
+
+    const { error } = await admin
       .from("expenses")
       .delete()
       .eq("id", id)
