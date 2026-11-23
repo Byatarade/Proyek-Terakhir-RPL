@@ -492,7 +492,8 @@ export function SuperadminClient({
                 <li>Seluruh produk menu ({deleteModalStore.products_count} produk)</li>
                 <li>Seluruh riwayat transaksi ({deleteModalStore.orders_count} pesanan)</li>
                 <li>Data pengeluaran operasional dan kategori</li>
-                <li>Akun staf / profil pegawai toko</li>
+                <li>Akun staf &amp; profil pegawai toko</li>
+                <li>Akun login autentikasi (Supabase Auth) sehingga email dapat didaftarkan kembali</li>
               </ul>
             </div>
 

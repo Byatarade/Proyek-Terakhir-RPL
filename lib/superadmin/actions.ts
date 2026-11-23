@@ -240,6 +240,41 @@ export async function deleteStoreAction(
   const admin = createAdminClient();
 
   try {
+    // 0. Collect all auth user IDs associated with this store before deleting data
+    // a) From profiles table (all staff & owner of this store)
+    const { data: storeProfiles } = await admin
+      .from("profiles")
+      .select("id")
+      .eq("store_id", storeId);
+
+    const userIdsToDelete = new Set<string>();
+    storeProfiles?.forEach((p) => {
+      if (p.id) userIdsToDelete.add(p.id);
+    });
+
+    // b) Fetch the store slug to check if any auth user registered with this store slug
+    const { data: targetStore } = await admin
+      .from("stores")
+      .select("slug")
+      .eq("id", storeId)
+      .maybeSingle();
+
+    // c) Also scan auth users list to catch any user whose metadata links to this store_id or slug
+    try {
+      const { data: authUsers } = await admin.auth.admin.listUsers({ perPage: 1000 });
+      authUsers?.users?.forEach((u) => {
+        const meta = u.user_metadata as Record<string, unknown> | undefined;
+        if (
+          meta?.store_id === storeId ||
+          (targetStore?.slug && meta?.slug === targetStore.slug)
+        ) {
+          userIdsToDelete.add(u.id);
+        }
+      });
+    } catch (scanErr: unknown) {
+      console.warn("Superadmin: failed to scan auth users metadata:", scanErr);
+    }
+
     // 1. Delete order status logs (must precede orders due to FK)
     await admin.from("order_status_logs").delete().eq("store_id", storeId);
 
@@ -268,6 +303,21 @@ export async function deleteStoreAction(
     const { error: storeErr } = await admin.from("stores").delete().eq("id", storeId);
     if (storeErr) {
       throw storeErr;
+    }
+
+    // 10. Delete all associated users from Supabase Auth so their emails can be re-registered cleanly
+    for (const userId of userIdsToDelete) {
+      // Safety check: Never delete the superadmin account!
+      if (userId === adminUser.id) continue;
+
+      try {
+        const { data: userRecord } = await admin.auth.admin.getUserById(userId);
+        if (userRecord?.user?.email === "admin@paybuy.web.id") continue;
+
+        await admin.auth.admin.deleteUser(userId);
+      } catch (userDelErr: unknown) {
+        console.error(`Superadmin: failed to delete auth user ${userId}:`, userDelErr);
+      }
     }
 
     revalidatePath("/khusus-admin");
