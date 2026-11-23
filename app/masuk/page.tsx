@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isUserSuperadmin } from "@/lib/superadmin/auth";
 import { AuthLayout } from "@/components/templates/AuthLayout";
 import { LoginForm } from "@/components/organisms";
 
@@ -17,6 +18,9 @@ export default async function MasukPage() {
   } = await supabase.auth.getUser();
 
   if (user) {
+    if (isUserSuperadmin(user)) {
+      redirect("/khusus-admin");
+    }
     redirect("/dashboard");
   }
 

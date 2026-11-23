@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { DashboardShell } from "@/components/templates/DashboardShell";
 import { UserRole } from "@/lib/types/database";
 import { getAuthenticatedProfile } from "@/lib/supabase/auth-cache";
+import { isUserSuperadmin } from "@/lib/superadmin/auth";
 
 export default async function DashboardLayout({
   children,
@@ -15,6 +16,10 @@ export default async function DashboardLayout({
 
   if (!user) {
     redirect("/masuk?next=/dashboard");
+  }
+
+  if (isUserSuperadmin(user)) {
+    redirect("/khusus-admin");
   }
 
   if (profileData && profileData.is_active === false) {

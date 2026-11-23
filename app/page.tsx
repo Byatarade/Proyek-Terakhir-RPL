@@ -16,7 +16,7 @@ export const revalidate = 0;
 
 export default async function LandingPage() {
   const { user, profile, store } = await getAuthenticatedProfile();
-
+  
   return (
     <SmoothScrollProvider>
       <div className="flex flex-col min-h-screen">
